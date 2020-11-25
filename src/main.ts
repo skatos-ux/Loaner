@@ -11,9 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 library.add(fas)
 
-// Bulma
-import './../node_modules/bulma/css/bulma.css';
-
 //Axios
 Vue.use({
   install (Vue) {
