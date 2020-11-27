@@ -1,0 +1,11 @@
+$section-border-color: #dbdbdb;
+$section-border-radius: 4px;
+section {
+  box-shadow: 0 0 0 1px $section-border-color;
+  &.section--1 {
+    border-radius: $section-border-radius;
+  }
+  &.section--2 {
+    border-radius: 0 0 $section-border-radius $section-border-radius;
+  }
+}

@@ -15,7 +15,7 @@ library.add(fas)
 Vue.use({
   install (Vue) {
     Vue.prototype.$api = axios.create({
-      baseURL: 'http://localhost:3000/'
+      baseURL: 'http://localhost:3000'
     })
   }
 })

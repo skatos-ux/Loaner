@@ -1,18 +1,19 @@
 <template>
   <div class="login">
-      <LoginForm/>
+      <LoginComponent/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import LoginForm from "@/components/components/LoginForm.vue";
+import LoginComponent from "@/components/components/LoginComponent.vue";
 @Component({
-  components: {LoginForm}
+  components: {LoginComponent}
 })
 export default class Login extends Vue {
 
 }
+
 </script>
 <style scoped lang="scss">
   .login {
