@@ -1,39 +1,20 @@
 <template>
-  <section class="dashboard__cart section--1 has-text-left">
-    <aside class="menu">
+  <section class="cart section--1 has-text-left">
+    <aside class="cart__menu menu">
       <p class="menu-label">
-        General
+        Category1
       </p>
       <ul class="menu-list">
-        <li><a>Dashboard</a></li>
-        <li><a>Customers</a></li>
-      </ul>
-      <p class="menu-label">
-        Administration
-      </p>
-      <ul class="menu-list">
-        <li><a>Team Settings</a></li>
-        <li>
-          <a class="is-active">Manage Your Team</a>
-          <ul>
-            <li><a>Members</a></li>
-            <li><a>Plugins</a></li>
-            <li><a>Add a member</a></li>
-          </ul>
-        </li>
-        <li><a>Invitations</a></li>
-        <li><a>Cloud Storage Environment Settings</a></li>
-        <li><a>Authentication</a></li>
-      </ul>
-      <p class="menu-label">
-        Transactions
-      </p>
-      <ul class="menu-list">
-        <li><a>Payments</a></li>
-        <li><a>Transfers</a></li>
-        <li><a>Balance</a></li>
+        <li><a>item1</a></li>
+        <li><a>item2</a></li>
       </ul>
     </aside>
+    <div class="cart__command control field has-icons-right ">
+      <input class="button is-success is-fullwidth is-size-6" type="button" value="Commander">
+      <span class="icon is-small is-right">
+          <font-awesome-icon :icon="['fas', 'shopping-cart']" />
+      </span>
+    </div>
   </section>
 </template>
 
@@ -48,11 +29,20 @@ export default class CartComponent extends Vue {
 
 <style scoped lang="scss">
 @import "../../scss/globals";
-  .dashboard__cart {
+  .cart {
     position: relative;
-    max-width: 200px;
-    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 300px;
+    min-width: 200px;
     height: 100%;
-    padding-left: 10px;
+    padding: 0 5px 0 5px;
+    &__menu {
+      margin-top: 10px;
+    }
+    &__command {
+      margin-bottom: 10px;
+    }
   }
 </style>
