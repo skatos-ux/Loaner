@@ -24,6 +24,8 @@ export default class Device extends Vue {
     justify-content: space-around;
     align-items: flex-start;
     margin-bottom: 10px;
+    transition: background-color ease 200ms;
+    border-radius: 4px;
     &:hover {
       cursor: pointer;
       background-color: grey;
