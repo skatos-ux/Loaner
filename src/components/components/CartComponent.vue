@@ -1,5 +1,5 @@
 <template>
-  <div class="cart has-text-left">
+  <section class="dashboard__cart section--1 has-text-left">
     <aside class="menu">
       <p class="menu-label">
         General
@@ -34,7 +34,7 @@
         <li><a>Balance</a></li>
       </ul>
     </aside>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -47,9 +47,12 @@ export default class CartComponent extends Vue {
 </script>
 
 <style scoped lang="scss">
-  .cart {
+@import "../../scss/globals";
+  .dashboard__cart {
     position: relative;
     max-width: 200px;
     min-width: 100px;
+    height: 100%;
+    padding-left: 10px;
   }
 </style>
