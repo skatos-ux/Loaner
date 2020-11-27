@@ -25,8 +25,8 @@ export default class DeviceCategoryLayout extends Vue {
 <style scoped lang="scss">
 @import "./../../scss/globals";
   .deviceCategory {
-    background-color: red;
     padding: 1.25rem;
+    border-bottom: $section-border-color solid 2px;
     &--container {
       display: flex;
       flex-direction: column;
