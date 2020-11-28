@@ -24,7 +24,7 @@
         Remember me
       </label>
     </div>
-    <div class="field">
+    <div id="submit" class="field">
       <input class="button is-success is-fullwidth is-size-6" type="button" @click="submitForm" value="Se connecter">
     </div>
   </section>
@@ -43,7 +43,10 @@ export default class LoginComponent extends Vue {
   }
 
   submitForm(){
+    const input = document.querySelector("#submit")
+    input!.setAttribute("class", input!.getAttribute("class") + " control is-loading")
     console.log(this.form)
+
     /*
     this.$api.post("/login", this.form).then((res) => {
       console.log(res.data)
