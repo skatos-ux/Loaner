@@ -36,8 +36,10 @@ export default class CartComponent extends Vue {
     justify-content: space-between;
     max-width: 300px;
     min-width: 200px;
-    height: 100%;
-    padding: 0 5px 0 5px;
+    height: calc(100% - 20px);
+    margin: 10px;
+    padding: 0 10px 0 10px;
+
     &__menu {
       margin-top: 10px;
     }

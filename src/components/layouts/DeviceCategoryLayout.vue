@@ -2,11 +2,7 @@
   <div class="deviceCategory has-text-left">
     <h5 class="title is-5">{{ title }}</h5>
     <div class="devicesCategory__container">
-      <!-- TODO: implement slots -->
-      <Device/>
-      <Device/>
-      <Device/>
-      <Device/>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -26,7 +22,6 @@ export default class DeviceCategoryLayout extends Vue {
 @import "./../../scss/globals";
   .deviceCategory {
     padding: 1.25rem;
-    border-bottom: $section-border-color solid 2px;
     &--container {
       display: flex;
       flex-direction: column;
