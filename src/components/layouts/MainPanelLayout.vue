@@ -13,17 +13,41 @@
         </div>
       </div>
     </div>
-    <section class="mainpanel__devicelist section--1">
-      <DeviceCategoryLayout v-for="category in categories" :key="category.name" :title="category.name"/>
-    </section>
+    <div class="mainpanel__devicelist">
+      <DeviceCategoryLayout v-for="category in categories" :key="category.name" :title="category.name">
+        <Device v-for="device in category.devices" :key="device.name" :id="device.ref">
+          <template v-slot:name>
+            {{ device.name }}
+          </template>
+          <template v-slot:ref>
+            {{ device.ref }}
+          </template>
+          <template v-slot:libre>
+            <span v-show="device.available" class="icon is-small success">
+              <font-awesome-icon :icon="['fas', 'check']" />
+            </span>
+            <span v-show="!device.available" class="icon is-small fail">
+              <font-awesome-icon :icon="['fas', 'times']" />
+            </span>
+          </template>
+          <template v-slot:version>
+            {{ device.version }}
+          </template>
+          <template v-slot:photo>
+            {{ device.photo }}
+          </template>
+        </Device>
+      </DeviceCategoryLayout>
+    </div>
   </section>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import DeviceCategoryLayout from "@/components/layouts/DeviceCategoryLayout.vue";
+import Device from "@/components/components/Device.vue";
 @Component({
-  components: {DeviceCategoryLayout}
+  components: {Device, DeviceCategoryLayout}
 })
 export default class MainPanelLayout extends Vue {
   filters = this.$store.state.web.filters
@@ -34,12 +58,11 @@ export default class MainPanelLayout extends Vue {
 <style scoped lang="scss">
   @import "../../scss/globals";
   .dashboard__mainpanel {
-    position: relative;
     flex-grow: 2;
-    height: 100%;
+    height: calc(100% - 20px);
     display: flex;
     flex-direction: column;
-    margin: 0 10px 0 10px;
+    margin: 10px;
   }
   .mainpanel {
     &__searchbar {
@@ -64,6 +87,12 @@ export default class MainPanelLayout extends Vue {
     &__devicelist {
       margin: 5px;
       overflow: auto;
+      .fail {
+        color: red;
+      }
+      .success {
+        color: green;
+      }
     }
   }
 </style>
