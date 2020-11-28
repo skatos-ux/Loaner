@@ -24,6 +24,5 @@ export default class Dashboard extends Vue {
     height: 100%;
     display: flex;
     flex-direction: row;
-    padding: 10px 0 10px 0;
   }
 </style>
