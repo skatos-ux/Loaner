@@ -17,33 +17,49 @@ export default new Vuex.Store({
       deviceCategories: [
         {
           name: "category1",
-          items: [
+          devices: [
             {
-              name: "item1"
+              name: "item1",
+              ref: "a",
+              version: "1.0",
+              photo: "https://bulma.io/images/placeholders/1280x960.png",
+              available: true
             }
           ]
         },
         {
           name: "category2",
-          deviceList: [
+          devices: [
             {
-              name: "item2"
+              name: "item2",
+              ref: "b",
+              version: "1.0",
+              photo: "https://bulma.io/images/placeholders/1280x960.png",
+              available: false
             }
           ]
         },
         {
           name: "category3",
-          items: [
+          devices: [
             {
-              name: "item3"
+              name: "item3",
+              ref: "c",
+              version: "1.0",
+              photo: "https://bulma.io/images/placeholders/1280x960.png",
+              available: true
             }
           ]
         },
         {
           name: "category4",
-          deviceList: [
+          devices: [
             {
-              name: "item4"
+              name: "item4",
+              ref: "d",
+              version: "1.0",
+              photo: "https://bulma.io/images/placeholders/1280x960.png",
+              available: false
             }
           ]
         }
