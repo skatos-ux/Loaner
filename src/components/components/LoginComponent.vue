@@ -44,8 +44,7 @@ export default class LoginComponent extends Vue {
 
   submitForm(){
     const input = document.querySelector("#submit")
-    input!.setAttribute("class", input!.getAttribute("class") + " control is-loading")
-    console.log(this.form)
+    input!.className +=  " control is-loading"
 
     /*
     this.$api.post("/login", this.form).then((res) => {
