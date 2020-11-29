@@ -15,12 +15,18 @@
     </div>
     <div class="mainpanel__devicelist">
       <DeviceCategoryLayout v-for="category in categories" :key="category.name" :title="category.name">
-        <Device v-for="device in category.devices" :key="device.name" :id="device.ref">
+        <Device v-for="device in category.devices" :key="device.name" :id="device.ref" :photo="device.photo" :rank="user.rank">
           <template v-slot:name>
             {{ device.name }}
           </template>
+          <template v-slot:category>
+            {{ category.name }}
+          </template>
           <template v-slot:ref>
             {{ device.ref }}
+          </template>
+          <template v-slot:version>
+            {{ device.version }}
           </template>
           <template v-slot:libre>
             <span v-show="device.available" class="icon is-small success">
@@ -29,12 +35,6 @@
             <span v-show="!device.available" class="icon is-small fail">
               <font-awesome-icon :icon="['fas', 'times']" />
             </span>
-          </template>
-          <template v-slot:version>
-            {{ device.version }}
-          </template>
-          <template v-slot:photo>
-            {{ device.photo }}
           </template>
         </Device>
       </DeviceCategoryLayout>
@@ -51,7 +51,10 @@ import Device from "@/components/components/Device.vue";
 })
 export default class MainPanelLayout extends Vue {
   filters = this.$store.state.web.filters
-  categories = this.$store.state.web.deviceCategories
+  categories = this.$store.state.db.deviceCategories
+  user = {
+    rank: 1
+  }
 }
 </script>
 
