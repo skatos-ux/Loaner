@@ -13,6 +13,7 @@ import MainPanelLayout from "@/components/layouts/MainPanelLayout.vue";
   components: {MainPanelLayout, CartComponent}
 })
 export default class Dashboard extends Vue {
+  user = this.$store.state.auth.user
 
 }
 </script>
