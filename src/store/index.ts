@@ -13,7 +13,9 @@ export default new Vuex.Store({
         {
           name: "filtre2"
         }
-      ],
+      ]
+    },
+    db: {
       deviceCategories: [
         {
           name: "category1",
