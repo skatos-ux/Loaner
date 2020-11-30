@@ -24,11 +24,15 @@
         Remember me
       </label>
     </div>
+    <article v-show="failLogin" class="message is-danger">
+      <div class="message-body is-size-7">
+        Nom d'utilisateur ou mot de passe incorrecte (c'est admin:admin espèce de con)
+      </div>
+    </article>
     <div id="submit" class="field">
       <input class="button is-success is-fullwidth is-size-6" type="button" @click="submitForm" value="Se connecter">
     </div>
   </section>
-
 </template>
 
 <script lang="ts">
@@ -39,12 +43,23 @@ export default class LoginComponent extends Vue {
   form =  {
     username: '',
     password: '',
+    rank: 0,
     remember: false
   }
+  failLogin = false
 
   submitForm(){
     const input = document.querySelector("#submit")
     input!.className +=  " control is-loading"
+
+    //TEMPORARY
+    if(this.form.username === "admin" && this.form.password === "admin") {
+      this.$store.dispatch('login', this.form)
+      this.$router.push("/dashboard")
+    } else {
+      this.failLogin = true
+      input!.classList.remove("control", "is-loading")
+    }
 
     /*
     this.$api.post("/login", this.form).then((res) => {
