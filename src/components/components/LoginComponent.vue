@@ -1,5 +1,5 @@
 <template>
-  <section @submit="submitForm" class="section--2 login__form p-4 m-6 animate__animated animate__fadeIn">
+  <form @submit="submitForm" class="section--2 login__form p-4 m-6 animate__animated animate__fadeIn">
     <div class="field">
       <label class="label is-size-7 has-text-left">Nom d'utilisateur</label>
       <div class="control has-icons-left">
@@ -30,9 +30,9 @@
       </div>
     </article>
     <div id="submit" class="field">
-      <input class="button is-success is-fullwidth is-size-6" type="button" @click="submitForm" value="Se connecter">
+      <input class="button is-success is-fullwidth is-size-6" type="submit" value="Se connecter">
     </div>
-  </section>
+  </form>
 </template>
 
 <script lang="ts">
@@ -48,7 +48,7 @@ export default class LoginComponent extends Vue {
   }
   failLogin = false
 
-  submitForm(){
+  submitForm(event: Event){
     const input = document.querySelector("#submit")
     input!.className +=  " control is-loading"
 
@@ -59,6 +59,7 @@ export default class LoginComponent extends Vue {
     } else {
       this.failLogin = true
       input!.classList.remove("control", "is-loading")
+      event.preventDefault()
     }
 
     /*

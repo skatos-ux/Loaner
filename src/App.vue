@@ -5,8 +5,7 @@
 </template>
 
 <style lang="scss">
-$body-overflow-y: auto;
-
+@import "./scss/globals";
 @import "node_modules/bulma/bulma";
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
