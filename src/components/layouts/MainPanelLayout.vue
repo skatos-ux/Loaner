@@ -1,5 +1,5 @@
 <template>
-  <section class="dashboard__mainpanel section--1">
+  <section class="mainpanel section--1">
     <div class="mainpanel__searchbar section--1 box">
       <div class="mainpanel__searchbar--bar">
         <input class="input is-rounded" type="text" placeholder="Rechercher un appareil">
@@ -59,20 +59,17 @@ export default class MainPanelLayout extends Vue {
 </script>
 
 <style scoped lang="scss">
-  @import "../../scss/globals";
-  .dashboard__mainpanel {
+  @import "./../../scss/globals";
+  .mainpanel {
+    position: relative;
+    width: 100%;
+    height: 100%;
     flex-grow: 2;
-    height: calc(100% - 20px);
     display: flex;
     flex-direction: column;
-    margin: 10px;
-  }
-  .mainpanel {
+    margin: $dashboard-margin;
     &__searchbar {
       margin: 5px;
-      &--search {
-
-      }
       &--filters {
         display: flex;
         flex-direction: row;

@@ -22,13 +22,13 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
-export default class CartComponent extends Vue {
+export default class CartLayout extends Vue {
 
 }
 </script>
 
 <style scoped lang="scss">
-@import "../../scss/globals";
+  @import "../../scss/globals";
   .cart {
     position: relative;
     display: flex;
@@ -36,8 +36,8 @@ export default class CartComponent extends Vue {
     justify-content: space-between;
     max-width: 300px;
     min-width: 200px;
-    height: calc(100% - 20px);
-    margin: 10px;
+    height: 100%;
+    margin: $dashboard-margin;
     padding: 0 10px 0 10px;
 
     &__menu {
