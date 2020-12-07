@@ -15,28 +15,7 @@
     </div>
     <div class="mainpanel__devicelist">
       <DeviceCategoryLayout v-for="category in categories" :key="category.name" :title="category.name">
-        <Device v-for="device in category.devices" :key="device.name" :id="device.ref" :photo="device.photo" :rank="user.rank">
-          <template v-slot:name>
-            {{ device.name }}
-          </template>
-          <template v-slot:category>
-            {{ category.name }}
-          </template>
-          <template v-slot:ref>
-            {{ device.ref }}
-          </template>
-          <template v-slot:version>
-            {{ device.version }}
-          </template>
-          <template v-slot:libre>
-            <span v-show="device.available" class="icon is-small success">
-              <font-awesome-icon :icon="['fas', 'check']" />
-            </span>
-            <span v-show="!device.available" class="icon is-small fail">
-              <font-awesome-icon :icon="['fas', 'times']" />
-            </span>
-          </template>
-        </Device>
+        <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :available="device.available" :photo="device.photo" :rank="user.rank"></Device>
       </DeviceCategoryLayout>
     </div>
   </section>
@@ -52,16 +31,13 @@ import Device from "@/components/components/Device.vue";
 export default class MainPanelLayout extends Vue {
   filters = this.$store.state.web.filters
   categories = this.$store.state.db.deviceCategories
-  user = {
-    rank: 1
-  }
+  user = this.$store.state.auth.user
 }
 </script>
 
 <style scoped lang="scss">
   @import "./../../scss/globals";
   .mainpanel {
-    position: relative;
     width: 100%;
     height: 100%;
     flex-grow: 2;
@@ -87,12 +63,6 @@ export default class MainPanelLayout extends Vue {
     &__devicelist {
       margin: 5px;
       overflow: auto;
-      .fail {
-        color: red;
-      }
-      .success {
-        color: green;
-      }
     }
   }
 </style>

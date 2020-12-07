@@ -42,6 +42,11 @@ export default class Dashboard extends Vue {
     height: 100vh;
     display: flex;
     flex-direction: column;
+
+    &__header {
+      position: relative;
+      z-index: 1;
+    }
     &__body--admin {
       position: relative;
       width: 100%;
