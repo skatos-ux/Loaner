@@ -39,7 +39,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
-export default class LoginComponent extends Vue {
+export default class LoginForm extends Vue {
   form =  {
     username: '',
     password: '',

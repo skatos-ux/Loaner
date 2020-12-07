@@ -21,8 +21,14 @@ import DashboardLayout from "@/components/layouts/DashboardLayout.vue";
 export default class Dashboard extends Vue {
   user = this.$store.state.auth.user
 
+  mounted() {
+    if(!this.user.logged) {
+      this.$router.push("/")
+    }
+  }
+
   isAdmin(){
-      return this.user.rank === 0
+    return this.user.rank === 0
   }
   adminLayout() {
     if(this.isAdmin()){
