@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="device__info">
-        <button :disabled="!available" class="button button--iconl is-primary is-inverted">
+        <button @click="addToCart" :disabled="!available" class="button button--iconl is-primary is-inverted">
           Ajouter au panier
           <span class="icon is-small">
               <font-awesome-icon :icon="['fas', 'plus']" />
@@ -69,14 +69,27 @@ export default class Device extends Vue {
   @Ref() readonly modal!: Modal
 
   currentTime = "2017-06-01 08:30"
+
+  item = {
+    ref: this.reference
+  }
   /*
   newItemAdded(e: { target: HTMLInputElement }) {
     const category = e.target.
   }
   */
-  @Emit()
-  addToCart(category: string, device: string) {
-    return category.concat(device)
+  addToCart(event: Event){
+
+    this.$store.dispatch('addToCart', this.item)
+
+    /*
+    this.$api.post("/login", this.form).then((res) => {
+      console.log(res.data)
+    }).catch((error) => {
+      console.log(error)
+      element.preventDefault()
+    })
+    */
   }
   popModal() {
     this.modal.popModal()

@@ -5,8 +5,7 @@
         Category1
       </p>
       <ul class="menu-list">
-        <li><a>item1</a></li>
-        <li><a>item2</a></li>
+        <li v-for="item in cart" :key="item.ref"><a> {{ item.ref }}</a></li>
       </ul>
     </aside>
     <div class="cart__command control field has-icons-right ">
@@ -23,7 +22,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class CartLayout extends Vue {
-
+  cart = this.$store.state.cart.items
 }
 </script>
 
