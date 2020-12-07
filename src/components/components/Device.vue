@@ -73,23 +73,11 @@ export default class Device extends Vue {
   item = {
     ref: this.reference
   }
-  /*
-  newItemAdded(e: { target: HTMLInputElement }) {
-    const category = e.target.
-  }
-  */
+
   addToCart(event: Event){
 
     this.$store.dispatch('addToCart', this.item)
 
-    /*
-    this.$api.post("/login", this.form).then((res) => {
-      console.log(res.data)
-    }).catch((error) => {
-      console.log(error)
-      element.preventDefault()
-    })
-    */
   }
   popModal() {
     this.modal.popModal()
