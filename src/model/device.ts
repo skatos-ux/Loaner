@@ -1,23 +1,28 @@
-import { version } from "punycode";
+import Category from './category';
 
 export default class Device {
     private ref!: string;
-    // TODO : Ajouter la catégorie
+    private category!: Category;
     private name!: string;
     private version!: string;
-    private pictureUrl!: string;
+    private photo!: string;
     private phone!: string;
 
-    public Device(ref : string, name : string, version : string, pictureUrl : string, phone : string) {
+    constructor(ref : string, category: Category, name : string, version : string, photo : string, phone : string) {
         this.ref = ref;
+        this.category = category;
         this.name = name;
         this.version = version;
-        this.pictureUrl = pictureUrl;
+        this.photo = photo;
         this.phone = phone;
     }
 
     public getRef() : string {
         return this.ref;
+    }
+
+    public getCategory() : Category {
+        return this.category;
     }
 
     public getName() : string {
@@ -28,8 +33,8 @@ export default class Device {
         return this.version;
     }
 
-    public getPictureURL() : string {
-        return this.pictureUrl;
+    public getPhoto() : string {
+        return this.photo;
     }
 
     public getPhone() : string {
@@ -43,6 +48,10 @@ export default class Device {
         }
 
         this.ref = ref;
+    }
+
+    public setCategory(category : Category) : void {
+        this.category = category;
     }
 
     public setName(name : string) : void {
@@ -63,13 +72,13 @@ export default class Device {
         this.version = version;
     }
 
-    public setPictureURL(pictureUrl : string) : void {
+    public setPhoto(photo : string) : void {
         
-        if(pictureUrl.length == 0) {
-            throw new Error("Invalid picture");
+        if(photo.length == 0) {
+            throw new Error("Invalid photo");
         }
 
-        this.pictureUrl = pictureUrl;
+        this.photo = photo;
     }
 
     public setPhone(phone : string) : void {
