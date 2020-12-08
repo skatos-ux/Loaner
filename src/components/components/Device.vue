@@ -28,10 +28,10 @@
         <p class="modal-card-title">{{ name }}</p>
         <div class="modal__sim">
           <label class="label is-size-7 has-text-left	">SIM:</label>
-          <span v-show="available" class="icon is-small success">
+          <span v-show="sim" class="icon is-small success">
               <font-awesome-icon :icon="['fas', 'check']" />
-            </span>
-          <span v-show="!available" class="icon is-small fail">
+          </span>
+          <span v-show="!sim" class="icon is-small fail">
               <font-awesome-icon :icon="['fas', 'times']" />
           </span>
         </div>
@@ -62,6 +62,7 @@ export default class Device extends Vue {
   @Prop() private category!: string
   @Prop() private reference!: string
   @Prop() private version!: string
+  @Prop() private sim!: boolean
   @Prop() private available!: boolean
   @Prop() private photo!: string
   @Prop() private rank!: number
@@ -71,13 +72,16 @@ export default class Device extends Vue {
   currentTime = "2017-06-01 08:30"
 
   item = {
-    ref: this.reference
+    identifier: null,
+    name: this.name,
+    version: this.version,
+    reference: this.reference,
+    loanStart: 0,
+    loanEnd: 1
   }
 
-  addToCart(event: Event){
-
+  addToCart(){
     this.$store.dispatch('addToCart', this.item)
-
   }
   popModal() {
     this.modal.popModal()

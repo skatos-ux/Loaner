@@ -1,17 +1,23 @@
 export const cart = {
     state: {
         items: [
-            {ref: "item1"}
         ]
     },
     mutations: {
         addItem(state: any, item: any) {
+            item.identifier = state.items.length
             state.items.push(item)
+        },
+        remItem(state: any, item: any) {
+            state.items.splice(item.identifier, 1) // TODO: add ids on cart items
         }
     },
     actions: {
         addToCart(context: any, item: any) {
             context.commit('addItem', item)
+        },
+        remFromCart(context: any, item: any) {
+            context.commit('remItem', item)
         }
     }
 }

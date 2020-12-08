@@ -26,6 +26,7 @@ export default new Vuex.Store({
               name: "item1",
               ref: "a",
               version: "1.0",
+              sim: true,
               photo: "https://bulma.io/images/placeholders/1280x960.png",
               available: true
             }
@@ -38,6 +39,7 @@ export default new Vuex.Store({
               name: "item2",
               ref: "b",
               version: "1.0",
+              sim: true,
               photo: "https://bulma.io/images/placeholders/1280x960.png",
               available: false
             }
@@ -50,6 +52,7 @@ export default new Vuex.Store({
               name: "item3",
               ref: "c",
               version: "1.0",
+              sim: true,
               photo: "https://bulma.io/images/placeholders/1280x960.png",
               available: true
             }
@@ -62,6 +65,7 @@ export default new Vuex.Store({
               name: "item4",
               ref: "d",
               version: "1.0",
+              sim: true,
               photo: "https://bulma.io/images/placeholders/1280x960.png",
               available: false
             }

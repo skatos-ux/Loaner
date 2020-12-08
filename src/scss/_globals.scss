@@ -16,3 +16,18 @@ section {
     border-radius: 0 0 $section-border-radius $section-border-radius;
   }
 }
+
+.success {
+  color: green;
+}
+.fail {
+  color: red;
+}
+.fail--hover {
+  &:hover {
+    span {
+      color: red;
+      pointer-events: auto;
+    }
+  }
+}
