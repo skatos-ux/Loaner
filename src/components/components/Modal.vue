@@ -22,8 +22,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class Modal extends Vue {
   @Prop() private id!: string
 
-  //TODO: change refs to slots to allow different types of modals for the "Add to cart" modal
-
   public popModal(): any {
     document.getElementById(this.id)!.className += " is-active"
   }

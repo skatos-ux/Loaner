@@ -9,7 +9,7 @@ export const cart = {
             state.items.push(item)
         },
         remItem(state: any, item: any) {
-            state.items.splice(item.identifier, 1) // TODO: add ids on cart items
+            state.items.splice(item.identifier, 1)
         }
     },
     actions: {
