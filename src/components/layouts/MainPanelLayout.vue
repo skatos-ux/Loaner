@@ -14,8 +14,8 @@
       </div>
     </div>
     <div class="mainpanel__devicelist">
-      <DeviceCategoryLayout v-for="category in categories" :key="category.name" :title="category.name">
-        <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :sim="device.sim" :available="device.available" :photo="device.photo" :rank="user.rank"></Device>
+      <DeviceCategoryLayout v-for="(category, index) in categories" :key="category.name" :title="category.name">
+        <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :sim="device.sim" :available="device.available" :photo="device.photo" :rank="user.rank" :pikaday="index * 2"></Device>
       </DeviceCategoryLayout>
     </div>
   </section>

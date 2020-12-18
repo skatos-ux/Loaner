@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 library.add(fas)
 
-//Axios
+// Axios
 Vue.use({
   install (Vue) {
     Vue.prototype.$api = axios.create({

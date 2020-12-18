@@ -17,7 +17,7 @@
         <button @click="addToCart" :disabled="!available" class="button button--iconl is-primary is-inverted">
           Ajouter au panier
           <span class="icon is-small">
-              <font-awesome-icon :icon="['fas', 'plus']" />
+            <font-awesome-icon :icon="['fas', 'plus']" />
           </span>
         </button>
       </div>
@@ -52,8 +52,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Ref, Emit, Vue} from 'vue-property-decorator';
+import { Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import Modal from "@/components/components/Modal.vue";
+
 @Component({
   components: {Modal}
 })
@@ -86,7 +87,11 @@ export default class Device extends Vue {
   popModal() {
     this.modal.popModal()
   }
-
+  /*
+  mounted() {
+    const picker = new Pikaday({ field: document.getElementById('datepicker' + this.pikaday) });
+  }
+  */
 }
 </script>
 

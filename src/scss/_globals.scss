@@ -16,7 +16,9 @@ section {
     border-radius: 0 0 $section-border-radius $section-border-radius;
   }
 }
-
+.is-target {
+  pointer-events: auto;
+}
 .success {
   color: green;
 }
