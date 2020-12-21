@@ -10,6 +10,8 @@ abstract class DAO<T> {
     public abstract rowToModel(row: any) : T;
 
     // Pour obtenir une seule ligne
+    // sqlQuery : Requête SQL
+    // params : Paramètre de la requête préparée, peut être ignoré
     protected getOneRow(sqlQuery : string, params : any = []) : Promise<T> {
         return new Promise((resolve, reject) => {
             db.get(sqlQuery, params, (err, row) => {
@@ -23,6 +25,8 @@ abstract class DAO<T> {
     }
 
     // Pour obtenir toutes les lignes
+    // sqlQuery : Requête SQL
+    // params : Paramètre de la requête préparée, peut être ignoré
     protected getAllRows(sqlQuery : string, params : any = []) : Promise<T[]> {
         return new Promise((resolve, reject) => {
             db.all(sqlQuery, params, (err, rows) => {
@@ -36,6 +40,8 @@ abstract class DAO<T> {
     }
 
     // Pour simplement exécuter une requête
+    // sqlQuery : Requête SQL
+    // params : Paramètre de la requête préparée, peut être ignoré
     protected runQuery(sqlQuery : string, params : any) : Promise<void> {
         return new Promise((resolve, reject) => {
             db.run(sqlQuery, params, err => {

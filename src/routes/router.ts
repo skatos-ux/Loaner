@@ -7,7 +7,7 @@ import auth_route from './auth_route';
 /*
 Racine : /api
 
-Utilisateurs : /users
+Utilisateurs : /users - Lilian
  Coté admin :
     - Liste de tous les utilisateurs    GET /all
     - Obtenir les informations d'un utilisateur (pas sur)     GET /:id_utilisateur
@@ -16,7 +16,7 @@ Utilisateurs : /users
     - Supprimer un utilisateur          DELETE /delete/:id_utilisateur
     - Historique des emprunts pour un utilisateur   GET /:id_utilisateur/history
 
-Matériels : /devices
+Matériels : /devices - Milan / Yohan
     - Liste de tous les matériels   GET /all
     - Obtenir les informations d'un matériel (pas sur)     GET /:id_materiel
     - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all/nom_filtre/:filtre/...
@@ -32,13 +32,13 @@ Matériels : /devices
         - Historique des emprunts pour un matériel      GET /:id_materiel/history (token dans le corps de la requête)
         
 
-Catégories : /category
+Catégories : /category - Milan
     Coté admin :
         - Ajouter des catégories    PUT /add/:nom_categorie (token dans le corps de la requête)
         - Modifier les catégories   POST /modify (token + informations sur le catégorie dans le corps de la requête)
         - Supprimer des catégories  DELETE /delete/:id_category (token dans le corps de la requête)
 
-Authentification : /auth
+Authentification : /auth - Yohan
     - Faire s'authentifier un utilisateur (renvoie un token de connexion)   POST /auth/login (informations d'authentification de l'utilisateur)
     - Faire se déconnecter un utilisateur   POST /auth/logout   (token dans le corps de la requête)
 */

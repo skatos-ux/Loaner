@@ -1,5 +1,6 @@
 import Category from './category';
 
+// TODO : Ajouter available
 export default class Device {
     private ref!: string;
     private category!: Category;
