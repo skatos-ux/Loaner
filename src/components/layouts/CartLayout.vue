@@ -5,7 +5,7 @@
         Panier
       </p>
       <ul class="menu-list">
-        <CartItem v-for="item in cart" :key="item.ref" :identifier="item.index" :name="item.name" :version="item.version" :reference="item.reference" :loanStart="item.loanStart" :loanEnd="item.loanEnd"></CartItem>
+        <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference" :loanStart="item.loanStart" :loanEnd="item.loanEnd"></CartItem>
       </ul>
     </aside>
     <div class="cart__command control field has-icons-right ">
@@ -20,10 +20,9 @@
       </template>
 
       <template v-slot:body>
-        <div>test</div>
-        <div>test</div>
-        <div>test</div>
-        <div>test</div>
+        <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference" :loanStart="item.loanStart" :loanEnd="item.loanEnd">
+          hello
+        </CartItem>
       </template>
     </Modal>
   </section>

@@ -1,12 +1,16 @@
 <template>
-  <li>
-    <a class="control has-icons-right fail--hover">
-      {{ name }}
-      <span @click="remFromCart" class="icon is-small is-right test">
-        <font-awesome-icon :icon="['fas', 'trash-alt']" />
-      </span>
-    </a>
-  </li>
+  <div>
+    <slot>
+      <li>
+        <a class="control has-icons-right fail--hover">
+          {{ name }}
+          <span @click="remFromCart" class="icon is-small is-right test">
+            <font-awesome-icon :icon="['fas', 'trash-alt']" />
+          </span>
+        </a>
+      </li>
+    </slot>
+  </div>
 </template>
 
 <script lang="ts">
@@ -18,8 +22,8 @@ export default class CartItem extends Vue {
   @Prop() private name!: string;
   @Prop() private version!: string;
   @Prop() private reference!: string;
-  @Prop() private loanStart!: number;
-  @Prop() private loanEnd!: number;
+  @Prop() private loanStart: number | undefined;
+  @Prop() private loanEnd: number | undefined;
 
   item = {
     identifier: this.identifier,
@@ -29,7 +33,8 @@ export default class CartItem extends Vue {
     loanStart: this.loanStart,
     loanEnd: this.loanEnd
   }
-  remFromCart(event: { target: HTMLInputElement}) {
+
+  remFromCart() {
     this.$store.dispatch('remFromCart', this.item)
   }
 

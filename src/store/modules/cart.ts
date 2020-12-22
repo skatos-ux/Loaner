@@ -1,7 +1,6 @@
 export const cart = {
     state: {
-        items: [
-        ]
+        items: []
     },
     mutations: {
         addItem(state: any, item: any) {
