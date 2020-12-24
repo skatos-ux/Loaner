@@ -7,3 +7,5 @@ CREATE TABLE device(ref CHAR(5), idCategory INTEGER, name VARCHAR(30), version V
 -- A completer
 
 INSERT INTO device VALUES("AN001", 1, "Samsung Galaxy S1000", "1.0", "", 0123456789);
+
+INSERT INTO user VALUES("0", "Lilian", "Bethus", "lilianb@mail.fr", 1, "fromage");
