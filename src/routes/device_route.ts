@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { send } from 'process';
 
 import DeviceController from '../controller/controller_device';
 
@@ -12,9 +13,20 @@ router.get('/all', (req, res) => {
     controller.getAll(res);
 });
 
-router.get('/:id_utilisateur/history', (req, res) => {
+router.get('/:id_device', (req,res) => {
+    const idDevice = req.params.id_device;
+    controller.getInfoDevice(res, idDevice);
+});
+
+router.post('/:id_device/borrow/:id_user', (req,res) => {
+    const idDevice = req.params.id_device;
+    const idUser = req.params.id_user;
+    controller.borrowDevice(res, idDevice, idUser);
+});
+
+/*router.get('/:id_utilisateur/history', (req, res) => {
     const idUser = req.params.id_utilisateur || null;
     res.send(idUser);
-});
+});*/
 
 export default router;
