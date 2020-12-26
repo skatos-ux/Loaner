@@ -40,7 +40,6 @@ Catégories : /category - Milan
 
 Authentification : /auth - Yohan
     - Faire s'authentifier un utilisateur (renvoie un token de connexion)   POST /auth/login (informations d'authentification de l'utilisateur)
-    - Faire se déconnecter un utilisateur   POST /auth/logout   (token dans le corps de la requête)
 */
 
 const router = express.Router();

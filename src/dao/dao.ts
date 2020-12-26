@@ -5,18 +5,20 @@ const db = new sqlite.Database('database.db');
 
 abstract class DAO<T> {
 
-    // A faire implémenter par la classe fille
-    // Permet de transformer une ligne de la base de donnée en objet du modèle
+    /*  A faire implémenter par la classe fille
+        Permet de transformer une ligne de la base de donnée en objet du modèle */
     public abstract rowToModel(row: any) : T;
 
-    // Pour obtenir une seule ligne
-    // sqlQuery : Requête SQL
-    // params : Paramètre de la requête préparée, peut être ignoré
+    /*  Pour obtenir une seule ligne
+        sqlQuery : Requête SQL
+        params : Paramètre de la requête préparée, peut être ignoré */
     protected getOneRow(sqlQuery : string, params : any = []) : Promise<T> {
         return new Promise((resolve, reject) => {
             db.get(sqlQuery, params, (err, row) => {
                 if (err) {
                     reject(err);
+                } else if(row == null) {
+                    reject(new Error("Cannot find results for this query"));
                 } else {
                     resolve(this.rowToModel(row));
                 }
@@ -24,9 +26,9 @@ abstract class DAO<T> {
         });
     }
 
-    // Pour obtenir toutes les lignes
-    // sqlQuery : Requête SQL
-    // params : Paramètre de la requête préparée, peut être ignoré
+    /*  Pour obtenir toutes les lignes
+        sqlQuery : Requête SQL
+        params : Paramètre de la requête préparée, peut être ignoré */
     protected getAllRows(sqlQuery : string, params : any = []) : Promise<T[]> {
         return new Promise((resolve, reject) => {
             db.all(sqlQuery, params, (err, rows) => {
@@ -39,9 +41,9 @@ abstract class DAO<T> {
         });
     }
 
-    // Pour simplement exécuter une requête
-    // sqlQuery : Requête SQL
-    // params : Paramètre de la requête préparée, peut être ignoré
+    /*  Pour simplement exécuter une requête
+        sqlQuery : Requête SQL
+        params : Paramètre de la requête préparée, peut être ignoré */
     protected runQuery(sqlQuery : string, params : any) : Promise<void> {
         return new Promise((resolve, reject) => {
             db.run(sqlQuery, params, err => {

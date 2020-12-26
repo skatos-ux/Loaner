@@ -1,22 +1,23 @@
 export default class User {
-    private idUser!: number;
+    private id!: number;
     private firstName!: string;
     private lastName!: string;
     private email!: string;
     private admin!: number;
-    // private password!: string;
+    private password!: string;
 
-    constructor(idUser: number, firstName: string, lastName: string, email: string, admin: number){
-      this.idUser = idUser;
+    constructor(id: number, firstName: string, lastName: string, email: string, admin: number, password : string){
+      this.id = id;
       this.firstName = firstName;
       this.lastName = lastName;
       this.email = email;
       this.admin = admin;
+      this.password = password;
     }
 
     //getters
-    public getIdUser() : number {
-      return this.idUser;
+    public getId() : number {
+      return this.id;
     }
 
     public getFirstName() : string {
@@ -31,13 +32,17 @@ export default class User {
       return this.email;
     }
 
-    public getAdmin() : number {
+    public isAdmin() : number {
       return this.admin;
     }
 
+    public getPassword() : string {
+      return this.password;
+    }
+
     //setters
-    public setIdUser(idUser : number) : void {
-      this.idUser = idUser;
+    public setId(id : number) : void {
+      this.id = id;
     }
 
     public setFirstName(firstName : string) : void {

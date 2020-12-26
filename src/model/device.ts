@@ -1,6 +1,5 @@
 import Category from './category';
 
-// TODO : Ajouter available
 export default class Device {
     private ref!: string;
     private category!: Category;
@@ -8,14 +7,16 @@ export default class Device {
     private version!: string;
     private photo!: string;
     private phone!: string;
+    private available!: boolean;
 
-    constructor(ref : string, category: Category, name : string, version : string, photo : string, phone : string) {
+    constructor(ref : string, category: Category, name : string, version : string, photo : string, phone : string, available: boolean) {
         this.ref = ref;
         this.category = category;
         this.name = name;
         this.version = version;
         this.photo = photo;
         this.phone = phone;
+        this.available = available;
     }
 
     public getRef() : string {
@@ -42,6 +43,11 @@ export default class Device {
         return this.phone;
     }
 
+    public isAvailable() : boolean {
+        return this.available;
+    }
+
+    // A laisser ?
     public setRef(ref : string) : void {
 
         if(ref.length != 5) {
@@ -51,6 +57,7 @@ export default class Device {
         this.ref = ref;
     }
 
+    // A laisser ?
     public setCategory(category : Category) : void {
         this.category = category;
     }

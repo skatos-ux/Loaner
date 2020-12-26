@@ -7,16 +7,17 @@ const stubCategory = new Category(1, "Test");
 
 export default class DAODevice extends DAO<Device> {
 
+    // TODO : Gerer category + available
     public rowToModel(row: any): Device {
-        return new Device(row.ref, stubCategory, row.name, row.version, row.photo, row.phone);
+        return new Device(row.ref, stubCategory, row.name, row.version, row.photo, row.phone, false);
     }
 
     public getAll() : Promise<Device[]> {
         return this.getAllRows("SELECT * FROM device");
     }
 
-    public getInfoDevice(idDevice : String) : Promise<Device> {
-        return this.getOneRow("SELECT * FROM device where ref='"+idDevice+"'");
+    public get(idDevice : String) : Promise<Device> {
+        return this.getOneRow("SELECT * FROM device where ref=?", idDevice);
     }
 
     public borrowDevice(idDevice : String, idUser : String) : Promise<void>{
