@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="device__info">
-        <button @click="addToCart" :disabled="!available" class="button button--iconl is-primary is-inverted">
+        <button @click="addToCart" :disabled="!available" class="button is-primary is-inverted">
           Ajouter au panier
           <span class="icon is-small">
             <font-awesome-icon :icon="['fas', 'plus']" />
@@ -54,6 +54,7 @@
 <script lang="ts">
 import { Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import Modal from "@/components/components/Modal.vue";
+import Litepicker from "litepicker";
 
 @Component({
   components: {Modal}
@@ -65,18 +66,18 @@ export default class Device extends Vue {
   @Prop() private version!: string
   @Prop() private sim!: boolean
   @Prop() private available!: boolean
+  @Prop() private lockDays!: string[]
   @Prop() private photo!: string
   @Prop() private rank!: number
 
   @Ref() readonly modal!: Modal
-
-  currentTime = "2017-06-01 08:30"
 
   item = {
     identifier: null,
     name: this.name,
     version: this.version,
     reference: this.reference,
+    lockDays: this.lockDays,
     loanStart: 0,
     loanEnd: 1
   }
@@ -87,11 +88,7 @@ export default class Device extends Vue {
   popModal() {
     this.modal.popModal()
   }
-  /*
-  mounted() {
-    const picker = new Pikaday({ field: document.getElementById('datepicker' + this.pikaday) });
-  }
-  */
+
 }
 </script>
 
@@ -122,6 +119,7 @@ export default class Device extends Vue {
       }
     }
     &__info {
+      width: 25%;
       margin-right: 10px;
       span {
         display: table-cell;

@@ -2,7 +2,7 @@
   <section class="mainpanel section--1">
     <div class="mainpanel__searchbar section--1 box">
       <div class="mainpanel__searchbar--bar">
-        <input class="input is-rounded" type="text" placeholder="Rechercher un appareil">
+        <input class="input is-rounded" v-model="search" type="text" placeholder="Rechercher une catégorie">
       </div>
       <div class="mainpanel__searchbar--filters">
         <div v-for="filter in filters" :key="filter.name" class="field">
@@ -14,24 +14,126 @@
       </div>
     </div>
     <div class="mainpanel__devicelist">
-      <DeviceCategoryLayout v-for="(category, index) in categories" :key="category.name" :title="category.name">
-        <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :sim="device.sim" :available="device.available" :photo="device.photo" :rank="user.rank" :pikaday="index * 2"></Device>
+      <div v-if="isAdmin" class="mainpanel__devicelist--options">
+        <button @click="popCategoryModal" class="button  is-size-7 is-primary is-inverted">
+          Ajouter categorie
+        <span class="icon is-small">
+            <font-awesome-icon :icon="['fas', 'folder-plus']" />
+          </span>
+        </button>
+        <button @click="popDeviceModal" class="button is-size-7 is-primary is-inverted">
+          Ajouter appareil
+          <span class="icon is-small">
+            <font-awesome-icon :icon="['fas', 'plus-square']" />
+          </span>
+        </button>
+        <Modal id="addCatModal" ref="addCategoryModal">
+          <template v-slot:header>
+            <p class="modal-card-title">Ajouter une catégorie</p>
+          </template>
+
+          <template v-slot:body>
+            <div class="modal__body--wrapper">
+              <input type="text" class="input" placeholder="Ordinateurs, téléphones...">
+            </div>
+            <input @click="addCategory" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
+          </template>
+        </Modal>
+        <Modal id="addDevModal" ref="addDeviceModal">
+          <template v-slot:header>
+            <p class="modal-card-title">Ajouter un appareil</p>
+          </template>
+
+          <template v-slot:body>
+
+            <div class="modal__body--wrapper">
+              <div class="field">
+                <div class="control has-icons-left">
+                  <div class="select">
+                    <select>
+                      <option v-for="category in categories" :key="category.name"> {{ category.name}} </option>
+                    </select>
+                  </div>
+                  <div class="icon is-small is-left">
+                    <font-awesome-icon :icon="['fas', 'folder']" />
+                  </div>
+                </div>
+              </div>
+              <input id="deviceName" class="input" type="text" required placeholder="Nom de l'appareil">
+              <input id="deviceRef" class="input" type="text" required placeholder="Référence">
+              <input id="deviceVer" class="input" type="text" required placeholder="Version">
+            </div>
+            <div class="modal__body--wrapper">
+              <input id="devicePhoto" class="input" type="file" accept="image/x-png,image/jpeg" required placeholder="Image" value="test">
+              <input id="devicePhone" class="input" type="tel" required placeholder="Numéro de téléphone">
+            </div>
+            <input @click="addDevice" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
+          </template>
+        </Modal>
+
+      </div>
+      <DeviceCategoryLayout v-for="category in searchedCategories" :key="category.name" :title="category.name">
+        <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :sim="device.sim" :available="device.available" :lockDays="device.lockDays" :photo="device.photo" :rank="user.rank"></Device>
       </DeviceCategoryLayout>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import DeviceCategoryLayout from "@/components/layouts/DeviceCategoryLayout.vue";
 import Device from "@/components/components/Device.vue";
+import Modal from "@/components/components/Modal.vue";
 @Component({
-  components: {Device, DeviceCategoryLayout}
+  components: {Device, DeviceCategoryLayout, Modal}
 })
 export default class MainPanelLayout extends Vue {
+  @Ref() readonly addCategoryModal!: Modal
+  @Ref() readonly addDeviceModal!: Modal
+
   filters = this.$store.state.web.filters
   categories = this.$store.state.db.deviceCategories
   user = this.$store.state.auth.user
+  search = ""
+
+
+
+  isAdmin(){
+    return this.user.rank === 0
+  }
+  popCategoryModal() {
+    this.addCategoryModal.popModal()
+  }
+  popDeviceModal() {
+    this.addDeviceModal.popModal()
+  }
+
+  addCategory() {
+    console.log("add category")
+  }
+
+  addDevice() {
+    console.log("add device")
+  }
+
+  get searchedCategories() {
+    let search = this.search
+    let categories = this.categories
+
+    if(!search) {
+      return categories
+    }
+
+    search = search.toLowerCase()
+    categories = categories.filter((category: any) =>{
+      if(category.name.toLowerCase().indexOf(search) !== -1) {
+        return category
+      }
+    })
+
+    return categories
+
+  }
 }
 </script>
 
@@ -63,6 +165,25 @@ export default class MainPanelLayout extends Vue {
     &__devicelist {
       margin: 5px;
       overflow: auto;
+      &--options {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        margin-right: 30px;
+        button {
+          margin-left: 10px;
+          margin-top: 5px;
+          &:focus {
+            box-shadow: none !important;
+          }
+          span {
+            display: table-cell;
+            vertical-align: middle;
+            margin-left: 5px !important;
+          }
+        }
+      }
     }
   }
 </style>
