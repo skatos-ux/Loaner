@@ -13,4 +13,5 @@ CREATE TABLE reservation(id INTEGER PRIMARY KEY, refDevice CHAR(5), idUser CHAR(
 -- A completer
 
 INSERT INTO device VALUES("AN001", 1, "Samsung Galaxy S1000", "1.0", "", 0123456789);
-INSERT INTO user VALUES(1, "milan", "pasquereau", "milanpsqr@gmail.com", 1, "password");
+
+INSERT INTO user VALUES("0", "Lilian", "Bethus", "lilianb@mail.fr", 1, "fromage");
