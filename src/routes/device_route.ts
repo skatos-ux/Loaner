@@ -33,7 +33,7 @@ router.put('/add', (req,res) =>{
     const version = "1.0";
     const photo = "";
     const phone = "0234572281";
-    const device = new Device(idDevice, new Category(1,nameCategory), nameDevice, version, photo, phone);
+    const device = new Device(idDevice, new Category(1,nameCategory), nameDevice, version, photo, phone, false);
     controller.addDevice(res, device);
 });
 
