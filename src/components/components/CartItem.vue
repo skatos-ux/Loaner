@@ -4,7 +4,7 @@
       <li>
         <a class="control has-icons-right fail--hover">
           {{ name }}
-          <span @click="remFromCart" class="icon is-small is-right test">
+          <span @click="remFromCart" class="icon is-small is-right">
             <font-awesome-icon :icon="['fas', 'trash-alt']" />
           </span>
         </a>

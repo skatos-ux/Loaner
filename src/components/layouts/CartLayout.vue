@@ -9,7 +9,7 @@
       </ul>
     </aside>
     <div class="cart__command control field has-icons-right ">
-      <input @click="popModal" class="button is-success is-fullwidth is-size-6" type="button" value="Commander">
+      <input :disabled="checkEmpty" @click="popModal" class="button is-success is-fullwidth is-size-6" type="button" value="Commander">
       <span class="icon is-small is-right">
           <font-awesome-icon :icon="['fas', 'shopping-cart']" />
       </span>
@@ -21,8 +21,14 @@
 
       <template v-slot:body>
         <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference" :loanStart="item.loanStart" :loanEnd="item.loanEnd">
-          hello
+          <div class="cart__modal--item">
+            {{ item.name }}
+            <input :id="'datepicker' + index" class="input" type="text" required placeholder="date de réservation">
+          </div>
         </CartItem>
+        <div class="cart__modal--footer">
+          <input @click="command" class="button is-success is-fullwidth is-size-6" type="button" value="Commander">
+        </div>
       </template>
     </Modal>
   </section>
@@ -32,6 +38,7 @@
 import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import CartItem from "@/components/components/CartItem.vue";
 import Modal from "@/components/components/Modal.vue";
+import Litepicker from 'litepicker';
 @Component({
   components: {CartItem, Modal}
 })
@@ -40,8 +47,35 @@ export default class CartLayout extends Vue {
 
   cart = this.$store.state.cart.items
 
+  get checkEmpty () {
+    if(this.cart.length){
+      return false
+    }
+    return true
+  }
   popModal() {
     this.modal.popModal();
+
+    document.querySelectorAll('.litepicker').forEach(function(litepicker){
+      litepicker.remove()
+    })
+
+    this.cart.forEach((item: any, index: number) => {
+      new Litepicker({
+        element: document.getElementById("datepicker" + index),
+        format: "D MMMM YYYY",
+        lang: "fr-FR",
+        numberOfMonths: 2,
+        numberOfColumns: 2,
+        singleMode: false,
+        lockDays: item.lockDays,
+        disallowLockDaysInRange: true
+      });
+    });
+  }
+
+  command() {
+    console.log("commanded")
   }
 }
 </script>
@@ -59,6 +93,28 @@ export default class CartLayout extends Vue {
     margin: $dashboard-margin;
     padding: 0 10px 0 10px;
 
+    &__modal {
+      &--item {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        input {
+          max-width: 305px;
+          flex-grow: 2;
+        }
+      }
+      &--footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        input {
+          max-width: 305px;
+        }
+      }
+    }
     &__menu {
       margin-top: 10px;
     }
