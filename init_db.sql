@@ -2,10 +2,10 @@
 PRAGMA foreign_keys = ON;
 
 -- Suppression des anciennes tables
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS category;
-DROP TABLE IF EXISTS device;
 DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS device;
+DROP TABLE IF EXISTS category;
 
 -- Création des tables
 CREATE TABLE user(id CHAR(7) PRIMARY KEY, firstName VARCHAR(30), lastName VARCHAR(15), mail VARCHAR(255), admin INTEGER(1), password VARCHAR(255));

@@ -1,7 +1,8 @@
 import { verbose } from 'sqlite3';
+import * as config from '../../config.json';
 
 const sqlite = verbose();
-const db = new sqlite.Database('database.db');
+const db = new sqlite.Database(config.dbFile);
 
 abstract class DAO<T> {
 
