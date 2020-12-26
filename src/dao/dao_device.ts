@@ -21,8 +21,6 @@ export default class DAODevice extends DAO<Device> {
     }
 
     public borrowDevice(idDevice : String, idUser : String) : Promise<void>{
-        //return this.runQuery('insert into device values(?,?,?,?,?,?)',['a',2,'a','a','a',2]);
-        
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth()+1; 
@@ -39,5 +37,9 @@ export default class DAODevice extends DAO<Device> {
         }
         var date = day+'/'+month+'/'+yyyy;
         return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[null,idDevice,idUser,date,null,null]);
+    }
+
+    public addDevice(device : Device) : Promise<void>{
+        return this.runQuery('insert into device values(?,?,?,?,?,?)',[device.getRef(),device.getCategory()]);
     }
 }
