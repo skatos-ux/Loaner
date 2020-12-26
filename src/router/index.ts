@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Login from "@/views/Login.vue";
 import Dashboard from "@/views/Dashboard.vue";
+import MainPage from "@/views/MainPage.vue";
+import Users from "@/views/Users.vue";
 
 Vue.use(VueRouter)
 
@@ -12,9 +14,18 @@ const routes: Array<RouteConfig> = [
     component: Login
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard
+    path: '/mainpage',
+    name: 'mainpage',
+    component: MainPage,
+    children: [
+    {
+      path: 'dashboard',
+      component: Dashboard
+    },
+    {
+      path: 'users',
+      component: Users
+    }]
   },
   {
     path: '/about',

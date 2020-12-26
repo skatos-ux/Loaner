@@ -20,56 +20,80 @@ export default new Vuex.Store({
     db: {
       deviceCategories: [
         {
-          name: "category1",
+          name: "Ordinateurs",
           devices: [
             {
-              name: "item1",
-              ref: "a",
+              name: "pc patou",
+              ref: "XSR3",
               version: "1.0",
               sim: true,
               photo: "https://bulma.io/images/placeholders/1280x960.png",
-              available: true
+              available: true,
+              lockDays: [['2020-12-2', '2020-12-10']]
             }
           ]
         },
         {
-          name: "category2",
+          name: "Téléphones boulot",
           devices: [
             {
-              name: "item2",
-              ref: "b",
+              name: "tel pat boulot",
+              ref: "AMAMAMA",
               version: "1.0",
               sim: true,
               photo: "https://bulma.io/images/placeholders/1280x960.png",
-              available: false
+              available: false,
+              lockDays: [['2020-12-2', '2020-12-10']]
             }
           ]
         },
         {
-          name: "category3",
+          name: "Téléphones maison",
           devices: [
             {
-              name: "item3",
-              ref: "c",
+              name: "tel pat et lulu",
+              ref: "cCACACA",
               version: "1.0",
               sim: true,
               photo: "https://bulma.io/images/placeholders/1280x960.png",
-              available: true
+              available: true,
+              lockDays: [['2020-12-2', '2020-12-10']]
             }
           ]
         },
         {
-          name: "category4",
+          name: "Sac a merde de pat",
           devices: [
             {
-              name: "item4",
-              ref: "d",
+              name: "Vibro du fiston",
+              ref: "VVVVVVV",
               version: "1.0",
               sim: true,
               photo: "https://bulma.io/images/placeholders/1280x960.png",
-              available: false
+              available: false,
+              lockDays: [['2020-12-2', '2020-12-10']]
             }
           ]
+        }
+      ],
+      users: [
+        {
+          identifier: 1,
+          name: "toto",
+          surname: "pipe",
+          role: "useradmin"
+        },
+        {
+          identifier: 2,
+          name: "patoune",
+          surname: "pipe",
+          role: "useradmin"
+        },
+        {
+          identifier: 3,
+          name: "pipouche",
+          surname: "pipe",
+          role: "useradmin"
         }
       ]
     }
