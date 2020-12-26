@@ -8,15 +8,15 @@ export default class DeviceController extends Controller {
 
     private dao = new DAODevice();
 
-    public async getAll(res : Response) {
+    public async getAll(res : Response) : Promise<void> {
         this.dao.getAll().then(this.findSuccess(res)).catch(this.findError(res));
     }
 
-    public async getInfoDevice(res : Response, idDevice : String){
+    public async getInfoDevice(res : Response, idDevice : string) : Promise<void> {
         this.dao.get(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
-    public async borrowDevice(res : Response, idDevice : String, idUser : String) {
+    public async borrowDevice(res : Response, idDevice : string, idUser : string) : Promise<void> {
         this.dao.borrowDevice(idDevice, idUser).then(this.findSuccess(res)).catch(this.findError(res));
     }
 

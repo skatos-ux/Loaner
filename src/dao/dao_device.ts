@@ -16,17 +16,18 @@ export default class DAODevice extends DAO<Device> {
         return this.getAllRows("SELECT * FROM device");
     }
 
-    public get(idDevice : String) : Promise<Device> {
+    public get(idDevice : string) : Promise<Device> {
         return this.getOneRow("SELECT * FROM device where ref=?", idDevice);
     }
 
-    public borrowDevice(idDevice : String, idUser : String) : Promise<void>{
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth()+1; 
-        var yyyy = new String(today.getFullYear());
-        var day = new String(dd);
-        var month = new String(mm);
+    public borrowDevice(idDevice : string, idUser : string) : Promise<void> {
+        // Pour améliorer ca avec SQLite : https://sqlite.org/lang_datefunc.html
+        const today = new Date();
+        const dd = today.getDate();
+        const mm = today.getMonth()+1; 
+        const yyyy = new String(today.getFullYear());
+        let day = new String(dd);
+        let month = new String(mm);
         if(dd<10) 
         {
             day = '0'.concat(dd.toString());
@@ -35,7 +36,7 @@ export default class DAODevice extends DAO<Device> {
         {
             month = '0'.concat(mm.toString());
         }
-        var date = day+'/'+month+'/'+yyyy;
+        const date = day+'/'+month+'/'+yyyy;
         return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[null,idDevice,idUser,date,null,null]);
     }
 

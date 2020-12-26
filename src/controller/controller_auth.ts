@@ -13,7 +13,7 @@ export default class AuthController extends Controller {
 
     private dao = new DAOUser();
     
-    public async authentificate(firstName : string, lastName : string, password : string, req : Request, res : Response) {
+    public async authentificate(firstName : string, lastName : string, password : string, req : Request, res : Response) : Promise<void> {
 
         if(this.hasToken(req)) {
             const callback = this.findError(res);
@@ -60,7 +60,7 @@ export default class AuthController extends Controller {
 
         const userInfo = jwt.verify(token, config.jwtSecret);
 
-        if(!!userInfo) {
+        if(userInfo == null) {
             // ...
             return false;
         }

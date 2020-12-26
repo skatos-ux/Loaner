@@ -8,11 +8,11 @@ export default class CategoryController extends Controller {
     public async getAll(res : Response) : Promise<void> {
         this.dao.getAll().then(this.findSuccess(res)).catch(this.findError(res));
     }
-    public async addCategory(res : Response, name : String) : Promise<void> {
+    public async addCategory(res : Response, name : string) : Promise<void> {
         this.dao.addCategory(name).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
-    public async deleteCategory(res : Response, idCategory : String) : Promise<void> {
+    public async deleteCategory(res : Response, idCategory : string) : Promise<void> {
         this.dao.deleteCategory(idCategory).then(this.findSuccess(res)).catch(this.findError(res));
     }
 }
