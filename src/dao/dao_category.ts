@@ -6,16 +6,23 @@ export default class DAOCategory extends DAO<Category> {
     public rowToModel(row: any): Category {
         return new Category(row.id, row.name);
     }
-
-    public addCategory(nameCategory : string) {
-        return this.runQuery("insert into category values(?, ?)", [1, nameCategory]);
+    public addCategory(nameCategory : string, lastId : number) {
+        return this.runQuery("insert into category values(?, ?)", [lastId, nameCategory]);
     }
 
     public getAll() : Promise<Category[]> {
         return this.getAllRows("SELECT * FROM category");
     }
 
-    public deleteCategory(idCategory : string) {
+    public deleteCategory(idCategory : string) : Promise<void>{
         return this.runQuery("delete from category where id=?", [idCategory]);
+    }
+
+    public modifyCategory(oldName : string, newName : string) : Promise<void>{
+        return this.runQuery('update category set name=? where name=?', [newName, oldName]);
+    }
+
+    public getLastId() : Promise<Category>{
+        return this.getOneRow('select * from category order by id DESC LIMIT 1');
     }
 }

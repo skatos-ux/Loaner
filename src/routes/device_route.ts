@@ -27,15 +27,14 @@ router.post('/:id_device/borrow/:id_user', (req,res) => {
 });
 
 router.put('/add', (req,res) =>{
-    const idDevice = "AN002";
-    const nameCategory = "pc";
-    const nameDevice = "netbook";
-    const version = "1.0";
-    const photo = "";
-    const phone = "0234572281";
-    const device = new Device(idDevice, new Category(1,nameCategory), nameDevice, version, photo, phone, false);
+    const device: Device = JSON.parse(req.body);
     controller.addDevice(res, device);
 });
+
+router.post('/delete/:id_device', (req, res) => {
+    const idDevice = req.params.id_device;
+    controller.deleteDevice(res, idDevice);
+})
 
 /*router.get('/:id_utilisateur/history', (req, res) => {
     const idUser = req.params.id_utilisateur || null;

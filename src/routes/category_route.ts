@@ -28,4 +28,9 @@ router.delete('/delete/:id_category', (req, res) => {
     controller.deleteCategory(res, idCategory);
 });
 
+router.post('/modify', (req, res) => {
+    const names = req.body;
+    controller.modifyCategory(res, names.oldName, names.newName);
+});
+
 export default router;

@@ -1,5 +1,6 @@
 import Controller from './controller';
 import DAODevice from '../dao/dao_device';
+import DAOReservation from '../dao/dao_reservation';
 
 import { Response } from 'express';
 import Device from '../model/device';
@@ -7,6 +8,7 @@ import Device from '../model/device';
 export default class DeviceController extends Controller {
 
     private dao = new DAODevice();
+    private DAOReservation = new DAOReservation();
 
     public async getAll(res : Response) : Promise<void> {
         this.dao.getAll().then(this.findSuccess(res)).catch(this.findError(res));
@@ -17,10 +19,24 @@ export default class DeviceController extends Controller {
     }
 
     public async borrowDevice(res : Response, idDevice : string, idUser : string) : Promise<void> {
-        this.dao.borrowDevice(idDevice, idUser).then(this.findSuccess(res)).catch(this.findError(res));
+        var lastId = 1;
+        var firstRes =  true;
+        const promLastId = this.DAOReservation.getLastId().then(async () => {
+            firstRes = false;
+        }).catch((error) => {
+            lastId = 0;
+        });
+        if(!firstRes){
+            lastId = (await this.DAOReservation.getLastId()).getID();
+        } 
+        this.dao.borrowDevice(idDevice, idUser, lastId+1).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
-    public async addDevice(res: Response, device : Device) : Promise<void> {
+    public async addDevice(res : Response, device : Device) : Promise<void> {
         this.dao.addDevice(device).then(this.findSuccess(res)).catch(this.findError(res));
+    }
+
+    public async deleteDevice(res : Response, idDevice : string) : Promise<void> {
+        this.dao.deleteDevice(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
     }
 }
