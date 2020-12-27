@@ -14,6 +14,13 @@ abstract class DAO<T> {
         sqlQuery : Requête SQL
         params : Paramètre de la requête préparée, peut être ignoré */
     protected getOneRow(sqlQuery : string, params : any = []) : Promise<T> {
+        return this.getOneRowNoCast(sqlQuery, params).then((row) => { return this.rowToModel(row); });
+    }
+
+    /*  Pour obtenir une seule ligne mais sans conversion vers un objet du modèle
+        sqlQuery : Requête SQL
+        params : Paramètre de la requête préparée, peut être ignoré */
+    protected getOneRowNoCast(sqlQuery : string, params : any = []) : Promise<any> {
         return new Promise((resolve, reject) => {
             db.get(sqlQuery, params, (err, row) => {
                 if (err) {
@@ -21,7 +28,7 @@ abstract class DAO<T> {
                 } else if(row == null) {
                     reject(new Error("Cannot find results"));
                 } else {
-                    resolve(this.rowToModel(row));
+                    resolve(row);
                 }
             });
         });

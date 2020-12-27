@@ -1,12 +1,10 @@
 import Controller from './controller';
-import User from '../model/user';
 import DAOUser from '../dao/dao_user';
 
 import * as config from '../../config.json';
 
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
-//import * as bcrypt from 'bcryptjs';
 
 // https://www.freecodecamp.org/news/securing-node-js-restful-apis-with-json-web-tokens-9f811a92bb52/
 export default class AuthController extends Controller {
@@ -21,18 +19,17 @@ export default class AuthController extends Controller {
         }
 
         this.dao.checkUser(firstName, lastName, password)
-        .then(user => {
+        .then((user) => {
             const token = jwt.sign({ id: user.getId(), admin: user.isAdmin() }, config.jwtSecret, {
                 expiresIn: "1d"
             });
 
-            const callback = this.findSuccess(res);
-            callback({
+            this.giveSuccess({
                 auth: true,
                 token: token
-            });
+            }, res);
         })
-        .catch(err => {
+        .catch((err : Error) => {
             this.giveError(new Error("Invalid name or password"), res);
         });
     }
