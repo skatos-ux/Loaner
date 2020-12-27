@@ -19,7 +19,7 @@ abstract class DAO<T> {
                 if (err) {
                     reject(err);
                 } else if(row == null) {
-                    reject(new Error("Cannot find results for this query"));
+                    reject(new Error("Cannot find results"));
                 } else {
                     resolve(this.rowToModel(row));
                 }

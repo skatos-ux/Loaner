@@ -10,4 +10,11 @@ router.post('/login', (req, res) => {
     controller.authentificate(info.firstName, info.lastName, info.password, req, res);
 });
 
+// Utilisé pour du déboggage
+router.get('/check', (req, res) => {
+    if(controller.checkToken(req, res)) {
+        res.json({ connected: "true" });
+    }
+});
+
 export default router;

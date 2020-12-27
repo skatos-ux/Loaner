@@ -16,32 +16,24 @@ export default class AuthController extends Controller {
     public async authentificate(firstName : string, lastName : string, password : string, req : Request, res : Response) : Promise<void> {
 
         if(this.hasToken(req)) {
-            const callback = this.findError(res);
-            callback(new Error("You already have a token"));
+            this.giveError(new Error("You already have a token"), res);
             return;
         }
 
         this.dao.checkUser(firstName, lastName, password)
         .then(user => {
-            if(password == user.getPassword()) {
-                const token = jwt.sign({ id: user.getId() }, config.jwtSecret, {
-                    expiresIn: 86400 // 24h
-                });
+            const token = jwt.sign({ id: user.getId(), admin: user.isAdmin() }, config.jwtSecret, {
+                expiresIn: "1d"
+            });
 
-                const callback = this.findSuccess(res);
-                callback({
-                    auth: true,
-                    token: token
-                });
-
-            } else {
-                const callback = this.findError(res);
-                callback(new Error("Invalid password"));
-            }
+            const callback = this.findSuccess(res);
+            callback({
+                auth: true,
+                token: token
+            });
         })
         .catch(err => {
-            const callback = this.findError(res);
-            callback(new Error("Cannot find user"));
+            this.giveError(new Error("Invalid name or password"), res);
         });
     }
 
@@ -49,19 +41,33 @@ export default class AuthController extends Controller {
         return !!req.headers['x-access-token'];
     }
 
-    public checkToken(req : Request, res : Response) : boolean {
+    public checkToken(req : Request, res : Response, requireAdmin = false, requiredUserID = -1) : boolean {
 
         if(!this.hasToken(req)) {
-            // ...
+            this.giveError(new Error("No token specified"), res, 401);
             return false;
         }
 
         const token: string = req.headers['x-access-token']?.toString() || "";
 
-        const userInfo = jwt.verify(token, config.jwtSecret);
+        try {
+            const userInfo: any = jwt.verify(token, config.jwtSecret);
 
-        if(userInfo == null) {
-            // ...
+            const userID = userInfo["id"] || -1;
+            const admin = userInfo["admin"] || false;
+
+            if(requireAdmin && !admin) {
+                this.giveError(new Error("This endpoint requires admin privileges"), res, 401);
+                return false;
+            }
+
+            if(requiredUserID >= 0 && userID != requiredUserID) {
+                this.giveError(new Error("Invalid user"), res, 401);
+                return false;
+            }
+
+        } catch {
+            this.giveError(new Error("Invalid token"), res);
             return false;
         }
 

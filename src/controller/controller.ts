@@ -22,18 +22,23 @@ export default abstract class Controller {
     protected serverError(res : Response) : ErrorCallback {
         return (error) => {
             res.status(500); // Internal server Error
-            res.json(this.treatError(error));
+            res.json(this.createError(error));
         }
     }
 
     protected findError(res : Response) : ErrorCallback {
         return (error) => {
             res.status(404); // Not found
-            res.json(this.treatError(error));
+            res.json(this.createError(error));
         }
     }
 
-    private treatError(err : Error) : any {
+    protected giveError(err : Error, res : Response, code = 400) {
+        res.status(code);
+        res.json(this.createError(err));
+    }
+
+    private createError(err : Error) : any {
         return {
             error: true,
             message: err.message
