@@ -1,6 +1,6 @@
 import { Router } from 'express';
-
 import UserController from '../controller/controller_user';
+import User from '../model/user'
 
 const router = Router();
 const controller = new UserController();
@@ -15,9 +15,37 @@ const controller = new UserController();
 
 // ...
 
+// a tester
 router.get("/all", (req, res) => {
   controller.getAll(res);
 });
 
+//a tester
+router.get("/:idUser", (req, res) => {
+  const idUser = req.params.idUser;
+  controller.getUser(res, idUser);
+});
+
+//a tester
+router.post("/add", (req, res) => {
+  const user : User = JSON.parse(req.body);
+  controller.addUser(res, user);
+});
+
+//a tester
+router.put("/modify", (req, res) => {
+  const user : User = JSON.parse(req.body);
+  controller.updateUser(res, user);
+});
+
+router.delete("/delete/:idUser", (req, res) => {
+  const idUser = req.params.idUser;
+  controller.deleteUser(res, idUser);
+});
+
+router.get("/:idUser/history", (req, res) => {
+  const idUser = req.params.idUser;
+  controller.getUserHistory(res, idUser);
+});
 
 export default router;

@@ -16,5 +16,29 @@ export default class DAOUser extends DAO<User> {
       return this.getOneRow("SELECT * FROM user WHERE firstName=? AND lastName=? AND password=?", [firstName, lastName, password])
     }
 
-    // ...
+    public getUser(idUser : string){
+      return this.getOneRow("SELECT * FROM user WHERE id=?", [idUser]);
+    }
+
+    public getLastId() : Promise<User>{
+        return this.getOneRow('SELECT * FROM user ORDER BY id DESC LIMIT 1');
+    }
+
+    public addUser(user : User){
+        return this.runQuery("INSERT INTO user VALUES(?,?,?,?,?,?)", [user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getPassword()]);
+    }
+
+    public updateUser(user : User){
+      let query : string =  "UPDATE user SET firstname = ?, lastname = ?, email = ?, admin = ?, password = ?  WHERE id = ?";
+      return this.runQuery(query, [user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getPassword(), user.getId()]);
+    }
+
+    public deleteUser(idUser : string){
+      return this.runQuery("DELETE FROM user WHERE id = ?", [idUser]);
+    }
+
+    public getUserHistory(idUser : string){
+      return this.runQuery("SELECT * FROM reservation WHERE iduser = ?", [idUser]);
+    }
+   // ...
 }
