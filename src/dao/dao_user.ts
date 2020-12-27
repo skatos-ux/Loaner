@@ -1,5 +1,7 @@
-import { db, DAO } from './dao';
+import { DAO } from './dao';
 import User from '../model/user';
+import * as config from '../../config.json';
+
 import * as bcrypt from 'bcryptjs';
 
 export default class DAOUser extends DAO<User> {
@@ -31,13 +33,14 @@ export default class DAOUser extends DAO<User> {
         return this.getOneRow('SELECT * FROM user ORDER BY id DESC LIMIT 1');
     }
 
-    public addUser(user : User){
-        return this.runQuery("INSERT INTO user VALUES(?,?,?,?,?,?)", [user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getPassword()]);
+    public addUser(user : User, password : string){
+        return this.runQuery("INSERT INTO user VALUES(?,?,?,?,?,?)", [user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+          user.isAdmin(), bcrypt.hashSync(password, config.hashSaltRounds)]);
     }
 
     public updateUser(user : User){
-      let query : string =  "UPDATE user SET firstname = ?, lastname = ?, email = ?, admin = ?, password = ?  WHERE id = ?";
-      return this.runQuery(query, [user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getPassword(), user.getId()]);
+      let query : string =  "UPDATE user SET firstname = ?, lastname = ?, email = ?, admin = ? WHERE id = ?";
+      return this.runQuery(query, [user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getId()]);
     }
 
     public deleteUser(idUser : string){

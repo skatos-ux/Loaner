@@ -1,18 +1,19 @@
 {
   "name": "loaner",
   "version": "1.0.0",
-  "description": "",
+  "description": "Loaner allows you to track who borrowed your devices",
   "main": "dist/index.js",
   "private": true,
   "scripts": {
     "start": "ts-node ./src/index.ts",
     "start:dev": "nodemon",
+    "start:prod": "node ./dist/index.js",
     "test": "mocha -r ts-node/register tests/**/*.ts",
     "lint": "eslint . --ext .ts",
     "coverage": "nyc npm run test",
     "create-db": "node ./create_db.js",
-    "build-production": "npm test && npm run lint && tsc",
-    "start:prod": "node ./dist/index.js"
+    "build:dev": "tsc",
+    "build:prod": "npm test && npm run lint && tsc"
   },
   "repository": {
     "type": "git",

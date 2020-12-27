@@ -21,7 +21,7 @@ export default class AuthController extends Controller {
         this.dao.checkUser(firstName, lastName, password)
         .then((user) => {
             const token = jwt.sign({ id: user.getId(), admin: user.isAdmin() }, config.jwtSecret, {
-                expiresIn: "1d"
+                expiresIn: "1h"
             });
 
             this.giveSuccess({

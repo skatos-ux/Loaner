@@ -28,7 +28,9 @@ export default class UserController extends Controller {
           lastId = (await this.dao.getLastId()).getId();
       }
       user.setId(lastId+1);
-      this.dao.addUser(user).then(this.findSuccess(res)).catch(this.findError(res));
+      // TODO : Recuperer le mot de passe séparément de l'utilisateur
+      // Le mot de passe n'est pas dans l'objet modèle et n'est utilisé que lors de l'insertion
+      this.dao.addUser(user, "joli_motdepasse37").then(this.findSuccess(res)).catch(this.findError(res));
     }
 
     public async updateUser(res : Response, user : User) : Promise<void> {

@@ -17,7 +17,7 @@ CREATE TABLE reservation(id INTEGER PRIMARY KEY, refDevice CHAR(5), idUser CHAR(
     FOREIGN KEY (idUser) REFERENCES user(id));
 
 -- Insertion
-INSERT INTO category VALUES(1, "Test");
+INSERT INTO category VALUES(1, "Téléphones");
 
 INSERT INTO device VALUES("AN001", 1, "Samsung Galaxy S1000", "1.0", "", "0123456789");
 
