@@ -19,7 +19,7 @@ Utilisateurs : /users - Lilian
 Matériels : /devices - Milan / Yohan
     X  - Liste de tous les matériels   GET /all
     X  - Obtenir les informations d'un matériel (pas sur)     GET /:id_materiel
-    - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all/nom_filtre/:filtre/...
+    - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all?nom_filtre=valeur_filtre&...
         - Nom (name)
         - Ref (ref)
         - Disponibilité (libre ou non) (availability) (available/borrowed)

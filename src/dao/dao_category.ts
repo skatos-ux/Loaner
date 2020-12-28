@@ -25,4 +25,8 @@ export default class DAOCategory extends DAO<Category> {
     public getLastId() : Promise<Category>{
         return this.getOneRow('select * from category order by id DESC LIMIT 1');
     }
+
+    public getByName(name: string) : Promise<Category> {
+        return this.getOneRow("SELECT * FROM category WHERE name=?", name).catch((err) => { throw new Error("Invalid category name"); });
+    }
 }

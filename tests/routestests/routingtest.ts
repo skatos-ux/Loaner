@@ -1,0 +1,1 @@
+// https://medium.com/@raffalli.marc.ed/rest-api-e2e-testing-an-easier-way-85d265d1825d

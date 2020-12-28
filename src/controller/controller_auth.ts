@@ -26,7 +26,8 @@ export default class AuthController extends Controller {
 
             this.giveSuccess({
                 auth: true,
-                token: token
+                token: token,
+                user: user
             }, res);
         })
         .catch((err : Error) => {

@@ -51,4 +51,36 @@ export default class DAODevice extends DAO<Device> {
         return this.runQuery('delete from device where ref=?', [refDevice]);
     }
 
+    public getDevicesByFilter(name: string, ref: string, available: number, categoryID: number) : Promise<Device[]> {
+
+        if(name == "" && ref == "" && available == -1 && categoryID == -1) {
+            return Promise.reject(new Error("All fields can't be empty"));
+        }
+
+        const sqlWhens = [];
+        const params = [];
+
+        if(name != "") {
+            sqlWhens.push("d.name = ?");
+            params.push(name);
+        }
+
+        if(ref != "") {
+            sqlWhens.push("d.ref = ?");
+            params.push(ref);
+        }
+
+        // TODO : available
+
+        if(categoryID != -1) {
+            sqlWhens.push("d.idCategory = ?");
+            params.push(categoryID);
+        }
+
+
+        return this.getAllRows("SELECT ref, d.name as name, version, photo, phone, c.name as category " +
+            "FROM device d, category c " +
+            "WHERE d.idCategory = c.id AND " + sqlWhens.join(" AND ")
+            , params);
+    }
 }
