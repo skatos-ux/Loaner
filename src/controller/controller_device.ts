@@ -4,6 +4,7 @@ import DAOReservation from '../dao/dao_reservation';
 
 import { Response } from 'express';
 import Device from '../model/device';
+import Reservation from '../model/reservation';
 
 export default class DeviceController extends Controller {
 
@@ -19,7 +20,7 @@ export default class DeviceController extends Controller {
     }
 
     public async borrowDevice(res : Response, idDevice : string, idUser : string) : Promise<void> {
-        var lastId = 1;
+        var lastId = 0;
         var firstRes =  true;
         const promLastId = this.DAOReservation.getLastId().then(async () => {
             firstRes = false;
@@ -38,5 +39,9 @@ export default class DeviceController extends Controller {
 
     public async deleteDevice(res : Response, idDevice : string) : Promise<void> {
         this.dao.deleteDevice(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
+    }
+
+    public async historyDevice(res : Response, idDevice : string) : Promise<void> {
+        this.DAOReservation.historyDevice(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
     }
 }

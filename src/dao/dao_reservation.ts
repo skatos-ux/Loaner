@@ -10,5 +10,9 @@ export default class DAOCatgeory extends DAO<Reservation> {
     public getLastId() : Promise<Reservation>{
         return this.getOneRow('select * from reservation order by id DESC LIMIT 1');
     }
+
+    public historyDevice(idDevice : string) : Promise<Reservation []> {
+        return this.getAllRows('select * from reservation where refDevice=?', [idDevice]);
+    }
     // ...
 }

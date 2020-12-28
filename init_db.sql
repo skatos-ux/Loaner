@@ -22,3 +22,6 @@ INSERT INTO category VALUES(1, "Test");
 INSERT INTO device VALUES("AN001", 1, "Samsung Galaxy S1000", "1.0", "", "0123456789");
 
 INSERT INTO user VALUES("0", "Lilian", "Bethus", "lilianb@mail.fr", 1, "fromage");
+INSERT INTO device VALUES("AN002", 1, "Samsung Galaxy S1000", "1.0", "", "0123456789");
+
+INSERT INTO user VALUES("1", "Lilian", "Bethus", "lilianb@mail.fr", 1, "fromage");
