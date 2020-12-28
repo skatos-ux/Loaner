@@ -22,14 +22,11 @@ export default class DeviceController extends Controller {
     public async borrowDevice(res : Response, idDevice : string, idUser : string) : Promise<void> {
         var lastId = 0;
         var firstRes =  true;
-        const promLastId = this.DAOReservation.getLastId().then(async () => {
-            firstRes = false;
-        }).catch((error) => {
-            lastId = 0;
-        });
-        if(!firstRes){
+        try{
             lastId = (await this.DAOReservation.getLastId()).getID();
-        } 
+        }catch{
+            lastId = 0;
+        }
         this.dao.borrowDevice(idDevice, idUser, lastId+1).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
