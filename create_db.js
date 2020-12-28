@@ -6,6 +6,7 @@ const sqlContent = fs.readFileSync('./init_db.sql').toString();
 const db = new sqlite3.Database(config.dbFile);
 
 const lines = sqlContent.toString().split(';');
+const logQueries = process.argv[2] && process.argv[2] == "--log";
 
 console.log("Création de la base de données...");
 
@@ -14,8 +15,24 @@ db.serialize(() => {
     db.run('BEGIN TRANSACTION');
 
     lines.forEach((query) => {
-        if(query && query != '\n') {
+        if(query && query.trim()) {
             query = query.trim();
+
+            if(query.startsWith("--")) {
+                const pos = query.indexOf("\n");
+
+                if(pos != -1) {
+                    query = query.substring(pos + 1);
+                } else {
+                    return;
+                }
+            }
+
+            query = query.replace("\n", "");
+
+            if(logQueries) {
+                console.log(query);
+            }
 
             db.run(query, (err) => {
                 if(err) throw err;
@@ -28,7 +45,8 @@ db.serialize(() => {
 
 db.close((err) => {
     if (err) {
-        return console.error(err.message);
+        console.error(err.message);
+        return;
     }
     
     console.log('Création terminée');

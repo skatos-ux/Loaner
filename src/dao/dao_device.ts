@@ -1,23 +1,25 @@
 import { DAO } from './dao';
 import Device from '../model/device';
-import Category from '../model/category';
-
-// TODO : A retirer et aller chercher les catégories depuis la BDD
-const stubCategory = "Test";
 
 export default class DAODevice extends DAO<Device> {
 
-    // TODO : Gerer category + available
+    // TODO : Gerer les lockDays "reservation"
+    // Besoin de laisser le champ available si on gère les réservations ?
+    // Ajouter la champ sim ou non ?
     public rowToModel(row: any): Device {
-        return new Device(row.ref, stubCategory, row.name, row.version, row.photo, row.phone, false);
+        return new Device(row.ref, row.category, row.name, row.version, row.photo, row.phone, false);
     }
 
     public getAll() : Promise<Device[]> {
-        return this.getAllRows("SELECT * FROM device");
+        return this.getAllRows("SELECT ref, d.name as name, version, photo, phone, c.name as category " +
+            "FROM device d, category c " +
+            "WHERE d.idCategory = c.id");
     }
 
-    public get(idDevice : string) : Promise<Device> {
-        return this.getOneRow("SELECT * FROM device where ref=?", idDevice);
+    public get(refDevice : string) : Promise<Device> {
+        return this.getOneRow("SELECT ref, d.name as name, version, photo, phone, c.name as category " +
+            "FROM device d, category c " +
+            "WHERE d.idCategory = c.id AND d.ref=?", refDevice);
     }
 
     public borrowDevice(idDevice : string, idUser : string, lastId : number) : Promise<void> {
@@ -40,12 +42,13 @@ export default class DAODevice extends DAO<Device> {
         return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[lastId,idDevice,idUser,date,null,null]);
     }
 
-    public addDevice(device : Device) : Promise<void>{
+    public addDevice(device : Device) : Promise<void> {
+        // Il faut mettre l'ID de la categorie et non pas le nom (device.getCategory() = nom)
         return this.runQuery('insert into device values(?,?,?,?,?,?)',[device.getRef(), device.getCategory(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone()]);
     }
 
-    public deleteDevice(idDevice : string) : Promise<void> {
-        return this.runQuery('delete from device where id=?',[idDevice]);
+    public deleteDevice(refDevice : string) : Promise<void> {
+        return this.runQuery('delete from device where ref=?', [refDevice]);
     }
 
 }

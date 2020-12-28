@@ -17,11 +17,9 @@ CREATE TABLE reservation(id INTEGER PRIMARY KEY, refDevice CHAR(5), idUser CHAR(
     FOREIGN KEY (idUser) REFERENCES user(id));
 
 -- Insertion
-INSERT INTO category VALUES(1, "Test");
+INSERT INTO category VALUES(1, "Téléphones");
 
 INSERT INTO device VALUES("AN001", 1, "Samsung Galaxy S1000", "1.0", "", "0123456789");
 
-INSERT INTO user VALUES("0", "Lilian", "Bethus", "lilianb@mail.fr", 1, "fromage");
-INSERT INTO device VALUES("AN002", 1, "Samsung Galaxy S1000", "1.0", "", "0123456789");
-
-INSERT INTO user VALUES("1", "Lilian", "Bethus", "lilianb@mail.fr", 1, "fromage");
+INSERT INTO user VALUES("0", "Lilian", "Bethus", "lilianb@mail.fr", 1,
+    "$2a$10$MZfIG15tjZONVVfjsBTj/OCk1epnw7d.nX/ZrZXBDms/uHUDUSY8i"); -- Version hachée du mot de passe "fromage"

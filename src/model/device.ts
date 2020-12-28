@@ -1,5 +1,3 @@
-import Category from './category';
-
 export default class Device {
     private ref!: string;
     private category!: string;

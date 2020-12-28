@@ -44,6 +44,7 @@ Authentification : /auth - Yohan
 
 const router = express.Router();
 
+
 router.use('/devices', device_route);
 router.use('/users', user_route);
 router.use('/category', category_route);

@@ -4,15 +4,13 @@ export default class User {
     private lastName!: string;
     private email!: string;
     private admin!: number;
-    private password!: string;
 
-    constructor(id: number, firstName: string, lastName: string, email: string, admin: number, password : string){
+    constructor(id: number, firstName: string, lastName: string, email: string, admin: number){
       this.id = id;
       this.firstName = firstName;
       this.lastName = lastName;
       this.email = email;
       this.admin = admin;
-      this.password = password;
     }
 
     //getters
@@ -34,10 +32,6 @@ export default class User {
 
     public isAdmin() : number {
       return this.admin;
-    }
-
-    public getPassword() : string {
-      return this.password;
     }
 
     //setters
