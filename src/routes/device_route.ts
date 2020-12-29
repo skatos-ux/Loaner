@@ -37,9 +37,12 @@ router.get('/:id_device', (req,res) => {
 });
 
 router.post('/:id_device/borrow/:id_user', (req,res) => {
-    const idDevice = req.params.id_device;
     const idUser = req.params.id_user;
-    controller.borrowDevice(res, idDevice, idUser);
+    if(controllerAuth.checkToken(req,res,false,Number.parseInt(idUser)){
+        const idDevice = req.params.id_device;
+        
+        controller.borrowDevice(res, idDevice, idUser);
+    }
 });
 
 router.put('/add', (req,res) =>{
