@@ -1,9 +1,18 @@
 <template>
-  <form @submit="submitForm" class="section--2 login__form p-4 m-6 animate__animated animate__fadeIn">
+  <div class="section--2 login__form p-4 m-6 animate__animated animate__fadeIn">
     <div class="field">
-      <label class="label is-size-7 has-text-left">Nom d'utilisateur</label>
+      <label class="label is-size-7 has-text-left">Prénom</label>
       <div class="control has-icons-left">
-        <input v-model="form.username" class="input" type="text" required>
+        <input v-model="form.firstName" class="input" type="text" required>
+        <span class="icon is-small is-left">
+          <font-awesome-icon :icon="['fas', 'user']" />
+        </span>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label is-size-7 has-text-left">Nom</label>
+      <div class="control has-icons-left">
+        <input v-model="form.lastName" class="input" type="text" required>
         <span class="icon is-small is-left">
           <font-awesome-icon :icon="['fas', 'user']" />
         </span>
@@ -26,13 +35,19 @@
     </div>
     <article v-show="failLogin" class="message is-danger">
       <div class="message-body is-size-7">
-        Nom d'utilisateur ou mot de passe incorrecte (c'est admin:admin espèce de con)
+        Nom d'utilisateur ou mot de passe incorrecte
       </div>
     </article>
-    <div id="submit" class="field">
-      <input class="button is-success is-fullwidth is-size-6" type="submit" value="Se connecter">
+    <article v-show="backError" class="message is-danger">
+      <div class="message-body is-size-7">
+        Une erreur interne est survenue, veuillez réessayer dans quelques instants
+      </div>
+    </article>
+    <div class="login__form--footer">
+      <input @click="registerForm" class="button is-info is-fullwidth is-size-6 login__form--register" type="submit" value="S'enregistrer">
+      <input @click="loginForm" class="button is-success is-fullwidth is-size-6 login__form--login" type="submit" value="Se connecter">
     </div>
-  </form>
+  </div>
 </template>
 
 <script lang="ts">
@@ -41,36 +56,49 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component
 export default class LoginForm extends Vue {
   form =  {
-    username: '',
+    firstName: '',
+    lastName: '',
     password: '',
-    rank: 0,
+    admin: false,
+    token: '',
     remember: false
   }
   failLogin = false
+  failRegister = false
 
-  submitForm(event: Event){
-    const input = document.querySelector("#submit")
-    input!.className +=  " control is-loading"
+  backError = false
 
-    //TEMPORARY
-    if(this.form.username === "admin" && this.form.password === "admin") {
-      this.$store.dispatch('login', this.form)
-      this.$router.push("/mainpage/dashboard")
-    } else {
-      this.failLogin = true
-      input!.classList.remove("control", "is-loading")
-      event.preventDefault()
-    }
+  loginForm(event: { target: HTMLInputElement }){
+    const input = event.target
+    input.className +=  " control is-loading"
 
-    /*
-    this.$api.post("/login", this.form).then((res) => {
-      console.log(res.data)
+    this.$api.post("/auth/login", this.form).then((res) => {
+      this.form.token = res.data.token
+      this.form.admin = res.data.user.admin
+      if(res.data.auth) {
+        this.$store.dispatch('login', this.form)
+        this.$router.push("/mainpage/dashboard")
+      } else {
+        this.failLogin = true
+        input.classList.remove("control", "is-loading")
+      }
     }).catch((error) => {
-      console.log(error)
-      element.preventDefault()
+      if(error.response.status === 400) {
+        this.failLogin = true
+      } else {
+        this.backError = true
+      }
+      input.classList.remove("control", "is-loading")
     })
-    */
+
   }
+
+  registerForm(event: { target: HTMLInputElement}) {
+    console.log("register")
+  }
+
+  //TODO register
+  //TODO add backend
 }
 </script>
 
@@ -81,5 +109,17 @@ export default class LoginForm extends Vue {
     min-width: 200px;
     max-width: 500px;
     width: 100%;
+    &--footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+    &--login {
+      margin-left: 5px;
+    }
+    &--register {
+      margin-right: 5px;
+    }
   }
 </style>
