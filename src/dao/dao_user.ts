@@ -7,7 +7,7 @@ import * as bcrypt from 'bcryptjs';
 export default class DAOUser extends DAO<User> {
 
     public rowToModel(row: any): User {
-      return new User(row.id, row.firstname, row.lastname, row.email, row.admin, row.temporaryPassword);
+      return new User(row.id, row.firstName, row.lastName, row.mail, row.admin === 1, row.temporaryPassword === 1);
     }
 
     public getAll() : Promise<User[]> {
@@ -28,7 +28,7 @@ export default class DAOUser extends DAO<User> {
     }
 
     public updateUser(user : User) : Promise<void> {
-      let query : string =  "UPDATE user SET firstname = ?, lastname = ?, email = ?, admin = ? WHERE id = ?";
+      const query = "UPDATE user SET firstname = ?, lastname = ?, email = ?, admin = ? WHERE id = ?";
       return this.runQuery(query, [user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getId()]);
     }
 

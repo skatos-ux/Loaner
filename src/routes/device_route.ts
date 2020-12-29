@@ -1,4 +1,4 @@
-import { Router, Request } from 'express';
+import { Router } from 'express';
 
 import DeviceController from '../controller/controller_device';
 import AuthController from '../controller/controller_auth';
@@ -8,23 +8,12 @@ const router = Router();
 const controller = new DeviceController();
 const controllerAuth = new AuthController();
 
-// Permet de savoir une requête contient des éléments dans "query" (si des paramètres sont passés dans l'URL)
-function hasQueryParams(req : Request) {
-   for(const key in req.query) {
-     if (req.query.hasOwnProperty(key)) {
-        return true;
-     }
-   }
-
-   return false;
-}
-
 // On dit que lorsque l'on reçoit une requête HTTP GET sur /all, on exécute la méthode getAll de DeviceController
 // req = Request = Informations sur le requête reçue
 // res = Response = Informations sur la réponse que l'on va fourni au client
 router.get('/all', (req, res) => {
 
-    if(hasQueryParams(req)) {
+    if(Object.keys(req.query).length > 0) {
         controller.filterDevice(res, req.query);
     } else {
         controller.getAll(res);

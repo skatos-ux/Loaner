@@ -6,7 +6,8 @@ export default class DAOCategory extends DAO<Category> {
     public rowToModel(row: any): Category {
         return new Category(row.id, row.name);
     }
-    public addCategory(nameCategory : string, lastId : number) {
+
+    public addCategory(nameCategory : string, lastId : number) : Promise<void> {
         return this.runQuery("insert into category values(?, ?)", [lastId, nameCategory]);
     }
 
@@ -27,6 +28,6 @@ export default class DAOCategory extends DAO<Category> {
     }
 
     public getByName(name: string) : Promise<Category> {
-        return this.getOneRow("SELECT * FROM category WHERE name=?", name).catch((err) => { throw new Error("Invalid category name"); });
+        return this.getOneRow("SELECT * FROM category WHERE name=?", name).catch(() => { throw new Error("Invalid category name"); });
     }
 }

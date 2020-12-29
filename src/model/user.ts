@@ -3,10 +3,10 @@ export default class User {
     private firstName!: string;
     private lastName!: string;
     private email!: string;
-    private admin!: number;
+    private admin!: boolean;
     private temporaryPassword!: boolean;
 
-    constructor(id: number, firstName: string, lastName: string, email: string, admin: number, temporaryPassword: boolean){
+    constructor(id: number, firstName: string, lastName: string, email: string, admin: boolean, temporaryPassword: boolean){
       this.setId(id);
       this.setFirstName(firstName);
       this.setLastName(lastName);
@@ -32,7 +32,7 @@ export default class User {
       return this.email;
     }
 
-    public isAdmin() : number {
+    public isAdmin() : boolean {
       return this.admin;
     }
 
@@ -46,7 +46,8 @@ export default class User {
     }
 
     public setFirstName(firstName : string) : void {
-      if(firstName.length == 0 || firstName.length > 30) {
+
+      if(!firstName || firstName.length == 0 || firstName.length > 30) {
         throw new Error("Invalid firstname");
       }
       
@@ -54,7 +55,7 @@ export default class User {
     }
 
     public setLastName(lastName : string) : void {
-      if(lastName.length == 0 || lastName.length > 30) {
+      if(!lastName || lastName.length == 0 || lastName.length > 30) {
         throw new Error("Invalid lastname");
       }
 
@@ -63,14 +64,14 @@ export default class User {
 
     public setEmail(email : string) : void {
       
-      if(email.length == 0 || email.match(/^[^@\s]+@[^@\s]+\.[^@\s]+/g)) {
+      if(!email || email.length == 0 || email.match(/^[^@\s]+@[^@\s]+\.[^@\s]+/g)?.length != 1) {
         throw new Error("Invalid email");
       }
       
       this.email = email;
     }
 
-    public setAdmin(admin : number) : void {
+    public setAdmin(admin : boolean) : void {
       this.admin = admin;
     }
 

@@ -79,7 +79,7 @@ export default class Device {
 
     public setPhone(phone : string) : void {
 
-        if(phone.length > 14) {
+        if(!phone || phone.length > 14) {
             throw new Error("Invalid phone number")
         }
 

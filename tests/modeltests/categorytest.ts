@@ -1,6 +1,6 @@
 import Category from '../../src/model/category';
 
-const assert = require('chai').assert;
+import { assert } from 'chai';
 
 const catTested = new Category(1,"Test");
 

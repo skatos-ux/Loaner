@@ -1,6 +1,6 @@
 import DAODevice from '../../src/dao/dao_device';
 
-const assert = require('chai').assert;
+import { assert } from 'chai';
 
 /* TODO:
 - Vérifier que les types des variabes soient du même type que les attributs de la classe;

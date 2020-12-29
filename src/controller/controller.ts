@@ -33,12 +33,12 @@ export default abstract class Controller {
         }
     }
 
-    protected giveSuccess(result: any, res : Response, code = 200) {
+    protected giveSuccess(result: any, res : Response, code = 200) : void {
         res.status(code);
         res.json(result);
     }
 
-    protected giveError(err : Error, res : Response, code = 400) {
+    protected giveError(err : Error, res : Response, code = 400) : void {
         res.status(code);
         res.json(this.createError(err));
     }
