@@ -9,22 +9,24 @@ Racine : /api
 
 Utilisateurs : /users - Lilian
  Coté admin :
-    - Liste de tous les utilisateurs    GET /all
-    - Obtenir les informations d'un utilisateur (pas sur)     GET /:id_utilisateur
-    - Ajouter un utilisateur            PUT /add (informations de l'utilisateur dans le corps de la requête)
-    - Modifier un utilisateur           POST /modify (informations de l'utilisateur dans le corps de la requête)
-    - Supprimer un utilisateur          DELETE /delete/:id_utilisateur
-    - Historique des emprunts pour un utilisateur   GET /:id_utilisateur/history
+ X   - Liste de tous les utilisateurs    GET /all
+ X   - Obtenir les informations d'un utilisateur (pas sur)     GET /:id_utilisateur
+ X   - Ajouter un utilisateur            PUT /add (informations de l'utilisateur dans le corps de la requête)
+ X   - Modifier un utilisateur           POST /modify (informations de l'utilisateur dans le corps de la requête)
+ X   - Supprimer un utilisateur          DELETE /delete/:id_utilisateur
+ X   - Historique des emprunts pour un utilisateur   GET /:id_utilisateur/history
 
 Matériels : /devices - Milan / Yohan
-    X  - Liste de tous les matériels   GET /all
+    -> reservation : renvoyer sous le format : lockDays = [ ['start1', 'end1'], ['start2', 'end2'] ]
+    -> end = (returnDate == null) ? endDate : returnDate
+    X  - Liste de tous les matériels   GET /all -> A agencer par categorie
     X  - Obtenir les informations d'un matériel (pas sur)     GET /:id_materiel
-    - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all?nom_filtre=valeur_filtre&...
+    X - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all?nom_filtre=valeur_filtre&... -> A agencer par categorie
         - Nom (name)
         - Ref (ref)
         - Disponibilité (libre ou non) (availability) (available/borrowed)
         - Catégorie (category)
-    - Emprunter un matériel     POST /:id_materiel/borrow/:id_utilisateur
+    X - Emprunter un matériel     POST /:id_materiel/borrow/:id_utilisateur
     Coté admin :
     X    - Ajouter des matériels     PUT /add (token + informations sur le matériel dans le corps de la requête)
         - Modifier les matériels     POST /modify (token + informations sur le matériel dans le corps de la requête)
@@ -39,7 +41,8 @@ Catégories : /category - Milan
     X    - Supprimer des catégories  DELETE /delete/:id_category (token dans le corps de la requête)
 
 Authentification : /auth - Yohan
-    - Faire s'authentifier un utilisateur (renvoie un token de connexion)   POST /auth/login (informations d'authentification de l'utilisateur)
+    X - Faire s'authentifier un utilisateur (renvoie un token de connexion)   POST /auth/login (informations d'authentification de l'utilisateur)
+      - Changement de mot de passe d'un utilisateur (pour le temporaryPassword) POST /auth/password/change (identique à /auth/login avec l'ancien mdp en plus)
 */
 
 const router = express.Router();

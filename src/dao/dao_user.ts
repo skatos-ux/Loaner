@@ -7,7 +7,7 @@ import * as bcrypt from 'bcryptjs';
 export default class DAOUser extends DAO<User> {
 
     public rowToModel(row: any): User {
-      return new User(row.id, row.firstname, row.lastname, row.email, row.admin);
+      return new User(row.id, row.firstname, row.lastname, row.email, row.admin, row.temporaryPassword);
     }
 
     public getAll() : Promise<User[]> {
@@ -20,35 +20,40 @@ export default class DAOUser extends DAO<User> {
         if(bcrypt.compareSync(password, row.password)) {
           return this.rowToModel(row);
         }
-
+        
         throw new Error("Invalid password");
       });
     }
 
-    public getUser(idUser : string){
+    public getUser(idUser : string) : Promise<User> {
       return this.getOneRow("SELECT * FROM user WHERE id=?", [idUser]);
     }
 
-    public getLastId() : Promise<User>{
+    public getLastId() : Promise<User> {
         return this.getOneRow('SELECT * FROM user ORDER BY id DESC LIMIT 1');
     }
 
-    public addUser(user : User, password : string){
-        return this.runQuery("INSERT INTO user VALUES(?,?,?,?,?,?)", [user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
-          user.isAdmin(), bcrypt.hashSync(password, config.hashSaltRounds)]);
+    public addUser(user : User, password : string) : Promise<void> {
+        return this.runQuery("INSERT INTO user VALUES(?,?,?,?,?,?,?)", [user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+          user.isAdmin(), bcrypt.hashSync(password, config.hashSaltRounds), true]);
     }
 
-    public updateUser(user : User){
+    public updateUser(user : User) : Promise<void> {
       let query : string =  "UPDATE user SET firstname = ?, lastname = ?, email = ?, admin = ? WHERE id = ?";
       return this.runQuery(query, [user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getId()]);
     }
 
-    public deleteUser(idUser : string){
+    public deleteUser(idUser : string) : Promise<void> {
       return this.runQuery("DELETE FROM user WHERE id = ?", [idUser]);
     }
 
-    public getUserHistory(idUser : string){
+    public getUserHistory(idUser : string) : Promise<void> {
       return this.runQuery("SELECT * FROM reservation WHERE iduser = ?", [idUser]);
     }
+
+    public hasUserWithemail(email : string) : Promise<boolean> {
+      return this.getOneRow("SELECT * FROM user WHERE email=?", [email]).then(() => { return true; }).catch(() => { return false; });
+    }
+
    // ...
 }

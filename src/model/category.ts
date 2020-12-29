@@ -21,7 +21,7 @@ export default class Category {
 
     public setName(name : string) : void {
 
-        if(this.name.length == 0 || this.name.length > 255) {
+        if(name.length == 0 || name.length > 255) {
             throw new Error("Invalid name");
         }
 

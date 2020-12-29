@@ -65,7 +65,7 @@ export default class AuthController extends Controller {
             }
 
         } catch {
-            this.giveError(new Error("Invalid token"), res);
+            this.giveError(new Error("Invalid token"), res, 401);
             return false;
         }
 

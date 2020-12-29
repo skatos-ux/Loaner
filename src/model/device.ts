@@ -5,18 +5,17 @@ export default class Device {
     private version!: string;
     private photo!: string;
     private phone!: string;
-    private available!: boolean;
 
-    constructor(ref : string, category: string, name : string, version : string, photo : string, phone : string, available: boolean) {
-        this.ref = ref;
+    constructor(ref : string, category: string, name : string, version : string, photo : string, phone : string) {
+        this.setRef(ref);
         this.category = category;
-        this.name = name;
-        this.version = version;
-        this.photo = photo;
-        this.phone = phone;
-        this.available = available;
+        this.setName(name);
+        this.setVersion(version);
+        this.setPhoto(photo);
+        this.setPhone(phone);
     }
 
+    // Getters
     public getRef() : string {
         return this.ref;
     }
@@ -41,23 +40,14 @@ export default class Device {
         return this.phone;
     }
 
-    public isAvailable() : boolean {
-        return this.available;
-    }
 
-    // A laisser ?
+    // Setters
     public setRef(ref : string) : void {
-
         if(ref.length != 5) {
             throw new Error("Invalid reference");
         }
 
         this.ref = ref;
-    }
-
-    // A laisser ?
-    public setCategory(category : string) : void {
-        this.category = category;
     }
 
     public setName(name : string) : void {
@@ -80,16 +70,16 @@ export default class Device {
 
     public setPhoto(photo : string) : void {
         
-        if(photo.length == 0) {
+        /*if(photo.length == 0) {
             throw new Error("Invalid photo");
-        }
+        }*/
 
         this.photo = photo;
     }
 
     public setPhone(phone : string) : void {
 
-        if(phone.length == 0) {
+        if(phone.length > 14) {
             throw new Error("Invalid phone number")
         }
 
