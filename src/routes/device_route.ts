@@ -1,10 +1,12 @@
 import { Router, Request } from 'express';
 
 import DeviceController from '../controller/controller_device';
+import AuthController from '../controller/controller_auth';
 import Device from '../model/device';
 
 const router = Router();
 const controller = new DeviceController();
+const controllerAuth = new AuthController();
 
 // Permet de savoir une requête contient des éléments dans "query" (si des paramètres sont passés dans l'URL)
 function hasQueryParams(req : Request) {
@@ -41,18 +43,24 @@ router.post('/:id_device/borrow/:id_user', (req,res) => {
 });
 
 router.put('/add', (req,res) =>{
-    const device: Device = JSON.parse(req.body);
-    controller.addDevice(res, device);
+    if(controllerAuth.checkToken(req,res,true)){
+        const device: Device = JSON.parse(req.body);
+        controller.addDevice(res, device);
+    }
 });
 
 router.post('/delete/:id_device', (req, res) => {
-    const idDevice = req.params.id_device;
-    controller.deleteDevice(res, idDevice);
+    if(controllerAuth.checkToken(req,res,true)){
+        const idDevice = req.params.id_device;
+        controller.deleteDevice(res, idDevice);
+    }
 });
 
 router.get('/:id_device/history', (req, res) => {
-    const idDevice = req.params.id_device;
-    controller.historyDevice(res, idDevice);
+    if(controllerAuth.checkToken(req,res,true)){
+        const idDevice = req.params.id_device;
+        controller.historyDevice(res, idDevice);
+    }
 });
 
 export default router;
