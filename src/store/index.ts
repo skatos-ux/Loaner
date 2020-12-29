@@ -26,9 +26,8 @@ export default new Vuex.Store({
               name: "pc patou",
               ref: "XSR3",
               version: "1.0",
-              sim: true,
+              phone: "12345",
               photo: "https://bulma.io/images/placeholders/1280x960.png",
-              available: true,
               lockDays: [['2020-12-2', '2020-12-10']]
             }
           ]
@@ -40,7 +39,7 @@ export default new Vuex.Store({
               name: "tel pat boulot",
               ref: "AMAMAMA",
               version: "1.0",
-              sim: true,
+              phone: "",
               photo: "https://bulma.io/images/placeholders/1280x960.png",
               available: false,
               lockDays: [['2020-12-2', '2020-12-10']]
@@ -54,7 +53,7 @@ export default new Vuex.Store({
               name: "tel pat et lulu",
               ref: "cCACACA",
               version: "1.0",
-              sim: true,
+              phone: "12345",
               photo: "https://bulma.io/images/placeholders/1280x960.png",
               available: true,
               lockDays: [['2020-12-2', '2020-12-10']]
@@ -68,7 +67,7 @@ export default new Vuex.Store({
               name: "Vibro du fiston",
               ref: "VVVVVVV",
               version: "1.0",
-              sim: true,
+              phone: "",
               photo: "https://bulma.io/images/placeholders/1280x960.png",
               available: false,
               lockDays: [['2020-12-2', '2020-12-10']]
@@ -81,19 +80,19 @@ export default new Vuex.Store({
           identifier: 1,
           name: "toto",
           surname: "pipe",
-          role: "useradmin"
+          admin: true
         },
         {
           identifier: 2,
           name: "patoune",
           surname: "pipe",
-          role: "useradmin"
+          admin: false
         },
         {
           identifier: 3,
           name: "pipouche",
           surname: "pipe",
-          role: "useradmin"
+          admin: true
         }
       ]
     }

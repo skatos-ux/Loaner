@@ -19,7 +19,20 @@
 
           <template v-slot:body>
             <div class="modal__body--wrapper">
-              <input type="text" class="input" placeholder="Ordinateurs, téléphones...">
+              <input v-model="formAddUser.name" type="text" class="input" placeholder="Nom">
+              <input v-model="formAddUser.surname" type="text" class="input" placeholder="Prénom">
+              <div class="control has-icons-left">
+                <div class="select">
+                  <select v-model="formAddUser.role" >
+                    <option selected> Utilisateur </option>
+                    <option> Invité </option>
+                    <option> Administrateur </option>
+                  </select>
+                </div>
+                <div class="icon is-small is-left">
+                  <font-awesome-icon :icon="['fas', 'user-tag']" />
+                </div>
+              </div>
             </div>
             <input @click="addUser" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
@@ -45,7 +58,12 @@ export default class UsersLayout extends Vue {
   users = this.$store.state.db.users
   search = ""
 
-  //TODO do dis
+  formAddUser = {
+    name: "",
+    surname: "",
+    role: ""
+  }
+
   popUserModal() {
     this.addUserModal.popModal()
   }

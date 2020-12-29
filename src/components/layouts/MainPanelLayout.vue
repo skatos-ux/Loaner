@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="mainpanel__devicelist">
-      <div v-if="isAdmin" class="mainpanel__devicelist--options">
+      <div v-if="user.admin" class="mainpanel__devicelist--options">
         <button @click="popCategoryModal" class="button  is-size-7 is-primary is-inverted">
           Ajouter categorie
         <span class="icon is-small">
@@ -34,7 +34,7 @@
 
           <template v-slot:body>
             <div class="modal__body--wrapper">
-              <input type="text" class="input" placeholder="Ordinateurs, téléphones...">
+              <input v-model="formAddCategory.name" type="text" class="input" placeholder="Ordinateurs, téléphones...">
             </div>
             <input @click="addCategory" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
@@ -59,13 +59,13 @@
                   </div>
                 </div>
               </div>
-              <input id="deviceName" class="input" type="text" required placeholder="Nom de l'appareil">
-              <input id="deviceRef" class="input" type="text" required placeholder="Référence">
-              <input id="deviceVer" class="input" type="text" required placeholder="Version">
+              <input v-model="formAddDevice.name" id="deviceName" class="input" type="text" required placeholder="Nom de l'appareil">
+              <input v-model="formAddDevice.reference" id="deviceRef" class="input" type="text" required placeholder="Référence">
+              <input v-model="formAddDevice.version" id="deviceVer" class="input" type="text" required placeholder="Version">
             </div>
             <div class="modal__body--wrapper">
               <input id="devicePhoto" class="input" type="file" accept="image/x-png,image/jpeg" required placeholder="Image" value="test">
-              <input id="devicePhone" class="input" type="tel" required placeholder="Numéro de téléphone">
+              <input v-model="formAddDevice.phone" id="devicePhone" class="input" type="tel" required placeholder="Numéro de téléphone">
             </div>
             <input @click="addDevice" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
@@ -73,7 +73,7 @@
 
       </div>
       <DeviceCategoryLayout v-for="category in searchedCategories" :key="category.name" :title="category.name">
-        <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :sim="device.sim" :available="device.available" :lockDays="device.lockDays" :photo="device.photo" :rank="user.rank"></Device>
+        <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :phone="device.phone" :lockDays="device.lockDays" :photo="device.photo"></Device>
       </DeviceCategoryLayout>
     </div>
   </section>
@@ -96,11 +96,26 @@ export default class MainPanelLayout extends Vue {
   user = this.$store.state.auth.user
   search = ""
 
-
-
-  isAdmin(){
-    return this.user.rank === 0
+  formAddCategory = {
+    name: ""
   }
+
+  formAddDevice = {
+    name: "",
+    reference: "",
+    version: 1.0,
+    photo: "",
+    phone: ""
+  }
+
+  mounted() {
+    this.$api.get('/devices/all').then((res) => {
+      console.log(res.data)
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
   popCategoryModal() {
     this.addCategoryModal.popModal()
   }
@@ -110,10 +125,26 @@ export default class MainPanelLayout extends Vue {
 
   addCategory() {
     console.log("add category")
+    /*
+    this.$api.post("/login", this.form).then((res) => {
+      console.log(res.data)
+    }).catch((error) => {
+      console.log(error)
+      element.preventDefault()
+    })
+    */
   }
 
   addDevice() {
     console.log("add device")
+    /*
+    this.$api.post("/login", this.form).then((res) => {
+      console.log(res.data)
+    }).catch((error) => {
+      console.log(error)
+      element.preventDefault()
+    })
+    */
   }
 
   get searchedCategories() {

@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard">
-      <DashboardLayout :user-rank="this.user.rank"/>
+      <DashboardLayout/>
   </div>
 </template>
 

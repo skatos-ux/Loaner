@@ -22,7 +22,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class Modal extends Vue {
   @Prop() private id!: string
 
-  public popModal(): any {
+  popModal(): any {
     document.getElementById(this.id)!.className += " is-active"
   }
 
@@ -69,6 +69,13 @@ export default class Modal extends Vue {
         z-index: 2;
         max-width: 300px;
       }
+    }
+    &--footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 20px;
     }
   }
 

@@ -5,16 +5,16 @@
         <div class="device__info" >{{ name }}</div>
         <div class="device__info">{{ reference }}</div>
         <div class="device__info">
-          <span v-show="available" class="icon is-small success">
-              <font-awesome-icon :icon="['fas', 'check']" />
+          <span v-show="phone !== ''" class="icon is-small success">
+              {{ phone }}
           </span>
-          <span v-show="!available" class="icon is-small fail">
+          <span v-show="phone === ''" class="icon is-small fail">
               <font-awesome-icon :icon="['fas', 'times']" />
           </span>
         </div>
       </div>
       <div class="device__info">
-        <button @click="addToCart" :disabled="!available" class="button is-primary is-inverted">
+        <button @click="addToCart" class="button is-primary is-inverted">
           Ajouter au panier
           <span class="icon is-small">
             <font-awesome-icon :icon="['fas', 'plus']" />
@@ -22,16 +22,16 @@
         </button>
       </div>
     </div>
-    <Modal :id="reference" ref="modal">
+    <Modal :id="reference" ref="deviceInfoModal">
       <template v-slot:header>
         <p class="modal-card-title">{{ category }}</p>
         <p class="modal-card-title">{{ name }}</p>
         <div class="modal__sim">
-          <label class="label is-size-7 has-text-left	">SIM:</label>
-          <span v-show="sim" class="icon is-small success">
-              <font-awesome-icon :icon="['fas', 'check']" />
+          <label class="label is-size-7 has-text-left">Téléphone : </label>
+          <span v-show="phone !== ''" class="is-size-7 has-text-left">
+              {{ phone }}
           </span>
-          <span v-show="!sim" class="icon is-small fail">
+          <span v-show="phone === ''" class="icon is-small fail">
               <font-awesome-icon :icon="['fas', 'times']" />
           </span>
         </div>
@@ -44,8 +44,13 @@
           <div class="modal__body--info">{{ reference }}</div>
         </div>
         <p class="image is-4by3">
-          <img :src="photo" alt="">
+          <img :src="photo" alt="Photo de l'appareil">
         </p>
+        <div v-if="user.admin" class="modal__body--footer">
+          <div class="modal__body--info">
+            <input @click="deleteDevice" class="button is-danger" type="button" value="Supprimer">
+          </div>
+        </div>
       </template>
     </Modal>
   </div>
@@ -64,13 +69,13 @@ export default class Device extends Vue {
   @Prop() private category!: string
   @Prop() private reference!: string
   @Prop() private version!: string
-  @Prop() private sim!: boolean
-  @Prop() private available!: boolean
+  @Prop() private phone!: string
   @Prop() private lockDays!: string[]
   @Prop() private photo!: string
-  @Prop() private rank!: number
 
-  @Ref() readonly modal!: Modal
+  @Ref() readonly deviceInfoModal!: Modal
+
+  user = this.$store.state.auth.user
 
   item = {
     identifier: null,
@@ -78,15 +83,29 @@ export default class Device extends Vue {
     version: this.version,
     reference: this.reference,
     lockDays: this.lockDays,
-    loanStart: 0,
-    loanEnd: 1
+    phone: this.phone,
   }
 
+
+  deleteDevice() {
+    console.log("delete")
+
+    this.deviceInfoModal.depopModal()
+
+    /*
+    this.$api.post("/login", this.form).then((res) => {
+      console.log(res.data)
+    }).catch((error) => {
+      console.log(error)
+      element.preventDefault()
+    })
+    */
+  }
   addToCart(){
     this.$store.dispatch('addToCart', this.item)
   }
   popModal() {
-    this.modal.popModal()
+    this.deviceInfoModal.popModal()
   }
 
 }

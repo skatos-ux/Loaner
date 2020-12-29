@@ -14,7 +14,7 @@
           <font-awesome-icon :icon="['fas', 'shopping-cart']" />
       </span>
     </div>
-    <Modal id="command" ref="modal">
+    <Modal id="command" ref="commandModal">
       <template v-slot:header>
         <p class="modal-card-title">Cart</p>
       </template>
@@ -23,7 +23,7 @@
         <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference" :loanStart="item.loanStart" :loanEnd="item.loanEnd">
           <div class="cart__modal--item">
             {{ item.name }}
-            <input :id="'datepicker' + index" class="input" type="text" required placeholder="date de réservation">
+            <input v-model="item.lockDays" :id="'datepicker' + index" class="input" type="text" required placeholder="date de réservation">
           </div>
         </CartItem>
         <div class="cart__modal--footer">
@@ -43,9 +43,10 @@ import Litepicker from 'litepicker';
   components: {CartItem, Modal}
 })
 export default class CartLayout extends Vue {
-  @Ref() readonly modal!: Modal
+  @Ref() readonly commandModal!: Modal
 
   cart = this.$store.state.cart.items
+  litepickers: Array<Litepicker> = []
 
   get checkEmpty () {
     if(this.cart.length){
@@ -53,15 +54,18 @@ export default class CartLayout extends Vue {
     }
     return true
   }
-  popModal() {
-    this.modal.popModal();
 
-    document.querySelectorAll('.litepicker').forEach(function(litepicker){
+  popModal() {
+    this.commandModal.popModal();
+
+    document.querySelectorAll('.litepicker').forEach((litepicker) => {
       litepicker.remove()
     })
 
+    this.litepickers = []
+
     this.cart.forEach((item: any, index: number) => {
-      new Litepicker({
+      this.litepickers.push(new Litepicker({
         element: document.getElementById("datepicker" + index),
         format: "D MMMM YYYY",
         lang: "fr-FR",
@@ -70,12 +74,25 @@ export default class CartLayout extends Vue {
         singleMode: false,
         lockDays: item.lockDays,
         disallowLockDaysInRange: true
-      });
+      }));
     });
   }
 
   command() {
-    console.log("commanded")
+    this.litepickers.forEach((litepicker) => {
+      console.log(litepicker.getStartDate())
+      console.log(litepicker.getEndDate())
+    })
+    this.commandModal.depopModal()
+
+    /*
+    this.$api.post("/login", this.form).then((res) => {
+      console.log(res.data)
+    }).catch((error) => {
+      console.log(error)
+      element.preventDefault()
+    })
+    */
   }
 }
 </script>

@@ -48,6 +48,14 @@ export default class User extends Vue {
 
   remUser() {
     console.log("remUser")
+    /*
+    this.$api.post("/login", this.form).then((res) => {
+      console.log(res.data)
+    }).catch((error) => {
+      console.log(error)
+      element.preventDefault()
+    })
+    */
   }
 }
 </script>
