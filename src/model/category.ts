@@ -16,6 +16,11 @@ export default class Category {
     }
 
     public setID(ID : number) : void {
+
+        if(ID < 0) {
+            throw new Error("Invalid ID");
+        }
+
         this.ID = ID;
     }
 
