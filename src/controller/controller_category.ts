@@ -9,12 +9,14 @@ export default class CategoryController extends Controller {
         this.dao.getAll().then(this.findSuccess(res)).catch(this.findError(res));
     }
     public async addCategory(res : Response, name : string) : Promise<void> {
-        var lastId = 0;
-        try{
+        let lastId = 0;
+
+        try {
             lastId = (await this.dao.getLastId()).getID();
-        }catch{
+        } catch {
             lastId = 0;
         }
+        
         this.dao.addCategory(name, lastId+1).then(this.findSuccess(res)).catch(this.findError(res));
     }
 

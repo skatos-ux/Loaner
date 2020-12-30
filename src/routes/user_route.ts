@@ -28,13 +28,13 @@ router.get("/:idUser", (req, res) => {
 
 //a tester
 router.post("/add", (req, res) => {
-  const user : User = JSON.parse(req.body);
+  const user : User = req.body;
   controller.addUser(res, user);
 });
 
 //a tester
 router.put("/modify", (req, res) => {
-  const user : User = JSON.parse(req.body);
+  const user : User = req.body;
   controller.updateUser(res, user);
 });
 

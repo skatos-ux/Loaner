@@ -16,12 +16,17 @@ export default class Category {
     }
 
     public setID(ID : number) : void {
+
+        if(ID < 0) {
+            throw new Error("Invalid ID");
+        }
+
         this.ID = ID;
     }
 
     public setName(name : string) : void {
 
-        if(this.name.length == 0 || this.name.length > 255) {
+        if(!name || name.length == 0 || name.length > 255) {
             throw new Error("Invalid name");
         }
 

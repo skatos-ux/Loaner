@@ -1,6 +1,6 @@
 import DAOCategory from '../../src/dao/dao_category';
 
-const assert = require('chai').assert;
+import { assert } from 'chai';
 
 /* TODO 
     - Vérifier que le résultat soit un tableau

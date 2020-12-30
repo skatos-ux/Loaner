@@ -1,8 +1,6 @@
 import { Router } from 'express';
-import { send } from 'process';
 import CategoryController from '../controller/controller_category';
 import AuthController from '../controller/controller_auth';
-import Category from '../model/category';
 
 const router = Router();
 const controller = new CategoryController();

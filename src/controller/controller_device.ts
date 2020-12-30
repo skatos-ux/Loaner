@@ -21,13 +21,14 @@ export default class DeviceController extends Controller {
     }
 
     public async borrowDevice(res : Response, idDevice : string, idUser : string) : Promise<void> {
-        var lastId = 0;
-        var firstRes =  true;
-        try{
+        let lastId = 0;
+        
+        try {
             lastId = (await this.DAOReservation.getLastId()).getID();
-        }catch{
+        } catch {
             lastId = 0;
         }
+
         this.dao.borrowDevice(idDevice, idUser, lastId+1).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
@@ -45,10 +46,10 @@ export default class DeviceController extends Controller {
 
     public async filterDevice(res : Response, params: any) {
 
-        let name: string = "";
-        let ref: string = "";
-        let available: number = -1;
-        let categoryID: number = -1;
+        let name = "";
+        let ref = "";
+        let available = -1;
+        let categoryID = -1;
 
         for(const param in params) {
 

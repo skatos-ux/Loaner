@@ -35,6 +35,27 @@ export default class AuthController extends Controller {
         });
     }
 
+    public async changePassword(firstName : string, lastName : string, oldPassword : string, newPassword : string,
+        req : Request, res : Response) : Promise<void> {
+
+            if(newPassword.length == 0) {
+                this.giveError(new Error("New password can't be empty"), res);
+                return;
+            }
+        
+            this.dao.checkUser(firstName, lastName, oldPassword)
+            .then((user) => {
+                if(this.checkToken(req, res, false, user.getId())) {
+                    this.dao.changePassword(firstName, lastName, newPassword);
+
+                    // Besoin de donner un token ?
+                }
+            })
+            .catch((err : Error) => {
+                this.giveError(new Error("Invalid name or old password"), res);
+            })
+    }
+
     public hasToken(req : Request) : boolean {
         return !!req.headers['x-access-token'];
     }
@@ -65,7 +86,7 @@ export default class AuthController extends Controller {
             }
 
         } catch {
-            this.giveError(new Error("Invalid token"), res);
+            this.giveError(new Error("Invalid token"), res, 401);
             return false;
         }
 

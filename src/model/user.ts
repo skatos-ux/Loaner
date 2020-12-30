@@ -3,17 +3,19 @@ export default class User {
     private firstName!: string;
     private lastName!: string;
     private email!: string;
-    private admin!: number;
+    private admin!: boolean;
+    private temporaryPassword!: boolean;
 
-    constructor(id: number, firstName: string, lastName: string, email: string, admin: number){
-      this.id = id;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.email = email;
-      this.admin = admin;
+    constructor(id: number, firstName: string, lastName: string, email: string, admin: boolean, temporaryPassword: boolean){
+      this.setId(id);
+      this.setFirstName(firstName);
+      this.setLastName(lastName);
+      this.setEmail(email);
+      this.setAdmin(admin);
+      this.setTemporaryPassword(temporaryPassword);
     }
 
-    //getters
+    // Getters
     public getId() : number {
       return this.id;
     }
@@ -30,28 +32,50 @@ export default class User {
       return this.email;
     }
 
-    public isAdmin() : number {
+    public isAdmin() : boolean {
       return this.admin;
     }
 
-    //setters
-    public setId(id : number) : void {
+    public hasTemporaryPassword() : boolean {
+      return this.temporaryPassword;
+    }
+
+    // Setters
+    public setId(id: number) : void {
       this.id = id;
     }
 
     public setFirstName(firstName : string) : void {
+
+      if(!firstName || firstName.length == 0 || firstName.length > 30) {
+        throw new Error("Invalid firstname");
+      }
+      
       this.firstName = firstName;
     }
 
     public setLastName(lastName : string) : void {
+      if(!lastName || lastName.length == 0 || lastName.length > 30) {
+        throw new Error("Invalid lastname");
+      }
+
       this.lastName = lastName;
     }
 
     public setEmail(email : string) : void {
+      
+      if(!email || email.length == 0 || email.match(/^[^@\s]+@[^@\s]+\.[^@\s]+/g)?.length != 1) {
+        throw new Error("Invalid email");
+      }
+      
       this.email = email;
     }
 
-    public setAdmin(admin : number) : void {
+    public setAdmin(admin : boolean) : void {
       this.admin = admin;
+    }
+
+    public setTemporaryPassword(temporaryPassword: boolean): void {
+      this.temporaryPassword = temporaryPassword;
     }
 }
