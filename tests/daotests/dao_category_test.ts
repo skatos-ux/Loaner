@@ -7,6 +7,10 @@ const expect = require('chai').expect;
 
 const DAOCategTested = new DAOCategory();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1e07d924d2f974ef591788c87bba1faf97a3765d
 /* TODO 
     - Vérifier que le résultat soit un tableau
     - Vérifier qu'il y ait au moins une catégorie
