@@ -1,17 +1,11 @@
-import { executionAsyncId } from 'async_hooks';
-import { DAO } from '../../src/dao/dao';
+
 import DAOCategory from '../../src/dao/dao_category';
 import Category from '../../src/model/category';
 
-<<<<<<< HEAD
 const assert = require('chai').assert;
 const expect = require('chai').expect;
 
 const DAOCategTested = new DAOCategory();
-
-=======
-import { assert } from 'chai';
->>>>>>> 7b2767657b480aaf7aaa5099edbd6caa609525e7
 
 /* TODO 
     - Vérifier que le résultat soit un tableau

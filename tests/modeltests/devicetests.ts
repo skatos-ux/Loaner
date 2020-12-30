@@ -1,14 +1,8 @@
 import Device from '../../src/model/device';
 
-<<<<<<< HEAD
 const assert = require('chai').assert;
 const expect = require('chai').expect;
-const devTested = new Device("test1","Computer","PremierTest","1.0","url","0707070707",true);
-=======
-import { assert } from 'chai';
-
 const devTested = new Device("test1","Computer","PremierTest","1.0","url","0707070707");
->>>>>>> 7b2767657b480aaf7aaa5099edbd6caa609525e7
 
 describe("Test on device.ts", function(){
 
