@@ -38,7 +38,7 @@ router.get('/:id_device', (req,res) => {
 
 router.post('/:id_device/borrow/:id_user', (req,res) => {
     const idUser = req.params.id_user;
-    if(controllerAuth.checkToken(req,res,false,Number.parseInt(idUser)){
+    if(controllerAuth.checkToken(req,res,false,Number.parseInt(idUser))){
         const idDevice = req.params.id_device;
         
         controller.borrowDevice(res, idDevice, idUser);
