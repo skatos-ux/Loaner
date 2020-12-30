@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { send } from 'process';
 import CategoryController from '../controller/controller_category';
-import Category from '../model/category';
+import AuthController from '../controller/controller_auth';
 
 const router = Router();
 const controller = new CategoryController();
+const controllerAuth = new AuthController();
 
 /*Catégories : /category - Milan
     Coté admin :
@@ -19,18 +19,24 @@ router.get('/all', (req,res) => {
 
 
 router.put('/add/:name_Category', (req, res) => {
-    const nameCategory = req.params.name_Category;
-    controller.addCategory(res, nameCategory);
+    if(controllerAuth.checkToken(req,res,true)){
+        const nameCategory = req.params.name_Category;
+        controller.addCategory(res, nameCategory);
+    }
 });
 
 router.delete('/delete/:id_category', (req, res) => {
-    const idCategory = req.params.id_category;
-    controller.deleteCategory(res, idCategory);
+    if(controllerAuth.checkToken(req,res,true)){
+        const idCategory = req.params.id_category;
+        controller.deleteCategory(res, idCategory);
+    }
 });
 
 router.post('/modify', (req, res) => {
-    const names = req.body;
-    controller.modifyCategory(res, names.oldName, names.newName);
+    if(controllerAuth.checkToken(req,res,true)){
+        const names = req.body;
+        controller.modifyCategory(res, names.oldName, names.newName);
+    }
 });
 
 export default router;

@@ -1,8 +1,9 @@
 import Controller from './controller';
 import DAOUser from '../dao/dao_user';
-import User from '../model/user'
+import User from '../model/user';
 
 import { Response } from 'express';
+import { generate as generatePassword } from 'generate-password';
 
 export default class UserController extends Controller {
 
@@ -17,20 +18,32 @@ export default class UserController extends Controller {
     }
 
     public async addUser(res : Response, user : User) : Promise<void> {
-      var lastId = 1;
+      
+      // On vérifie si l'adresse mail n'existe pas deja
+      if(await this.dao.hasUserWithemail(user.getEmail())) {
+        this.giveError(new Error("User with this email already exists"), res);
+        return;
+      }
+
+      /*var lastId = 1;
       var firstRes =  true;
-      const promLastId = this.dao.getLastId().then(async () => {
+      /*const promLastId = this.dao.getLastId().then(async () => {
           firstRes = false;
       }).catch((error) => {
           lastId = 0;
-      });
+      });*/
+
+      let lastId = 1;
+      let firstRes = true;
+      await this.dao.getLastId().then(() => firstRes = false).catch(() => lastId = 0);
       if(!firstRes){
           lastId = (await this.dao.getLastId()).getId();
       }
       user.setId(lastId+1);
-      // TODO : Recuperer le mot de passe séparément de l'utilisateur
-      // Le mot de passe n'est pas dans l'objet modèle et n'est utilisé que lors de l'insertion
-      this.dao.addUser(user, "joli_motdepasse37").then(this.findSuccess(res)).catch(this.findError(res));
+
+      const password = generatePassword({ length: 10, numbers: true });
+      
+      this.dao.addUser(user, password).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
     public async updateUser(res : Response, user : User) : Promise<void> {

@@ -10,6 +10,12 @@ router.post('/login', (req, res) => {
     controller.authentificate(info.firstName, info.lastName, info.password, req, res);
 });
 
+router.get('/change/password', (req, res) => {
+    const info = req.body;
+    controller.changePassword(info.firstName, info.lastName, info.oldPassword, info.newPassword, req, res);
+});
+
+
 // Utilisé pour du déboggage
 router.get('/check', (req, res) => {
     if(controller.checkToken(req, res)) {

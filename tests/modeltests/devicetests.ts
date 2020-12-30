@@ -1,8 +1,14 @@
 import Device from '../../src/model/device';
 
+<<<<<<< HEAD
 const assert = require('chai').assert;
 const expect = require('chai').expect;
 const devTested = new Device("test1","Computer","PremierTest","1.0","url","0707070707",true);
+=======
+import { assert } from 'chai';
+
+const devTested = new Device("test1","Computer","PremierTest","1.0","url","0707070707");
+>>>>>>> 7b2767657b480aaf7aaa5099edbd6caa609525e7
 
 describe("Test on device.ts", function(){
 
@@ -13,19 +19,18 @@ describe("Test on device.ts", function(){
         assert.equal(devTested.getVersion(),"1.0");
         assert.equal(devTested.getPhoto(),"url");
         assert.equal(devTested.getPhone(),"0707070707");
-        assert.equal(typeof(devTested.isAvailable()),"boolean");
     })
 
     it("Device Modification test", function (){
         devTested.setRef("modif");
-        devTested.setCategory("Phone");
+        //devTested.setCategory("Phone");
         devTested.setName("ModifTest");
         devTested.setVersion("1.1");
         devTested.setPhoto("url2");
         devTested.setPhone("0707070708");
 
         assert.equal(devTested.getRef(),"modif");
-        assert.equal(devTested.getCategory(),"Phone");
+        //assert.equal(devTested.getCategory(),"Phone");
         assert.equal(devTested.getName(),"ModifTest");
         assert.equal(devTested.getVersion(),"1.1");
         assert.equal(devTested.getPhoto(),"url2");

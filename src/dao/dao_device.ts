@@ -7,7 +7,7 @@ export default class DAODevice extends DAO<Device> {
     // Besoin de laisser le champ available si on gère les réservations ?
     // Ajouter la champ sim ou non ?
     public rowToModel(row: any): Device {
-        return new Device(row.ref, row.category, row.name, row.version, row.photo, row.phone, false);
+        return new Device(row.ref, row.category, row.name, row.version, row.photo, row.phone);
     }
 
     public getAll() : Promise<Device[]> {
