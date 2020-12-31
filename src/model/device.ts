@@ -5,6 +5,7 @@ export default class Device {
     private version!: string;
     private photo!: string;
     private phone!: string;
+    private lockDays!: string[];
 
     constructor(ref : string, category: string, name : string, version : string, photo : string, phone : string) {
         this.setRef(ref);
@@ -13,6 +14,7 @@ export default class Device {
         this.setVersion(version);
         this.setPhoto(photo);
         this.setPhone(phone);
+        this.setLockDays(new Array());
     }
 
     // Getters
@@ -38,6 +40,10 @@ export default class Device {
 
     public getPhone() : string {
         return this.phone;
+    }
+
+    public getLockDays() : string[] {
+        return this.lockDays;
     }
 
 
@@ -84,5 +90,9 @@ export default class Device {
         }
 
         this.phone = phone;
+    }
+
+    public setLockDays(lockDays : string[]) : void {
+        this.lockDays = lockDays;
     }
 }
