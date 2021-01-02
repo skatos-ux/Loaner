@@ -3,10 +3,12 @@ import { Router } from 'express';
 import DeviceController from '../controller/controller_device';
 import AuthController from '../controller/controller_auth';
 import Device from '../model/device';
+import CategoryController from '../controller/controller_category';
 
 const router = Router();
 const controller = new DeviceController();
 const controllerAuth = new AuthController();
+const controllerCategory = new CategoryController();
 
 // On dit que lorsque l'on reçoit une requête HTTP GET sur /all, on exécute la méthode getAll de DeviceController
 // req = Request = Informations sur le requête reçue
@@ -36,8 +38,13 @@ router.post('/:id_device/borrow/:id_user', (req,res) => {
 
 router.put('/add', (req,res) =>{
     if(controllerAuth.checkToken(req,res,true)){
-        const device: Device = JSON.parse(req.body);
-        controller.addDevice(res, device);
+        const ref = req.body.ref;
+        const category = req.body.category;
+        const name = req.body.name;
+        const version = req.body.version;
+        const photo = req.body.photo;
+        const phone = req.body.phone;
+        controller.addDevice(res, ref, category, name, version, photo, phone);
     }
 });
 

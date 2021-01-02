@@ -44,7 +44,7 @@ export default class DAODevice extends DAO<Device> {
 
     public addDevice(device : Device) : Promise<void> {
         // Il faut mettre l'ID de la categorie et non pas le nom (device.getCategory() = nom)
-        return this.runQuery('insert into device values(?,?,?,?,?,?,?)',[device.getRef(), device.getCategory(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone(), device.getLockDays().toString()]);
+        return this.runQuery('insert into device values(?,?,?,?,?,?)',[device.getRef(), device.getCategory(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone()]);
     }
 
     public deleteDevice(refDevice : string) : Promise<void> {
