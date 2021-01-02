@@ -51,6 +51,8 @@ describe("Tests on dao_category.ts",function (){
             });
         });
 
+        //Pas dans les spécifications, confort utilisateur
+        /*
         it("The names of the categories must not have any number", async function(){
             const result = await resultAllCategories();
             result.forEach( function(category){
@@ -64,6 +66,7 @@ describe("Tests on dao_category.ts",function (){
                 expect(category.getName()).to.match(/^[a-zA-Z\-éèà]{0,255}$/);
             });
         });
+        */
     });
 
     describe("Tests on getByName() method",function (){
@@ -138,8 +141,8 @@ describe("Tests on dao_category.ts",function (){
         });
         */
 
-        it("Adding category with a negative ID should throw an error", function() {
-            expect(DAOCategTested.addCategory.bind(DAOCategTested,"TestCategory2",-1)).to.throw(Error);
+        it("Adding category with a negative ID should throw an error",async function() {
+           expect(await DAOCategTested.addCategory.bind(DAOCategTested,"TestCategory2",-1)).to.throw(Error);
         });
     });
 
@@ -150,19 +153,21 @@ describe("Tests on dao_category.ts",function (){
         }
 
         it("A deleted category should not be in a query later",async function() {
-            expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9999")).not.to.throw(Error);
+            expect(await DAOCategTested.deleteCategory.bind(DAOCategTested,"9999")).not.to.throw(Error);
+        });
+    
+        //The previous category we tried to add should not be added, so theses deletion should not work
+        it("The category we tried to added, should throw an error at its deletion, or it is deleted from the database",async function(){
+            //expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9998")).to.throw(Error);
+            //expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9997")).to.throw(Error);
+           //expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9996")).to.throw(Error);
+
+           //Test bloquant que la suppression ait fonctionné ou pas
+           expect(await DAOCategTested.deleteCategory.bind(DAOCategTested,"-1")).to.throw(Error);
+            
+
         });
         
-        //Pas dans les spécifications, expérience utilisateur
-        /*
-        //The previous category we tried to add should not be added, so theses deletion should not work
-        it("Deleting the testing addition of categories should throw error", function(){
-            expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9998")).to.throw(Error);
-            expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9997")).to.throw(Error);
-            expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9996")).to.throw(Error);
-            expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"-1")).to.throw(Error);
-        });
-        */
     });
 
 
