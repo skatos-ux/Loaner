@@ -1,6 +1,7 @@
 import { DAO } from './dao';
 import Device from '../model/device';
 
+
 export default class DAODevice extends DAO<Device> {
 
     // TODO : Gerer les lockDays "reservation"

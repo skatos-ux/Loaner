@@ -1,11 +1,17 @@
 import DAODevice from '../../src/dao/dao_device';
 import DAOCategory from '../../src/dao/dao_category';
 import Category from '../../src/model/category';
-import Device from '../../src/model/device'
+import Device from '../../src/model/device';
+import { DAO } from '../../src/dao/dao';
+import DAOUser from '../../src/dao/dao_user';
+import User from '../../src/model/user';
+import DAOReservation from '../../src/dao/dao_reservation';
 
  const assert = require('chai').assert;
  const expect = require('chai').expect;
 
+ const DAObooking = new DAOReservation();
+const DAOuser = new DAOUser();
 const DAOTested = new DAODevice();
 const DAOcat = new DAOCategory();
  /* TODO:
@@ -213,15 +219,57 @@ const DAOcat = new DAOCategory();
     });
 
     describe("Tests on borrowDevice() method",function() {
+        it("Booking a device which doesn't exist should throw error",async function(){
+            var reservationID = await  DAObooking.getLastId();
+            expect(await DAOTested.borrowDevice.bind(DAOTested,"TESTB","ABCDEFG",reservationID.getID()+1)).to.throw(Error);
+        });
 
-    });
+        it("Borrow a wrong reference device should throw an error",async function(){
+            var reservationID = await  DAObooking.getLastId();
+            expect(await DAOTested.borrowDevice.bind(DAOTested,"toolongref","ABCDEFG",reservationID.getID()+2)).to.throw(Error);
+            expect(await DAOTested.borrowDevice.bind(DAOTested,"ref","ABCDEFG",reservationID.getID()+3)).to.throw(Error);
+        });
 
-    
-
-    
+        it("Booking a device as a invalid user should throw error",async function(){
+            var reservationID = await  DAObooking.getLastId();
+            expect(await DAOTested.borrowDevice.bind(DAOTested,"AN001","testUserRef",reservationID.getID()+4)).to.throw(Error);
+        });
+    });    
 
     describe("Tests on getDevicesByFilter() method",function() {
 
+        it("Research with empty filters should throw error",async function (){
+            expect(await DAOTested.getDevicesByFilter.bind(DAOTested,"","",-1,-1)).to.throw("All fields can't be empty");
+        });
+
+        it("Checking if all the filters works well",async function(){
+            await DAOTested.addDevice.bind(DAOTested,new Device("test1","1","Test filters","1.0","","0778787878"));
+
+            var result = await DAOTested.getDevicesByFilter("Test filters","",-1,-1);
+            result.forEach(function(device){
+                assert.equal(device.getName(),"Test filters");
+            })
+
+            //Test à modifier selon l'implémentation du code
+            var result = await DAOTested.getDevicesByFilter("","test1",-1,-1);
+            result.forEach(function(device){
+                assert.equal(device.getRef(),"test1");
+                //assert.equal(device.getCategory(),1);
+            })
+
+            var result = await DAOTested.getDevicesByFilter("","",1,-1);
+            result.forEach(function(device){
+                assert.isEmpty(device.getLockDays());
+            })
+
+            var result = await DAOTested.getDevicesByFilter("","",-1,1);
+            result.forEach(function(device){
+                assert.equal(device.getName(),"Téléphones");
+            })
+
+            await DAOTested.deleteDevice.bind(DAOTested,"test1");
+        });
+        
     });
  })
 
