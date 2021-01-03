@@ -11,6 +11,7 @@ export default class DeviceController extends Controller {
 
     private dao = new DAODevice();
     private DAOReservation = new DAOReservation();
+    private DAOCategory = new DAOCategory();
 
     public async getAll(res : Response) : Promise<void> {
         this.dao.getAll().then(this.findSuccess(res)).catch(this.findError(res));
@@ -32,7 +33,9 @@ export default class DeviceController extends Controller {
         this.dao.borrowDevice(idDevice, idUser, lastId+1).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
-    public async addDevice(res : Response, device : Device) : Promise<void> {
+    public async addDevice(res : Response, ref : string, category : string, name : string, version : string, photo : string, phone: string) : Promise<void> {
+        const cat = (await this.DAOCategory.getByName(category)).getID();
+        const device  = new Device(ref, cat, name, version, photo, phone)
         this.dao.addDevice(device).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
@@ -112,5 +115,9 @@ export default class DeviceController extends Controller {
         }
 
         this.dao.getDevicesByFilter(name, ref, available, categoryID).then(this.findSuccess(res)).catch(this.findError(res));
+    }
+
+    public async getCategoryByName(res : Response, name : string) : Promise<void>{
+        this.DAOCategory.getByName(name).then(this.findSuccess(res)).catch(this.findError(res));
     }
 }

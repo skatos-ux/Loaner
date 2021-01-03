@@ -1,13 +1,15 @@
+import Category from "./category";
+
 export default class Device {
     private ref!: string;
-    private category!: string;
+    private category!: number;
     private name!: string;
     private version!: string;
     private photo!: string;
     private phone!: string;
     private lockDays!: string[];
 
-    constructor(ref : string, category: string, name : string, version : string, photo : string, phone : string) {
+    constructor(ref : string, category: number, name : string, version : string, photo : string, phone : string) {
         this.setRef(ref);
         this.category = category;
         this.setName(name);
@@ -22,7 +24,7 @@ export default class Device {
         return this.ref;
     }
 
-    public getCategory() : string {
+    public getCategory() : number {
         return this.category;
     }
 
