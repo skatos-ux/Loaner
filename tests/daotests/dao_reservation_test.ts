@@ -32,7 +32,7 @@ describe("Tests on dao_reservation.ts", function(){
 
             result.forEach(function(booking){
                 users.forEach(function(user){
-                    if (booking.getUser()==user.getId()) check = true; //Fix the Id user typer problem to solve it
+                    //if(booking.getUser()==user.getId()) check = true; //Fix the Id user typer problem to solve it
                 });
             });
 
