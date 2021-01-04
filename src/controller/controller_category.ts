@@ -1,15 +1,10 @@
 import DAOCategory from '../dao/dao_category';
 import Controller from './controller';
 import { Response } from 'express';
-import Category from '../model/category';
 
 export default class CategoryController extends Controller {
     private dao = new DAOCategory();
 
-    /*public async getAll(res : Response) : Promise<void> {
-        this.dao.getAll().then(this.findSuccess(res)).catch(this.findError(res));
-    }*/
-    
     public async addCategory(res : Response, name : string) : Promise<void> {
         let lastId = 0;
 

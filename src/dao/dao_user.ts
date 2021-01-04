@@ -59,6 +59,5 @@ export default class DAOUser extends DAO<User> {
     public changePassword(email : string, newPassword : string) : Promise<void> {
       return this.runQuery("UPDATE user SET password=?, temporaryPassword=0 WHERE mail=?",
         [bcrypt.hashSync(newPassword, config.hashSaltRounds), email]);
-        //.then(async () => { console.log("ss"); await this.runQuery("UPDATE user SET temporaryPassword=0 WHERE mail=?", [email]); });
     }
 }

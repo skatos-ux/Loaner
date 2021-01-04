@@ -52,9 +52,14 @@ export default class DeviceController extends Controller {
     }
 
     public async addDevice(res : Response, ref : string, categoryName : string, name : string, version : string, photo : string, phone: string) : Promise<void> {
-        const cat = await this.daoCategory.getByName(categoryName);
-        const device = new Device(ref, cat.getID(), cat.getName(), name, version, photo, phone)
-        this.dao.addDevice(device).then(this.findSuccess(res)).catch(this.findError(res));
+        
+        try {
+            const cat = await this.daoCategory.getByName(categoryName);
+            const device = new Device(ref, cat.getID(), cat.getName(), name, version, photo, phone)
+            this.dao.addDevice(device).then(this.findSuccess(res)).catch(this.findError(res));
+        } catch(err) {
+            this.giveError(err, res);
+        }
     }
 
     public async deleteDevice(res : Response, idDevice : string) : Promise<void> {

@@ -60,7 +60,7 @@ export default class AuthController extends Controller {
         return !!req.headers['x-access-token'];
     }
 
-    public checkToken(req : Request, res : Response, requireAdmin = false, requiredUserID = -1) : boolean {
+    public checkToken(req : Request, res : Response, requireAdmin = false, requiredUserID = "") : boolean {
 
         if(!this.hasToken(req)) {
             this.giveError(new Error("No token specified"), res, 401);
@@ -72,7 +72,7 @@ export default class AuthController extends Controller {
         try {
             const userInfo: any = jwt.verify(token, config.jwtSecret);
 
-            const userID = userInfo["id"] || -1;
+            const userID = userInfo["id"] || "";
             const admin = userInfo["admin"] || false;
 
             if(requireAdmin && !admin) {
@@ -80,7 +80,7 @@ export default class AuthController extends Controller {
                 return false;
             }
 
-            if(requiredUserID >= 0 && userID != requiredUserID) {
+            if(requiredUserID != "" && userID != requiredUserID) {
                 this.giveError(new Error("Invalid user"), res, 401);
                 return false;
             }
