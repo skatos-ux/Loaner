@@ -14,14 +14,14 @@ export default class CategoryController extends Controller {
             lastId = 0;
         }
         
-        this.dao.addCategory(name, lastId+1).then(this.findSuccess(res)).catch(this.findError(res));
+        this.dao.addCategory(name, lastId+1).then(this.editSuccess(res)).catch(this.findError(res));
     }
 
     public async deleteCategory(res : Response, idCategory : string) : Promise<void> {
-        this.dao.deleteCategory(idCategory).then(this.findSuccess(res)).catch(this.findError(res));
+        this.dao.deleteCategory(idCategory).then(this.editSuccess(res)).catch(this.findError(res));
     }
 
     public async modifyCategory(res : Response, oldName : string, newName : string) : Promise<void> {
-        this.dao.modifyCategory(oldName, newName).then(this.findSuccess(res)).catch(this.findError(res));
+        this.dao.modifyCategory(oldName, newName).then(this.editSuccess(res)).catch(this.findError(res));
     }
 }

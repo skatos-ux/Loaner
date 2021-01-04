@@ -28,16 +28,12 @@ export default class DAOUser extends DAO<User> {
     }
 
     public updateUser(user : User) : Promise<void> {
-      const query = "UPDATE user SET firstname = ?, lastname = ?, email = ?, admin = ? WHERE id = ?";
+      const query = "UPDATE user SET firstname = ?, lastname = ?, mail = ?, admin = ? WHERE id = ?";
       return this.runQuery(query, [user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getId()]);
     }
 
     public deleteUser(idUser : string) : Promise<void> {
       return this.runQuery("DELETE FROM user WHERE id = ?", [idUser]);
-    }
-
-    public getUserHistory(idUser : string) : Promise<void> {
-      return this.runQuery("SELECT * FROM reservation WHERE iduser = ?", [idUser]);
     }
 
     public hasUserWithEmail(email : string) : Promise<boolean> {

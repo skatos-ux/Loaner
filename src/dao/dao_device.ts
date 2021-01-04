@@ -3,9 +3,8 @@ import Device from '../model/device';
 
 export default class DAODevice extends DAO<Device> {
 
-    // TODO : Gerer les lockDays "reservation"
-    // Besoin de laisser le champ available si on gère les réservations ?
     public rowToModel(row: any): Device {
+        // Ne fonctionnera pas
         const lockDays = [row.startDate,row.endDate];
         const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
         device.setLockDays(lockDays);

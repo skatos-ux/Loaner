@@ -9,10 +9,10 @@
     "start:dev": "nodemon",
     "start:prod": "node ./dist/index.js",
     "test": "mocha -r ts-node/register tests/**/*.ts",
-    "test-routes": "mocha -r ts-node/register tests/routestests/*.ts",
+    "test:routes": "mocha -r ts-node/register tests/routestests/*.ts",
     "lint": "eslint . --ext .ts",
     "coverage": "nyc npm run test",
-    "create-db": "node ./create_db.js",
+    "create-db": "node ./util/create_db.js --exec --log-queries",
     "build:dev": "tsc",
     "build:prod": "npm test && npm run lint && tsc"
   },

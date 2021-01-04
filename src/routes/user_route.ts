@@ -13,28 +13,29 @@ const controller = new UserController();
  //    - Supprimer un utilisateur          DELETE /delete/:id_utilisateur
  //    - Historique des emprunts pour un utilisateur   GET /:id_utilisateur/history
 
-// ...
+ 
+ // TODO : check des tokens pour les fonctions admins
 
-// a tester
 router.get("/all", (req, res) => {
   controller.getAll(res);
 });
 
-//a tester
 router.get("/:idUser", (req, res) => {
   const idUser = req.params.idUser;
   controller.getUser(res, idUser);
 });
 
-//a tester
-router.post("/add", (req, res) => {
-  const user : User = req.body;
+router.put("/add", (req, res) => {
+  // TODO : A deplacer dans le controller
+  const info = req.body;
+  const user: User = new User(info.id, info.firstName, info.lastName, info.email, info.admin, info.temporaryPassword);
   controller.addUser(res, user);
 });
 
-//a tester
-router.put("/modify", (req, res) => {
-  const user : User = req.body;
+router.post("/modify", (req, res) => {
+  // TODO : A deplacer dans le controller
+  const info = req.body;
+  const user: User = new User(info.id, info.firstName, info.lastName, info.email, info.admin, info.temporaryPassword);
   controller.updateUser(res, user);
 });
 
