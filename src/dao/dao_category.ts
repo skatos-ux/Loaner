@@ -11,9 +11,10 @@ export default class DAOCategory extends DAO<Category> {
         return this.runQuery("insert into category values(?, ?)", [lastId, nameCategory]);
     }
 
-    /*public getAll() : Promise<Category[]> {
+    // Non utilisé
+    public getAll() : Promise<Category[]> {
         return this.getAllRows("SELECT * FROM category");
-    }*/
+    }
 
     public deleteCategory(idCategory : string) : Promise<void>{
         return this.runQuery("delete from category where id=?", [idCategory]);

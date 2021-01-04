@@ -1,29 +1,28 @@
-import { expect } from 'chai';
 import User from '../../src/model/user';
 
-const assert = require('chai').assert;
-const chai = require('chai');
-const userTested = new User(1,"Test","UserTest","test@gmail.com",false,false);
+import { assert, expect } from 'chai';
+
+const userTested = new User("00001","Test","UserTest","test@gmail.com",false,false);
 
 
 describe("Tests on user.ts", function() {
 
     it("User Creation test", function() {
-        assert.equal(userTested.getId(),1);
+        assert.equal(userTested.getId(),"00001");
         assert.equal(userTested.getFirstName(),"Test");
         assert.equal(userTested.getLastName(),"UserTest");
         assert.equal(userTested.getEmail(),"test@gmail.com");
-        assert.equal(userTested.isAdmin(),0);
+        assert.equal(userTested.isAdmin(), false);
     });
 
     it("Device Modification test", function (){
-        userTested.setId(2);
+        userTested.setId("00002");
         userTested.setFirstName("Milan");
         userTested.setLastName("Bourbe");
         userTested.setEmail("MilanBourbe@guez.com");
         userTested.setAdmin(true);
 
-        assert.equal(userTested.getId(),2);
+        assert.equal(userTested.getId(),"00002");
         assert.equal(userTested.getFirstName(),"Milan");
         assert.equal(userTested.getLastName(),"Bourbe");
         assert.equal(userTested.getEmail(),"MilanBourbe@guez.com");

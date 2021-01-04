@@ -7,8 +7,7 @@ import DAOUser from '../../src/dao/dao_user';
 import User from '../../src/model/user';
 import DAOReservation from '../../src/dao/dao_reservation';
 
- const assert = require('chai').assert;
- const expect = require('chai').expect;
+import { assert, expect } from 'chai';
 
  const DAObooking = new DAOReservation();
 const DAOuser = new DAOUser();
@@ -46,7 +45,7 @@ const DAOcat = new DAOCategory();
             //Testing for every device that its category is member of the categories of the database
             result.forEach(function(device){
                 existingCategories.forEach(function(category){
-                    if (device.getCategory() == category.getID()) check = true;
+                    if (device.getCategoryID() == category.getID()) check = true;
                 });
             });
 
@@ -119,7 +118,7 @@ const DAOcat = new DAOCategory();
 
             //Testing that its category is member of the categories of the database
             existingCategories.forEach(function(category){
-                if (device.getCategory() == category.getID()) check = true;
+                if (device.getCategoryID() == category.getID()) check = true;
             });
 
             assert.isTrue(check);
@@ -160,12 +159,12 @@ const DAOcat = new DAOCategory();
 
         it("Adding a compliant device should not throw exception, and the added device must be seen in queries",async function() {
             //This device is compliant to the specifications
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test1",1,"First test","1.0","","0778787878"))).not.to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test1",1,"Téléphones","First test","1.0","","0778787878"))).not.to.throw(Error);
             
             const result = await DAOTested.get("test1");
             assert.isNotNull(result);
             expect(result.getRef()).to.equal("test1");
-            expect(result.getCategory()).to.equal(1);
+            expect(result.getCategoryID()).to.equal(1);
             expect(result.getName()).to.equal("First test");
             expect(result.getVersion()).to.equal("1.0");
             expect(result.getPhoto()).to.equal("");

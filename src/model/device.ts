@@ -16,7 +16,7 @@ export default class Device {
         this.setVersion(version);
         this.setPhoto(photo);
         this.setPhone(phone);
-        this.setLockDays(new Array());
+        this.setLockDays([]);
     }
 
     // Getters
