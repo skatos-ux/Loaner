@@ -20,7 +20,7 @@ export default class UserController extends Controller {
     public async addUser(res : Response, user : User) : Promise<void> {
       
       // On vérifie si l'adresse mail n'existe pas deja
-      if(await this.dao.hasUserWithemail(user.getEmail())) {
+      if(await this.dao.hasUserWithEmail(user.getEmail())) {
         this.giveError(new Error("User with this email already exists"), res);
         return;
       }

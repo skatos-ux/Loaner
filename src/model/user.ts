@@ -1,12 +1,12 @@
 export default class User {
-    private id!: number;
+    private id!: string;
     private firstName!: string;
     private lastName!: string;
     private email!: string;
     private admin!: boolean;
     private temporaryPassword!: boolean;
 
-    constructor(id: number, firstName: string, lastName: string, email: string, admin: boolean, temporaryPassword: boolean){
+    constructor(id: string, firstName: string, lastName: string, email: string, admin: boolean, temporaryPassword: boolean){
       this.setId(id);
       this.setFirstName(firstName);
       this.setLastName(lastName);
@@ -16,7 +16,7 @@ export default class User {
     }
 
     // Getters
-    public getId() : number {
+    public getId() : string {
       return this.id;
     }
 
@@ -41,7 +41,12 @@ export default class User {
     }
 
     // Setters
-    public setId(id: number) : void {
+    public setId(id: string) : void {
+
+      if(id.length != 5) {
+        throw new Error("Invalid ID");
+      }
+
       this.id = id;
     }
 

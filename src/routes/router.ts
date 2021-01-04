@@ -41,7 +41,7 @@ Catégories : /category - Milan
 
 Authentification : /auth - Yohan
     X - Faire s'authentifier un utilisateur (renvoie un token de connexion)   POST /auth/login (informations d'authentification de l'utilisateur)
-    X  - Changement de mot de passe d'un utilisateur (pour le temporaryPassword) POST /auth/password/change (identique à /auth/login avec l'ancien mdp en plus)
+    X - Changement de mot de passe d'un utilisateur (pour le temporaryPassword) POST /auth/password/change (identique à /auth/login avec l'ancien mdp en plus)
 */
 
 const router = express.Router();
