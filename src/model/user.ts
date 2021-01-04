@@ -43,7 +43,7 @@ export default class User {
     // Setters
     public setId(id: string) : void {
 
-      if(id.length != 5) {
+      if(id.length != 7) {
         throw new Error("Invalid ID");
       }
 

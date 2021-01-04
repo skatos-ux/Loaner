@@ -33,13 +33,13 @@ export default class UserController extends Controller {
           lastId = 0;
       });*/
 
-      let lastId = 1;
+      /*let lastId = 1;
       let firstRes = true;
       await this.dao.getLastId().then(() => firstRes = false).catch(() => lastId = 0);
       if(!firstRes){
           lastId = (await this.dao.getLastId()).getId();
       }
-      user.setId(lastId+1);
+      user.setId(lastId+1);*/
 
       const password = generatePassword({ length: 10, numbers: true });
       

@@ -13,30 +13,25 @@ export default class DeviceController extends Controller {
     private daoReservation = new DAOReservation();
     private daoCategory = new DAOCategory();
 
-    private mapToCategories(devices : Device[]) : Category[] {
-        const categories: Category[] = [];
+    private async mapToCategories(devices : Device[]) : Promise<Category[]> {
+
+        const categories: Category[] = await this.daoCategory.getAll();
 
         devices.forEach((device: Device) => {
 
-            let cat = categories.find((value: Category) => {
+            const cat = categories.find((value: Category) => {
                 return value.getID() == device.getCategoryID();
             });
 
-            if(!cat) {
-                cat = new Category(device.getCategoryID(), device.getCategoryName());
-                categories.push(cat);
-            }
-
-            cat.addDevice(device);
+            cat?.addDevice(device);
         });
 
         return categories;
     }
 
     public async getAll(res : Response) : Promise<void> {
-        //this.dao.getAll().then(this.findSuccess(res)).catch(this.findError(res));
         this.dao.getAll().then(devices => {
-            this.giveSuccess(this.mapToCategories(devices), res);
+            this.mapToCategories(devices).then(this.findSuccess(res)).catch(this.findError(res));
         }).catch(this.findError(res));
     }
 
@@ -138,7 +133,7 @@ export default class DeviceController extends Controller {
         }
 
         this.dao.getDevicesByFilter(name, ref, available, categoryID).then(devices => {
-            this.giveSuccess(this.mapToCategories(devices), res);
+            this.mapToCategories(devices).then(this.findSuccess(res)).catch(this.findError(res));
         }).catch(this.findError(res));
     }
 
