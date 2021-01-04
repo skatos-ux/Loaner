@@ -25,3 +25,5 @@ if(config.useStatic) {
 app.listen(config.serverPort, () => {
   console.log('Server is listening on port ' + config.serverPort);
 });
+
+export { app };

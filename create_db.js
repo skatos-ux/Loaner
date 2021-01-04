@@ -3,7 +3,12 @@ const sqlite3 = require('sqlite3').verbose();
 const config = require('./config.json');
 
 const sqlContent = fs.readFileSync('./init_db.sql').toString();
-const db = new sqlite3.Database(config.dbFile);
+const db = new sqlite3.Database(config.dbFile, (err) => {
+    if(err) {
+        console.error(err);
+        process.exit(-1);
+    }
+});
 
 const lines = sqlContent.toString().split(';');
 const logQueries = process.argv[2] && process.argv[2] == "--log";
@@ -35,7 +40,10 @@ db.serialize(() => {
             }
 
             db.run(query, (err) => {
-                if(err) throw err;
+                if(err) {
+                    console.error(err);
+                    process.exit(-1);
+                }
             });
         }
     });
@@ -44,9 +52,10 @@ db.serialize(() => {
 });
 
 db.close((err) => {
+
     if (err) {
-        console.error(err.message);
-        return;
+        console.error(err);
+        process.exit(-1);
     }
     
     console.log('Création terminée');
