@@ -6,19 +6,22 @@ export default class DAODevice extends DAO<Device> {
     // TODO : Gerer les lockDays "reservation"
     // Besoin de laisser le champ available si on gère les réservations ?
     public rowToModel(row: any): Device {
-        return new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
+        const lockDays = [row.startDate,row.endDate];
+        const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
+        device.setLockDays(lockDays);
+        return device;
     }
 
     public getAll() : Promise<Device[]> {
-        return this.getAllRows("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as categoryName " +
-            "FROM device d, category c " +
-            "WHERE d.idCategory = c.id");
+        return this.getAllRows("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as categoryName, r.startDate as startDate, r.endDate as endDate " +
+            "FROM device d, category c, reservation r " +
+            "WHERE d.idCategory = c.id and d.ref = r.refDevice");
     }
 
     public get(refDevice : string) : Promise<Device> {
-        return this.getOneRow("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as category " +
-            "FROM device d, category c " +
-            "WHERE d.idCategory = c.id AND d.ref=?", refDevice);
+        return this.getOneRow("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as category, r.startDate as startDate, r.endDate as endDate " +
+            "FROM device d, category c, reservation r " +
+            "WHERE d.idCategory = c.id AND d.ref=? and d.ref = r.refDevice", refDevice);
     }
 
     public borrowDevice(idDevice : string, idUser : string, lastId : number) : Promise<void> {
