@@ -2,13 +2,11 @@ import { Router } from 'express';
 
 import DeviceController from '../controller/controller_device';
 import AuthController from '../controller/controller_auth';
-import Device from '../model/device';
 import CategoryController from '../controller/controller_category';
 
 const router = Router();
 const controller = new DeviceController();
 const controllerAuth = new AuthController();
-const controllerCategory = new CategoryController();
 
 // On dit que lorsque l'on reçoit une requête HTTP GET sur /all, on exécute la méthode getAll de DeviceController
 // req = Request = Informations sur le requête reçue

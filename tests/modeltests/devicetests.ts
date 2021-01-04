@@ -1,10 +1,34 @@
 import Device from '../../src/model/device';
 
-import { assert, expect } from 'chai';
+import { assert, expect, should } from 'chai';
 
 const devTested = new Device("test1",2,"Ordinateur","PremierTest","1.0","url","0707070707");
 
 describe("Test on device.ts", function(){
+
+    describe("Constructor tests",function (){
+        it("Create a device with invalid references should throw error",function(){
+            expect(() => new Device("test",1,"Téléphones","Second test","1.0","","0778787878")).to.throw(Error);
+            expect(() => new Device("test33",1,"Téléphones","Third test","1.0","","0778787878")).to.throw(Error);
+        })
+
+        it("Create a device with an invalid category should throw an error", async function (){
+            expect(() => new Device("test4",9999,"CategoryTest","Category test","1.0","","0778787878")).to.throw(Error);
+        });
+        
+        it("Create a device with invalid version number should throw an error", async function(){
+           expect(() => new Device("test5",1,"Téléphones","Version test","4447.09984145115621441","","0778787878")).to.throw(Error);
+           expect(() => new Device("test6",1,"Téléphones","Version test 2","1.","2.","0778787878")).to.throw(Error);
+           expect(() => new Device("test7",1,"Téléphones","Version test 3","testversion","","0778787878")).to.throw(Error);
+        });
+        
+        it("Create a device with an invalid phone number should throw an error"), async function(){
+            expect(() => new Device("test8",1,"Téléphones","Phone Number test","1.0","","+337787878787878787878787878")).to.throw(Error);
+            expect(() => new Device("test9",1,"Téléphones","Phone Number test","1.0","","++33778787878")).to.throw(Error);
+            expect(() => new Device("test10",1,"Téléphones","Phone Number test","1.0","","842+541616541")).to.throw(Error);
+            expect(() => new Device("test11",1,"Téléphones","Phone Number test","1.0","","testPhone")).to.throw(Error);
+        }
+    });
 
     it("Device Creation test", function() {
         assert.equal(devTested.getRef(),"test1");
