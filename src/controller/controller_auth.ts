@@ -48,7 +48,7 @@ export default class AuthController extends Controller {
                 this.dao.changePassword(email, newPassword).then(() => { this.giveSuccess({
                     success: true,
                     user: user
-                }, res)})
+                }, res, 201)})
                 .catch(this.findError(res));
             })
             .catch((err : Error) => {

@@ -1,3 +1,5 @@
+// Utilitaire permettant de créer à base de données à partir du contenu du fichier "init_db.sql"
+
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 const config = require('./config.json');
@@ -11,7 +13,7 @@ const db = new sqlite3.Database(config.dbFile, (err) => {
 });
 
 const lines = sqlContent.toString().split(';');
-const logQueries = process.argv[2] && process.argv[2] == "--log";
+const logQueries = process.argv.includes("--log");
 
 console.log("Création de la base de données...");
 

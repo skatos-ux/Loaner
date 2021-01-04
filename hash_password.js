@@ -1,3 +1,5 @@
+// Utilitaire permettant de hacher des mots de passes avec BCrypt pour la base de données
+
 const bcrypt = require('bcryptjs');
 const readline = require('readline');
 
