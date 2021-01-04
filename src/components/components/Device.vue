@@ -5,7 +5,7 @@
         <div class="device__info" >{{ name }}</div>
         <div class="device__info">{{ reference }}</div>
         <div class="device__info">
-          <span v-show="phone !== ''" class="icon is-small success">
+          <span v-show="phone !== ''" class="is-size-6 has-text-left">
               {{ phone }}
           </span>
           <span v-show="phone === ''" class="icon is-small fail">
@@ -92,14 +92,12 @@ export default class Device extends Vue {
 
     this.deviceInfoModal.depopModal()
 
-    /*
-    this.$api.post("/login", this.form).then((res) => {
+
+    this.$api.post("/device/" + this.item.identifier).then((res) => {
       console.log(res.data)
     }).catch((error) => {
       console.log(error)
-      element.preventDefault()
     })
-    */
   }
   addToCart(){
     this.$store.dispatch('addToCart', this.item)

@@ -14,17 +14,20 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.0",
+    "@types/js-cookie": "^2.2.6",
     "animate.css": "^4.1.1",
     "axios": "^0.21.0",
     "bulma": "^0.9.1",
     "core-js": "^3.6.5",
+    "js-cookie": "^2.2.1",
     "litepicker": "^1.5.7",
     "moment": "^2.29.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.5.1",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "vuex-persistedstate": "^4.0.0-beta.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",

@@ -1,23 +1,27 @@
+import {mapState} from "vuex";
+
 export const auth = {
     state: {
         user: {
+            id: null,
             firstName: null,
             lastName: null,
+            email: null,
             admin: false,
+            token: null,
+            temporaryPassword: null,
             logged: false,
-            token: null
         }
     },
     mutations: {
         loginSuccess(state: any, user: any) {
+            state.user.id = user.id
             state.user.firstName = user.firstName
             state.user.lastName = user.lastName
-            if(user.admin === 1) {
-                state.user.admin = true
-            } else {
-                state.user.admin = false
-            }
+            state.user.email = user.email
+            state.user.admin = user.admin
             state.user.token = user.token
+            state.user.temporaryPassword = user.temporaryPassword
             state.user.logged = true
         }
     },

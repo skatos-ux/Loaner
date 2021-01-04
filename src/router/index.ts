@@ -4,6 +4,7 @@ import Login from "@/views/Login.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import MainPage from "@/views/MainPage.vue";
 import Users from "@/views/Users.vue";
+import Register from "@/views/Register.vue";
 
 Vue.use(VueRouter)
 
@@ -12,6 +13,11 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'login',
     component: Login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register
   },
   {
     path: '/mainpage',

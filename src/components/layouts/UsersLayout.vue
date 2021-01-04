@@ -1,50 +1,44 @@
 <template>
   <section class="users section--1">
     <div class="users__searchbar section--1 box">
-      <input class="input is-rounded" v-model="search" type="text" placeholder="Rechercher un utilisateur">
+      <input class="input is-rounded" v-model="search" type="text" placeholder="Rechercher un nom de famille">
     </div>
+    <article v-show="backError" class="message is-danger">
+      <div class="message-body is-size-7">
+        Une erreur interne est survenue, veuillez réessayer dans quelques instants
+      </div>
+    </article>
     <div class="users__userslist">
       <div class="users__userslist--options">
         <button @click="popUserModal" class="button  is-size-7 is-primary is-inverted">
-          Ajouter utilisateur
+          Ajouter un administrateur
           <span class="icon is-small">
             <font-awesome-icon :icon="['fas', 'user-plus']" />
           </span>
         </button>
 
-        <Modal id="addUserModal" ref="addUserModal">
+        <Modal id="addAdminModal" ref="addAdminModal">
           <template v-slot:header>
-            <p class="modal-card-title">Ajouter un utilisateur</p>
+            <p class="modal-card-title">Ajouter un administrateur</p>
           </template>
 
           <template v-slot:body>
             <div class="modal__body--wrapper">
-              <input v-model="formAddUser.name" type="text" class="input" placeholder="Nom">
-              <input v-model="formAddUser.surname" type="text" class="input" placeholder="Prénom">
-              <div class="control has-icons-left">
-                <div class="select">
-                  <select v-model="formAddUser.role" >
-                    <option selected> Utilisateur </option>
-                    <option> Invité </option>
-                    <option> Administrateur </option>
-                  </select>
-                </div>
-                <div class="icon is-small is-left">
-                  <font-awesome-icon :icon="['fas', 'user-tag']" />
-                </div>
-              </div>
+              <input v-model="formAddAdmin.firstName" type="text" class="input left" placeholder="Prénom">
+              <input v-model="formAddAdmin.lastName" type="text" class="input middle" placeholder="Nom">
+              <input v-model="formAddAdmin.email" type="email" class="input right" placeholder="Email">
             </div>
-            <input @click="addUser" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
+            <input @click="addAdmin" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
         </Modal>
       </div>
-      <User v-for="user in searchedUsers" :key="user.name" :identifier="user.identifier" :name="user.name" :surname="user.surname" :role="user.role"></User>
+      <User v-for="user in searchedUsers" :key="user.name" :identifier="user.id" :firstName="user.firstName" :lastName="user.lastName" :email="user.email" :admin="user.admin"></User>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
+import {Component, Ref, Vue} from 'vue-property-decorator';
 import Modal from "@/components/components/Modal.vue";
 import Device from "@/components/components/Device.vue";
 import User from "@/components/components/User.vue";
@@ -53,35 +47,58 @@ import User from "@/components/components/User.vue";
   components: {User, Device, Modal}
 })
 export default class UsersLayout extends Vue {
-  @Ref() readonly addUserModal!: Modal
+  @Ref() readonly addAdminModal!: Modal
 
-  users = this.$store.state.db.users
+  users = []
   search = ""
 
-  formAddUser = {
-    name: "",
-    surname: "",
-    role: ""
+  formAddAdmin = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    admin: true,
+    temporaryPassword: true
   }
+
+  backError = false
 
   popUserModal() {
-    this.addUserModal.popModal()
+    this.addAdminModal.popModal()
   }
 
-  addUser() {
-    console.log("adduser")
+  mounted() {
+    this.$api.get('/users/all').then((res) => {
+      this.users = res.data
+    }).catch((error) => {
+      this.backError = true
+      console.log(error)
+    })
+  }
+
+  addAdmin() {
+    console.log(this.formAddAdmin)
+
+    this.$api.post('/users/add', this.formAddAdmin).then((res) => {
+      console.log(res.data)
+    }).catch((error) => {
+      this.backError = true
+      console.log(error)
+    })
+
   }
 
   get searchedUsers() {
-    const search = this.search
+    let search = this.search
     let users = this.users
 
     if(!search) {
       return users
     }
 
+    search = search.toLowerCase()
+
     users = users.filter((user: any) =>{
-      if(user.name.toLowerCase().indexOf(search) !== -1) {
+      if(user.lastName.toLowerCase().indexOf(search) !== -1) {
         return user
       }
     })

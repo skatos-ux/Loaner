@@ -21,14 +21,9 @@
       </div>
       <div class="navbar-end">
         <div class="navbar-item">
-          <div class="buttons">
-            <a class="button is-primary">
-              <strong>Sign up</strong>
-            </a>
-            <a class="button is-light">
-              Log in
-            </a>
-          </div>
+          <a @click="logout" class="button is-link navbar-logout">
+            <strong>Se déconnecter</strong>
+          </a>
         </div>
       </div>
     </div>
@@ -36,13 +31,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class NavBar extends Vue {
+  logout() {
+    this.$store.dispatch('logout')
+    this.$router.push("/")
+  }
 }
 </script>
 
 <style scoped lang="scss">
-
+.navbar-logout {
+  max-width: 150px;
+}
 </style>

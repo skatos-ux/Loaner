@@ -2,16 +2,21 @@
   <section class="mainpanel section--1">
     <div class="mainpanel__searchbar section--1 box">
       <div class="mainpanel__searchbar--bar">
-        <input class="input is-rounded" v-model="search" type="text" placeholder="Rechercher une catégorie">
+        <input class="input is-rounded" v-model="formSearch.search" type="text" :placeholder="'Rechercher un appareil par ' + formSearch.searchMode">
       </div>
       <div class="mainpanel__searchbar--filters">
         <div v-for="filter in filters" :key="filter.name" class="field">
-          <label class="filter label is-size-7 has-text-left">
-            <input type="checkbox">
-            {{  filter.name }}
+          <label class="radio filter label is-size-7 has-text-left">
+            <input @click="changeSearchType" :checked="filter.auto" type="radio" name="filter" :value="filter.name">
+            {{ filter.name }}
           </label>
         </div>
       </div>
+      <article v-show="backError" class="message is-danger">
+        <div class="message-body is-size-7">
+          Une erreur interne est survenue, veuillez réessayer dans quelques instants
+        </div>
+      </article>
     </div>
     <div class="mainpanel__devicelist">
       <div v-if="user.admin" class="mainpanel__devicelist--options">
@@ -59,13 +64,17 @@
                   </div>
                 </div>
               </div>
-              <input v-model="formAddDevice.name" id="deviceName" class="input" type="text" required placeholder="Nom de l'appareil">
-              <input v-model="formAddDevice.reference" id="deviceRef" class="input" type="text" required placeholder="Référence">
-              <input v-model="formAddDevice.version" id="deviceVer" class="input" type="text" required placeholder="Version">
             </div>
             <div class="modal__body--wrapper">
-              <input id="devicePhoto" class="input" type="file" accept="image/x-png,image/jpeg" required placeholder="Image" value="test">
-              <input v-model="formAddDevice.phone" id="devicePhone" class="input" type="tel" required placeholder="Numéro de téléphone">
+              <input v-model="formAddDevice.name" id="deviceName" class="input" type="text" required placeholder="Nom de l'appareil">
+            </div>
+            <div class="modal__body--wrapper">
+              <input v-model="formAddDevice.reference" id="deviceRef" class="input left" type="text" required placeholder="Référence">
+              <input v-model="formAddDevice.version" id="deviceVer" class="input right" type="text" required placeholder="Version">
+            </div>
+            <div class="modal__body--wrapper">
+              <input v-model="formAddDevice.photo" id="devicePhoto" class="input left" type="url" required placeholder="URL de l'image">
+              <input v-model="formAddDevice.phone" id="devicePhone" class="input right" type="tel" required placeholder="Numéro de téléphone">
             </div>
             <input @click="addDevice" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
@@ -84,6 +93,9 @@ import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import DeviceCategoryLayout from "@/components/layouts/DeviceCategoryLayout.vue";
 import Device from "@/components/components/Device.vue";
 import Modal from "@/components/components/Modal.vue";
+
+import authHeader from "@/services/auth-header";
+
 @Component({
   components: {Device, DeviceCategoryLayout, Modal}
 })
@@ -94,7 +106,13 @@ export default class MainPanelLayout extends Vue {
   filters = this.$store.state.web.filters
   categories = this.$store.state.db.deviceCategories
   user = this.$store.state.auth.user
-  search = ""
+
+  formSearch = {
+    search: "",
+    searchMode: "nom",
+  }
+
+  backError = false
 
   formAddCategory = {
     name: ""
@@ -102,14 +120,21 @@ export default class MainPanelLayout extends Vue {
 
   formAddDevice = {
     name: "",
+    category: "",
     reference: "",
-    version: 1.0,
+    version: "",
     photo: "",
     phone: ""
   }
 
   mounted() {
     this.$api.get('/devices/all').then((res) => {
+      console.log(res.data)
+    }).catch((error) => {
+      console.log(error)
+    })
+
+    this.$api.get('/category/all').then((res) => {
       console.log(res.data)
     }).catch((error) => {
       console.log(error)
@@ -124,46 +149,71 @@ export default class MainPanelLayout extends Vue {
   }
 
   addCategory() {
-    console.log("add category")
-    /*
-    this.$api.post("/login", this.form).then((res) => {
+    this.$api.put('/category/add/' + this.formAddCategory.name, {} ,{ headers: authHeader(this.user.token) }).then((res) => {
       console.log(res.data)
     }).catch((error) => {
-      console.log(error)
-      element.preventDefault()
+      this.backError = true
     })
-    */
   }
 
   addDevice() {
-    console.log("add device")
-    /*
-    this.$api.post("/login", this.form).then((res) => {
-      console.log(res.data)
+    this.$api.post("/devices/add", this.formAddDevice).then((res) => {
+      console.log(res)
     }).catch((error) => {
+      this.backError = true
       console.log(error)
-      element.preventDefault()
     })
-    */
+  }
+
+  changeSearchType(event: { target: HTMLInputElement }) {
+    this.formSearch.searchMode = event.target.getAttribute('value')!
   }
 
   get searchedCategories() {
-    let search = this.search
+    let search = this.formSearch.search
     let categories = this.categories
+
+
 
     if(!search) {
       return categories
     }
 
     search = search.toLowerCase()
-    categories = categories.filter((category: any) =>{
-      if(category.name.toLowerCase().indexOf(search) !== -1) {
-        return category
-      }
-    })
+
+    if(this.formSearch.searchMode === "nom") {
+      categories = categories.filter((category: any) =>{
+        const test = category.devices.filter((device: any) => {
+          if(device.name.toLowerCase().indexOf(search) !== -1) {
+            return device
+          }
+        })
+        if (test?.length) {
+          return test
+        }
+      })
+    }
+    else if(this.formSearch.searchMode === "catégorie") {
+      categories = categories.filter((category: any) => {
+        if(category.name.toLowerCase().indexOf(search) !== -1) {
+          return category
+        }
+      })
+    }
+    else if(this.formSearch.searchMode === "référence") {
+      categories = categories.filter((category: any) =>{
+        const test = category.devices.filter((device: any) => {
+          if(device.ref.toLowerCase().indexOf(search) !== -1) {
+            return device
+          }
+        })
+        if (test?.length) {
+          return test
+        }
+      })
+    }
 
     return categories
-
   }
 }
 </script>
