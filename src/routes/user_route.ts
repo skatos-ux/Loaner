@@ -13,6 +13,8 @@ const controller = new UserController();
  //    - Supprimer un utilisateur          DELETE /delete/:id_utilisateur
  //    - Historique des emprunts pour un utilisateur   GET /:id_utilisateur/history
 
+ 
+ // TODO : check des tokens pour les fonctions admins
 
 router.get("/all", (req, res) => {
   controller.getAll(res);
