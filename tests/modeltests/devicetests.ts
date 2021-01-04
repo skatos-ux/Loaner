@@ -2,13 +2,14 @@ import Device from '../../src/model/device';
 
 const assert = require('chai').assert;
 const expect = require('chai').expect;
-const devTested = new Device("test1","Computer","PremierTest","1.0","url","0707070707");
+const devTested = new Device("test1",2,"Computer","PremierTest","1.0","url","0707070707");
 
 describe("Test on device.ts", function(){
 
     it("Device Creation test", function() {
         assert.equal(devTested.getRef(),"test1");
-        assert.equal(devTested.getCategory(),"Computer");
+        assert.equal(devTested.getCategoryID(),2);
+        assert.equal(devTested.getCategoryName(),"Computer");
         assert.equal(devTested.getName(),"PremierTest");
         assert.equal(devTested.getVersion(),"1.0");
         assert.equal(devTested.getPhoto(),"url");

@@ -46,7 +46,7 @@ const DAOcat = new DAOCategory();
             //Testing for every device that its category is member of the categories of the database
             result.forEach(function(device){
                 existingCategories.forEach(function(category){
-                    if (device.getCategory() == category.getID()) check = true;
+                    if (device.getCategoryID() == category.getID()) check = true;
                 });
             });
 
@@ -119,7 +119,7 @@ const DAOcat = new DAOCategory();
 
             //Testing that its category is member of the categories of the database
             existingCategories.forEach(function(category){
-                if (device.getCategory() == category.getID()) check = true;
+                if (device.getCategoryID() == category.getID()) check = true;
             });
 
             assert.isTrue(check);
@@ -160,12 +160,12 @@ const DAOcat = new DAOCategory();
 
         it("Adding a compliant device should not throw exception, and the added device must be seen in queries",async function() {
             //This device is compliant to the specifications
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test1",1,"First test","1.0","","0778787878"))).not.to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test1",1,"Téléphones","First test","1.0","","0778787878"))).not.to.throw(Error);
             
             const result = await DAOTested.get("test1");
             assert.isNotNull(result);
             expect(result.getRef()).to.equal("test1");
-            expect(result.getCategory()).to.equal(1);
+            expect(result.getCategoryID()).to.equal(1);
             expect(result.getName()).to.equal("First test");
             expect(result.getVersion()).to.equal("1.0");
             expect(result.getPhoto()).to.equal("");
@@ -174,25 +174,25 @@ const DAOcat = new DAOCategory();
 
         //Theses devices are not compliant and should not be created neither added to the database
         it("Adding a device with invalid references should throw error", async function (){
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test",1,"Second test","1.0","","0778787878"))).to.throw(Error);
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test33",1,"Third test","1.0","","0778787878"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test",1,"Téléphones","Second test","1.0","","0778787878"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test33",1,"Téléphones","Third test","1.0","","0778787878"))).to.throw(Error);
         });
         
         it("Adding a device with an invalid category should throw an error", async function (){
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test4",9999,"Category test","1.0","","0778787878"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test4",9999,"CategoryTest","Category test","1.0","","0778787878"))).to.throw(Error);
         });
         
         it("Adding a device with invalid version number should throw an error", async function(){
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test5",1,"Version test","4447.09984145115621441","","0778787878"))).to.throw(Error);
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test6",1,"Version test 2","1.","2.","0778787878"))).to.throw(Error);
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test7",1,"Version test 3","testversion","","0778787878"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test5",1,"Téléphones","Version test","4447.09984145115621441","","0778787878"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test6",1,"Téléphones","Version test 2","1.","2.","0778787878"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test7",1,"Téléphones","Version test 3","testversion","","0778787878"))).to.throw(Error);
         });
         
         it("Adding a device with an invalid phone number should throw an error"), async function(){
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test8",1,"Phone Number test","1.0","","+337787878787878787878787878"))).to.throw(Error);
-            expect(await DAOTested.addDevice.bind(DAOTested, new Device("test9",1,"Phone Number test","1.0","","++33778787878"))).to.throw(Error);
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test10",1,"Phone Number test","1.0","","842+541616541"))).to.throw(Error);
-            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test11",1,"Phone Number test","1.0","","testPhone"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test8",1,"Téléphones","Phone Number test","1.0","","+337787878787878787878787878"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested, new Device("test9",1,"Téléphones","Phone Number test","1.0","","++33778787878"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test10",1,"Téléphones","Phone Number test","1.0","","842+541616541"))).to.throw(Error);
+            expect(await DAOTested.addDevice.bind(DAOTested,new Device("test11",1,"Téléphones","Phone Number test","1.0","","testPhone"))).to.throw(Error);
         }
         
     });
@@ -243,7 +243,7 @@ const DAOcat = new DAOCategory();
         });
 
         it("Checking if all the filters works well",async function(){
-            await DAOTested.addDevice.bind(DAOTested,new Device("test1",1,"Test filters","1.0","","0778787878"));
+            await DAOTested.addDevice.bind(DAOTested,new Device("test1",1,"Téléphones","Test filters","1.0","","0778787878"));
 
             var result = await DAOTested.getDevicesByFilter("Test filters","",-1,-1);
             result.forEach(function(device){
