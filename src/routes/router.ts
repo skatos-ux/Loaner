@@ -19,9 +19,9 @@ Utilisateurs : /users - Lilian
 Matériels : /devices - Milan / Yohan
     -> reservation : renvoyer sous le format : lockDays = [ ['start1', 'end1'], ['start2', 'end2'] ]
     -> end = (returnDate == null) ? endDate : returnDate
-    X  - Liste de tous les matériels   GET /all -> A agencer par categorie
+    X  - Liste de tous les matériels   GET /all
     X  - Obtenir les informations d'un matériel (pas sur)     GET /:id_materiel
-    X - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all?nom_filtre=valeur_filtre&... -> A agencer par categorie
+    X - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all?nom_filtre=valeur_filtre&...
         - Nom (name)
         - Ref (ref)
         - Disponibilité (libre ou non) (availability) (available/borrowed)
@@ -32,7 +32,6 @@ Matériels : /devices - Milan / Yohan
         - Modifier les matériels     POST /modify (token + informations sur le matériel dans le corps de la requête)
     X    - Supprimer des matériels   DELETE /delete/:id_materiel (token dans le corps de la requête)
     X    - Historique des emprunts pour un matériel      GET /:id_materiel/history (token dans le corps de la requête)
-        
 
 Catégories : /category - Milan
     Coté admin :

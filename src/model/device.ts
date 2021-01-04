@@ -1,17 +1,17 @@
-import Category from "./category";
-
 export default class Device {
     private ref!: string;
-    private category!: number;
+    private categoryID!: number;
+    private categoryName!: string;
     private name!: string;
     private version!: string;
     private photo!: string;
     private phone!: string;
     private lockDays!: string[];
 
-    constructor(ref : string, category: number, name : string, version : string, photo : string, phone : string) {
+    constructor(ref : string, categoryID: number, categoryName: string, name : string, version : string, photo : string, phone : string) {
         this.setRef(ref);
-        this.category = category;
+        this.categoryID = categoryID;
+        this.categoryName = categoryName;
         this.setName(name);
         this.setVersion(version);
         this.setPhoto(photo);
@@ -24,8 +24,12 @@ export default class Device {
         return this.ref;
     }
 
-    public getCategory() : number {
-        return this.category;
+    public getCategoryID() : number {
+        return this.categoryID;
+    }
+
+    public getCategoryName() : string {
+        return this.categoryName;
     }
 
     public getName() : string {
@@ -87,7 +91,7 @@ export default class Device {
 
     public setPhone(phone : string) : void {
 
-        if(!phone || phone.length > 14) {
+        if((!phone || phone.length > 14) && phone.length != 0) {
             throw new Error("Invalid phone number")
         }
 

@@ -1,10 +1,14 @@
+import Device from "./device";
+
 export default class Category {
     private ID!: number;
     private name!: string;
+    private devices!: Device[];
 
     constructor(ID : number, name : string) {
         this.ID = ID;
         this.name = name;
+        this.devices = [];
     }
 
     public getID() : number {
@@ -13,6 +17,10 @@ export default class Category {
 
     public getName() : string {
         return this.name;
+    }
+
+    public getDevices() : Device[] {
+        return this.devices;
     }
 
     public setID(ID : number) : void {
@@ -31,5 +39,9 @@ export default class Category {
         }
 
         this.name = name;
+    }
+
+    public addDevice(device : Device) : void {
+        this.devices.push(device);
     }
 }

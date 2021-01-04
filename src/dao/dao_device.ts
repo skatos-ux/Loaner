@@ -1,24 +1,22 @@
 import { DAO } from './dao';
 import Device from '../model/device';
 
-
 export default class DAODevice extends DAO<Device> {
 
     // TODO : Gerer les lockDays "reservation"
     // Besoin de laisser le champ available si on gère les réservations ?
-    // Ajouter la champ sim ou non ?
     public rowToModel(row: any): Device {
-        return new Device(row.ref, row.category, row.name, row.version, row.photo, row.phone);
+        return new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
     }
 
     public getAll() : Promise<Device[]> {
-        return this.getAllRows("SELECT ref, d.name as name, version, photo, phone, c.name as category " +
+        return this.getAllRows("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as categoryName " +
             "FROM device d, category c " +
             "WHERE d.idCategory = c.id");
     }
 
     public get(refDevice : string) : Promise<Device> {
-        return this.getOneRow("SELECT ref, d.name as name, version, photo, phone, c.name as category " +
+        return this.getOneRow("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as category " +
             "FROM device d, category c " +
             "WHERE d.idCategory = c.id AND d.ref=?", refDevice);
     }
@@ -45,7 +43,7 @@ export default class DAODevice extends DAO<Device> {
 
     public addDevice(device : Device) : Promise<void> {
         // Il faut mettre l'ID de la categorie et non pas le nom (device.getCategory() = nom)
-        return this.runQuery('insert into device values(?,?,?,?,?,?)',[device.getRef(), device.getCategory(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone()]);
+        return this.runQuery('insert into device values(?,?,?,?,?,?)',[device.getRef(), device.getCategoryID(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone()]);
     }
 
     public deleteDevice(refDevice : string) : Promise<void> {

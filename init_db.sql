@@ -24,7 +24,7 @@ INSERT INTO category VALUES(2, "Ordinateurs");
 INSERT INTO device VALUES("AN001", 1, "Samsung Galaxy S1000", "1.0", "", "0123456789");
 INSERT INTO device VALUES("AN002", 1, "Huawei P80", "1.1", "", "1234567890");
 
---INSERT INTO device VALUES("PC001", 2, "Acer Pro Max", "1.0", "", "", null);
+INSERT INTO device VALUES("PC001", 2, "Acer Pro Max", "1.0", "", "");
 
 INSERT INTO user VALUES("ABCDEFG", "Lilian", "Bethus", "lilianb@mail.fr", 1,
     "$2a$10$MZfIG15tjZONVVfjsBTj/OCk1epnw7d.nX/ZrZXBDms/uHUDUSY8i", 0); -- Version hachée du mot de passe "fromage"
