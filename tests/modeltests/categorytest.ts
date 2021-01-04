@@ -1,7 +1,7 @@
 import Category from '../../src/model/category';
 
-const assert = require('chai').assert;
-const chai = require('chai');
+import { assert } from 'chai';
+
 const catTested = new Category(1,"Test");
 
 describe("Tests on category.ts", function() {

@@ -1,15 +1,15 @@
 import Device from '../../src/model/device';
 
-const assert = require('chai').assert;
-const expect = require('chai').expect;
-const devTested = new Device("test1",2,"Computer","PremierTest","1.0","url","0707070707");
+import { assert, expect } from 'chai';
+
+const devTested = new Device("test1",2,"Ordinateur","PremierTest","1.0","url","0707070707");
 
 describe("Test on device.ts", function(){
 
     it("Device Creation test", function() {
         assert.equal(devTested.getRef(),"test1");
         assert.equal(devTested.getCategoryID(),2);
-        assert.equal(devTested.getCategoryName(),"Computer");
+        assert.equal(devTested.getCategoryName(),"Ordinateur");
         assert.equal(devTested.getName(),"PremierTest");
         assert.equal(devTested.getVersion(),"1.0");
         assert.equal(devTested.getPhoto(),"url");
@@ -40,14 +40,14 @@ describe("Test on device.ts", function(){
         });
 
         it("Setting a wrong size Name should throw error", function () {
-            var stringName = "";
+            let stringName = "";
             expect(devTested.setName.bind(devTested, stringName)).to.throw("Invalid name");
             stringName = "trentre et plus de noms pour le test";
             expect(devTested.setName.bind(devTested, stringName)).to.throw("Invalid name");
         });
 
         it("Setting a wrong version number size should throw an error", function() {
-            var stringVersion = "1";
+            let stringVersion = "1";
             expect(devTested.setVersion.bind(devTested, stringVersion)).to.throw("Invalid version");
             stringVersion = "11";
             expect(devTested.setVersion.bind(devTested, stringVersion)).to.throw("Invalid version");
@@ -56,7 +56,7 @@ describe("Test on device.ts", function(){
         });
 
         it("Setting a too long phone number size should throw an error", function() {
-            var stringVersion = "123456789102487"; //15 caracters maximum, to respect the +999787878787 form
+            const stringVersion = "123456789102487"; //15 caracters maximum, to respect the +999787878787 form
             expect(devTested.setPhone.bind(devTested, stringVersion)).to.throw("Invalid phone");
         });
     });

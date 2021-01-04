@@ -2,8 +2,7 @@
 import DAOCategory from '../../src/dao/dao_category';
 import Category from '../../src/model/category';
 
-const assert = require('chai').assert;
-const expect = require('chai').expect;
+import { assert, expect } from 'chai';
 
 const DAOCategTested = new DAOCategory();
 
@@ -21,7 +20,7 @@ const DAOCategTested = new DAOCategory();
 
 describe("Tests on dao_category.ts",function (){
 
-    describe("Tests on getAll() method",function (){
+    /*describe("Tests on getAll() method",function (){
 
         function resultAllCategories() {
             return DAOCategTested.getAll();
@@ -67,7 +66,7 @@ describe("Tests on dao_category.ts",function (){
             });
         });
         */
-    });
+    //});
 
     describe("Tests on getByName() method",function (){
 

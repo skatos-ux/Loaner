@@ -40,13 +40,13 @@ export default class DAOUser extends DAO<User> {
       return this.runQuery("SELECT * FROM reservation WHERE iduser = ?", [idUser]);
     }
 
-    public hasUserWithemail(email : string) : Promise<boolean> {
-      return this.getOneRow("SELECT * FROM user WHERE email=?", [email]).then(() => { return true; }).catch(() => { return false; });
+    public hasUserWithEmail(email : string) : Promise<boolean> {
+      return this.getOneRow("SELECT * FROM user WHERE mail=?", [email]).then(() => { return true; }).catch(() => { return false; });
     }
 
     // Partie authentification
-    public checkUser(firstName : string, lastName : string, password : string) : Promise<User> {
-      return this.getOneRowNoCast("SELECT * FROM user WHERE firstName=? AND lastName=?", [firstName, lastName])
+    public checkUser(email : string, password : string) : Promise<User> {
+      return this.getOneRowNoCast("SELECT * FROM user WHERE mail=?", [email])
       .then((row) => {
         if(bcrypt.compareSync(password, row.password)) {
           return this.rowToModel(row);
@@ -56,9 +56,9 @@ export default class DAOUser extends DAO<User> {
       });
     }
 
-    public changePassword(firstName : string, lastName : string, newPassword : string) : Promise<void> {
-      return this.runQuery("UPDATE user SET password=? WHERE firstName=? AND lastName=?",
-        [bcrypt.hashSync(newPassword, config.hashSaltRounds), firstName, lastName])
-        .then(() => { this.runQuery("UPDATE user SET temporaryPassword=0 WHERE firstName=? AND lastName=?", [firstName, lastName]); });
+    public changePassword(email : string, newPassword : string) : Promise<void> {
+      return this.runQuery("UPDATE user SET password=?, temporaryPassword=0 WHERE mail=?",
+        [bcrypt.hashSync(newPassword, config.hashSaltRounds), email]);
+        //.then(async () => { console.log("ss"); await this.runQuery("UPDATE user SET temporaryPassword=0 WHERE mail=?", [email]); });
     }
 }

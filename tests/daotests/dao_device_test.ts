@@ -7,8 +7,7 @@ import DAOUser from '../../src/dao/dao_user';
 import User from '../../src/model/user';
 import DAOReservation from '../../src/dao/dao_reservation';
 
- const assert = require('chai').assert;
- const expect = require('chai').expect;
+import { assert, expect } from 'chai';
 
  const DAObooking = new DAOReservation();
 const DAOuser = new DAOUser();

@@ -11,14 +11,14 @@ export default class AuthController extends Controller {
 
     private dao = new DAOUser();
     
-    public async authentificate(firstName : string, lastName : string, password : string, req : Request, res : Response) : Promise<void> {
+    public async authentificate(email : string, password : string, req : Request, res : Response) : Promise<void> {
 
         if(this.hasToken(req)) {
             this.giveError(new Error("You already have a token"), res);
             return;
         }
 
-        this.dao.checkUser(firstName, lastName, password)
+        this.dao.checkUser(email, password)
         .then((user) => {
             const token = jwt.sign({ id: user.getId(), admin: user.isAdmin() }, config.jwtSecret, {
                 expiresIn: "1h"
@@ -35,7 +35,7 @@ export default class AuthController extends Controller {
         });
     }
 
-    public async changePassword(firstName : string, lastName : string, oldPassword : string, newPassword : string,
+    public async changePassword(email : string, oldPassword : string, newPassword : string,
         req : Request, res : Response) : Promise<void> {
 
             if(newPassword.length == 0) {
@@ -43,17 +43,17 @@ export default class AuthController extends Controller {
                 return;
             }
         
-            this.dao.checkUser(firstName, lastName, oldPassword)
+            this.dao.checkUser(email, oldPassword)
             .then((user) => {
-                if(this.checkToken(req, res, false, user.getId())) {
-                    this.dao.changePassword(firstName, lastName, newPassword);
-
-                    // Besoin de donner un token ?
-                }
+                this.dao.changePassword(email, newPassword).then(() => { this.giveSuccess({
+                    success: true,
+                    user: user
+                }, res)})
+                .catch(this.findError(res));
             })
             .catch((err : Error) => {
                 this.giveError(new Error("Invalid name or old password"), res);
-            })
+            });
     }
 
     public hasToken(req : Request) : boolean {

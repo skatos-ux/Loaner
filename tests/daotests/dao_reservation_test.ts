@@ -2,8 +2,7 @@ import DAOReservation from '../../src/dao/dao_reservation';
 import DAOUser from '../../src/dao/dao_user';
 import DAODevice from '../../src/dao/dao_device';
 
-const expect = require('chai').expect;
-const assert = require('chai').assert;
+import { assert } from 'chai';
 
 const DAOTested = new DAOReservation();
 const DAOuser = new DAOUser();

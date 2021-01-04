@@ -7,12 +7,12 @@ const controller = new AuthController();
 
 router.post('/login', (req, res) => {
     const info = req.body;
-    controller.authentificate(info.firstName, info.lastName, info.password, req, res);
+    controller.authentificate(info.email, info.password, req, res);
 });
 
-router.get('/change/password', (req, res) => {
+router.post('/change/password', (req, res) => {
     const info = req.body;
-    controller.changePassword(info.firstName, info.lastName, info.oldPassword, info.newPassword, req, res);
+    controller.changePassword(info.email, info.oldPassword, info.newPassword, req, res);
 });
 
 

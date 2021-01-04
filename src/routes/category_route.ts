@@ -13,9 +13,9 @@ const controllerAuth = new AuthController();
         - Supprimer des catégories  DELETE /delete/:id_category (token dans le corps de la requête)
 */
 
-router.get('/all', (req,res) => {
+/*router.get('/all', (req,res) => {
     controller.getAll(res);
-}); 
+}); */
 
 
 router.put('/add/:name_Category', (req, res) => {

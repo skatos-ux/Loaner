@@ -11,6 +11,7 @@ export default class DAOCategory extends DAO<Category> {
         return this.runQuery("insert into category values(?, ?)", [lastId, nameCategory]);
     }
 
+    // Non utilisé
     public getAll() : Promise<Category[]> {
         return this.getAllRows("SELECT * FROM category");
     }
