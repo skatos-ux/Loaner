@@ -2,7 +2,12 @@ import DAOReservation from '../../src/dao/dao_reservation';
 import DAOUser from '../../src/dao/dao_user';
 import DAODevice from '../../src/dao/dao_device';
 
-import { assert } from 'chai';
+import * as chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+const assert = chai.assert;
+const expect = chai.expect;
+
+chai.use(chaiAsPromised);
 
 const DAOTested = new DAOReservation();
 const DAOuser = new DAOUser();
@@ -31,7 +36,7 @@ describe("Tests on dao_reservation.ts", function(){
 
             result.forEach(function(booking){
                 users.forEach(function(user){
-                    //if(booking.getUser()==user.getId()) check = true; //Fix the Id user typer problem to solve it
+                    if(booking.getUser()==user.getId()) check = true; 
                 });
             });
 

@@ -2,7 +2,12 @@
 import DAOCategory from '../../src/dao/dao_category';
 import Category from '../../src/model/category';
 
-import { assert, expect } from 'chai';
+import * as chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+const assert = chai.assert;
+const expect = chai.expect;
+
+chai.use(chaiAsPromised);
 
 const DAOCategTested = new DAOCategory();
 
@@ -20,7 +25,7 @@ const DAOCategTested = new DAOCategory();
 
 describe("Tests on dao_category.ts",function (){
 
-    /*describe("Tests on getAll() method",function (){
+    describe("Tests on getAll() method",function (){
 
         function resultAllCategories() {
             return DAOCategTested.getAll();
@@ -66,7 +71,7 @@ describe("Tests on dao_category.ts",function (){
             });
         });
         */
-    //});
+    });
 
     describe("Tests on getByName() method",function (){
 
@@ -110,10 +115,6 @@ describe("Tests on dao_category.ts",function (){
             const result = await resultGetLastId();
             assert.isAbove(result.getID(),0);
         });
-    });
-
-    describe("Tests on rowToModel() method",function (){
-
     });
 
     describe("Tests on addCategory() method",function (){
@@ -162,9 +163,7 @@ describe("Tests on dao_category.ts",function (){
            //expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9996")).to.throw(Error);
 
            //Test bloquant que la suppression ait fonctionné ou pas
-           expect(await DAOCategTested.deleteCategory.bind(DAOCategTested,"-1")).to.throw(Error);
-            
-
+           expect(DAOCategTested.deleteCategory("-1")).to.be.rejected;
         });
         
     });
