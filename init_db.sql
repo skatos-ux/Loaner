@@ -34,3 +34,7 @@ INSERT INTO user VALUES("ABCDEFG", "Lilian", "Bethus", "lilianb@mail.fr", 1,
     "$2a$10$MZfIG15tjZONVVfjsBTj/OCk1epnw7d.nX/ZrZXBDms/uHUDUSY8i", 0); -- Version hachée du mot de passe "fromage"
 INSERT INTO user VALUES("HIJKLMN", "Milan", "Pasquereau", "mpsqr@mail.fr", 0,
     "$2a$10$6Id/sE6Ocg8/iV9I75NGxupqxirjMCpZ7Q0tWTI/6VAcr.fP2WBmi", 0); -- Version hachée du mot de passe "bourbe"
+
+INSERT INTO reservation VALUES(1, "AN001", "HIJKLMN", "05-01-2020", "08-01-2020", NULL);
+INSERT INTO reservation VALUES(2, "PC001", "ABCDEFG", "04-01-2020", "12-01-2020", "04-02-2020");
+INSERT INTO reservation VALUES(3, "AN001", "HIJKLMN", "07-01-2020", "8-02-2020", NULL);

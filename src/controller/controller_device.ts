@@ -85,7 +85,6 @@ export default class DeviceController extends Controller {
 
         let name = "";
         let ref = "";
-        let available = -1;
         let categoryID = -1;
 
         for(const param in params) {
@@ -104,20 +103,6 @@ export default class DeviceController extends Controller {
                     ref = value;
                 } else {
                     this.giveError(new Error("'ref' is not a string"), res);
-                    return;
-                }
-            } else if(param == "availability") {
-                if(typeof value == "string") {
-
-                    if(value != "available" && value != "borrowed") {
-                        this.giveError(new Error("Invalid value for '" + value + "' for 'availability'"), res);
-                        return;
-                    }
-
-                    available = (value == "available") ? 1 : 0;
-
-                } else {
-                    this.giveError(new Error("'availability' is not a string"), res);
                     return;
                 }
             } else if(param == "category") {
@@ -148,7 +133,7 @@ export default class DeviceController extends Controller {
             }
         }
 
-        this.dao.getDevicesByFilter(name, ref, available, categoryID).then(devices => {
+        this.dao.getDevicesByFilter(name, ref, categoryID).then(devices => {
             this.mapToCategories(devices).then(this.findSuccess(res)).catch(this.findError(res));
         }).catch(this.findError(res));
     }

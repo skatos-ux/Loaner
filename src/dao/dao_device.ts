@@ -4,6 +4,7 @@ import DAOReservation from './dao_reservation';
 
 export default class DAODevice extends DAO<Device> {
 
+    // Non utilisé
     public rowToModel(row: any): Device {
         const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
         return device;
@@ -17,7 +18,6 @@ export default class DAODevice extends DAO<Device> {
                 const startDate = elementRes.getStartDate();
                 const endDate = elementRes.getEndDate();
                 device.addLockDays(startDate +','+endDate);
-                console.log(device.getLockDays());
             });
         });
         return device;
@@ -26,13 +26,16 @@ export default class DAODevice extends DAO<Device> {
     public getAll() : Promise<Device[]> {
         return this.getAllRowsNoCast("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as categoryName " +
             "FROM device d, category c " +
-            "WHERE d.idCategory = c.id").then(rows => {return rows.map((row) => { await this.rowToModelAsync.bind(this)()})});
+            "WHERE d.idCategory = c.id").then(async (rows) => {
+                const promises: Promise<Device>[] = rows.map(this.rowToModelAsync.bind(this));
+                return Promise.all(promises);
+            });
     }
 
     public get(refDevice : string) : Promise<Device> {
         return this.getOneRowNoCast("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as category " +
             "FROM device d, category c " +
-            "WHERE d.idCategory = c.id AND d.ref=?", refDevice);
+            "WHERE d.idCategory = c.id AND d.ref=?", refDevice).then(row => { return this.rowToModelAsync.bind(this)(row); });
     }
 
     public borrowDevice(idDevice : string, idUser : string, lastId : number) : Promise<void> {
@@ -56,7 +59,6 @@ export default class DAODevice extends DAO<Device> {
     }
 
     public addDevice(device : Device) : Promise<void> {
-        // Il faut mettre l'ID de la categorie et non pas le nom (device.getCategory() = nom)
         return this.runQuery('insert into device values(?,?,?,?,?,?)',[device.getRef(), device.getCategoryID(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone()]);
     }
 
@@ -64,9 +66,9 @@ export default class DAODevice extends DAO<Device> {
         return this.runQuery('delete from device where ref=?', [refDevice]);
     }
 
-    public getDevicesByFilter(name: string, ref: string, available: number, categoryID: number) : Promise<Device[]> {
+    public getDevicesByFilter(name: string, ref: string, categoryID: number) : Promise<Device[]> {
 
-        if(name == "" && ref == "" && available == -1 && categoryID == -1) {
+        if(name == "" && ref == "" && categoryID == -1) {
             return Promise.reject(new Error("All fields can't be empty"));
         }
 
@@ -83,17 +85,18 @@ export default class DAODevice extends DAO<Device> {
             params.push(ref);
         }
 
-        // TODO : available
-
         if(categoryID != -1) {
             sqlWhens.push("d.idCategory = ?");
             params.push(categoryID);
         }
 
 
-        return this.getAllRows("SELECT ref, d.name as name, version, photo, phone, c.name as category " +
+        return this.getAllRowsNoCast("SELECT ref, d.name as name, version, photo, phone, c.name as category " +
             "FROM device d, category c " +
             "WHERE d.idCategory = c.id AND " + sqlWhens.join(" AND ")
-            , params);
+            , params).then(async (rows) => {
+                const promises: Promise<Device>[] = rows.map(this.rowToModelAsync.bind(this));
+                return Promise.all(promises);
+            });
     }
 }

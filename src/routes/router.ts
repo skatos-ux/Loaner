@@ -24,7 +24,6 @@ Matériels : /devices - Milan / Yohan
     X - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all?nom_filtre=valeur_filtre&...
         - Nom (name)
         - Ref (ref)
-        - Disponibilité (libre ou non) (availability) (available/borrowed)
         - Catégorie (category)
     X - Emprunter un matériel     POST /:id_materiel/borrow/:id_utilisateur
     Coté admin :

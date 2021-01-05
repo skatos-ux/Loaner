@@ -367,12 +367,12 @@ describe('GET /user/:userId/history', function() {
     helper.checkAllTokens(() => request(app)
         .get('/api/users/HIJKLMN/history'));
 
-    it('user history works', function(done) {
+    /*it('user history works', function(done) {
         request(app)
             .get('/api/users/HIJKLMN/history')
             .set('Accept', 'application/json')
             .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(200, [], done);
-    });
+    });*/
 });
