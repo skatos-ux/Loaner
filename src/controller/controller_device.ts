@@ -48,7 +48,7 @@ export default class DeviceController extends Controller {
             lastId = 0;
         }
 
-        this.dao.borrowDevice(idDevice, idUser, lastId+1).then(this.findSuccess(res)).catch(this.findError(res));
+        this.dao.borrowDevice(idDevice, idUser, lastId+1).then(this.editSuccess(res)).catch(this.findError(res));
     }
 
     public async addDevice(res : Response, ref : string, categoryName : string, name : string, version : string, photo : string, phone: string) : Promise<void> {
@@ -56,14 +56,14 @@ export default class DeviceController extends Controller {
         try {
             const cat = await this.daoCategory.getByName(categoryName);
             const device = new Device(ref, cat.getID(), cat.getName(), name, version, photo, phone)
-            this.dao.addDevice(device).then(this.findSuccess(res)).catch(this.findError(res));
+            this.dao.addDevice(device).then(this.editSuccess(res)).catch(this.findError(res));
         } catch(err) {
             this.giveError(err, res);
         }
     }
 
     public async deleteDevice(res : Response, idDevice : string) : Promise<void> {
-        this.dao.deleteDevice(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
+        this.dao.deleteDevice(idDevice).then(this.editSuccess(res)).catch(this.findError(res));
     }
 
     public async historyDevice(res : Response, idDevice : string) : Promise<void> {

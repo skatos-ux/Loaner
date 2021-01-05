@@ -14,5 +14,8 @@ export default class DAOCatgeory extends DAO<Reservation> {
     public historyDevice(idDevice : string) : Promise<Reservation []> {
         return this.getAllRows('select * from reservation where refDevice=?', [idDevice]);
     }
-    // ...
+    
+    public getUserHistory(idUser : string) : Promise<Reservation[]> {
+        return this.getAllRows("SELECT * FROM reservation WHERE iduser = ?", [idUser]);
+    }
 }

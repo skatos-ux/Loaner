@@ -28,7 +28,7 @@ export default abstract class Controller {
 
     protected findError(res : Response) : ErrorCallback {
         return (error) => {
-            res.status(404); // Not found
+            res.status(400); // Bad request
             res.json(this.createError(error));
         }
     }
