@@ -60,7 +60,7 @@ describe("Tests on dao_reservation.ts", function(){
         });
 
         it("The start date must be earlier than the two others", async function() {
-            const result = await DAOTested.historyDevice("AN001");
+            const result = await DAOTested.historyDevice("AN002");
 
             result.forEach(function(booking){
                assert.notDeepEqual(booking.getStartDate(),booking.getReturnDate());

@@ -225,52 +225,49 @@ const DAOcat = new DAOCategory();
     });
 
     describe("Tests on borrowDevice() method",function() {
+
+        const startDate = new Date('14/01/2020');
+        const endDate = new Date('04/02/2020');
+        
         it("Booking a device which doesn't exist should throw error",async function(){
-            var reservationID = await  DAObooking.getLastId();
-            expect(DAOTested.borrowDevice("TESTB","ABCDEFG",reservationID.getID()+1)).to.be.rejected;
+            const reservationID = await  DAObooking.getLastId();
+            expect(DAOTested.borrowDevice("TESTB","ABCDEFG",reservationID.getID()+1, startDate, endDate)).to.be.rejected;
         });
 
         it("Borrow a wrong reference device should throw an error",async function(){
-            var reservationID = await  DAObooking.getLastId();
-            expect(DAOTested.borrowDevice("toolongref","ABCDEFG",reservationID.getID()+2)).to.be.rejected;
-            expect(DAOTested.borrowDevice("ref","ABCDEFG",reservationID.getID()+3)).to.be.rejected;
+            const reservationID = await  DAObooking.getLastId();
+            expect(DAOTested.borrowDevice("toolongref","ABCDEFG",reservationID.getID()+2, startDate, endDate)).to.be.rejected;
+            expect(DAOTested.borrowDevice("ref","ABCDEFG",reservationID.getID()+3, startDate, endDate)).to.be.rejected;
         });
 
         it("Booking a device as a invalid user should throw error",async function(){
-            var reservationID = await  DAObooking.getLastId();
-            expect(DAOTested.borrowDevice("AN001","testUserRef",reservationID.getID()+4)).to.be.rejected;
+            const reservationID = await  DAObooking.getLastId();
+            expect(DAOTested.borrowDevice("AN001","testUserRef",reservationID.getID()+4, startDate, endDate)).to.be.rejected;
         });
     });    
 
     describe("Tests on getDevicesByFilter() method",function() {
 
         it("Research with empty filters should throw error",async function (){
-            expect(DAOTested.getDevicesByFilter("","",-1,-1)).to.be.rejected;
+            expect(DAOTested.getDevicesByFilter("","",-1)).to.be.rejected;
         });
 
         it("Checking if all the filters works well",async function(){
             await DAOTested.addDevice.bind(DAOTested,new Device("test1",1,"Téléphones","Test filters","1.0","","0778787878"));
 
-            var result = await DAOTested.getDevicesByFilter("Test filters","",-1,-1);
+            let result = await DAOTested.getDevicesByFilter("Test filters","",-1);
             result.forEach(function(device){
                 assert.equal(device.getName(),"Test filters");
             })
 
             //Test à modifier selon l'implémentation du code
-            var result = await DAOTested.getDevicesByFilter("","test1",-1,-1);
+            result = await DAOTested.getDevicesByFilter("","test1",-1);
             result.forEach(function(device){
                 assert.equal(device.getRef(),"test1");
-            })
+            });
 
-            var result = await DAOTested.getDevicesByFilter("","",1,-1);
-            result.forEach(function(device){
-                assert.isEmpty(device.getLockDays());
-            })
-
-            var result = await DAOTested.getDevicesByFilter("","",-1,1);
-            result.forEach(function(device){
-                assert.equal(device.getName(),"Téléphones");
-            })
+            result = await DAOTested.getDevicesByFilter("","",1);
+            expect(result.map((device) => { return device.getName(); })).to.have.members(["Huawei P80", "Samsung Galaxy S1000"]);
 
             await DAOTested.deleteDevice.bind(DAOTested,"test1");
         });
