@@ -44,11 +44,14 @@ export default class AuthController extends Controller {
         
             this.dao.checkUser(email, oldPassword)
             .then((user) => {
-                this.dao.changePassword(email, newPassword).then(() => { this.giveSuccess({
-                    success: true,
-                    user: user
-                }, res, 201)})
-                .catch(this.findError(res));
+                if(this.checkToken(req, res, user.isAdmin(), user.getId())) {
+                    this.dao.changePassword(email, newPassword).then(() => {
+                        this.giveSuccess({
+                            success: true,
+                            user: user
+                        }, res, 201)})
+                    .catch(this.findError(res));
+                }
             })
             .catch((err : Error) => {
                 this.giveError(new Error("Invalid name or old password"), res);
@@ -62,7 +65,6 @@ export default class AuthController extends Controller {
     public checkToken(req : Request, res : Response, requireAdmin = false, requiredUserID = "") : boolean {
 
         if(!this.hasToken(req)) {
-            //console.error(req.path + " => No token specified");
             this.giveError(new Error("No token specified"), res, 401);
             return false;
         }
@@ -76,19 +78,16 @@ export default class AuthController extends Controller {
             const admin = userInfo["admin"] || false;
 
             if(requireAdmin && !admin) {
-                //console.error(req.path + " => This endpoint requires admin privileges");
                 this.giveError(new Error("This endpoint requires admin privileges"), res, 401);
                 return false;
             }
 
             if(requiredUserID != "" && userID != requiredUserID) {
-                //console.error(req.path + " => Invalid user");
                 this.giveError(new Error("Invalid user"), res, 401);
                 return false;
             }
 
         } catch {
-            //console.error(req.path + " => Invalid token");
             this.giveError(new Error("Invalid token"), res, 401);
             return false;
         }

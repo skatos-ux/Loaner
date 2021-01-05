@@ -49,6 +49,10 @@ export default class DAOUser extends DAO<User> {
         .then(() => { return true; }).catch(() => { return false; });
     }
 
+    /*public getUserByEmail(email: string) : Promise<User> {
+      return this.getOneRow("SELECT * FROM user WHERE mail = ?", [email]);
+    }*/
+
     // Partie authentification
     public checkUser(email : string, password : string) : Promise<User> {
       return this.getOneRowNoCast("SELECT * FROM user WHERE mail = ?", [email])

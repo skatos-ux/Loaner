@@ -1,7 +1,5 @@
 import request from 'supertest';
-
 import { app } from '../../src/index';
-
 import * as helper from './routing_tests_helper';
 
 const createDatabase = require('../../util/create_db');
@@ -367,12 +365,19 @@ describe('GET /user/:userId/history', function() {
     helper.checkAllTokens(() => request(app)
         .get('/api/users/HIJKLMN/history'));
 
-    /*it('user history works', function(done) {
+    it('user history works', function(done) {
         request(app)
-            .get('/api/users/HIJKLMN/history')
+            .get('/api/users/ABCDEFG/history')
             .set('Accept', 'application/json')
             .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
-            .expect(200, [], done);
-    });*/
+            .expect(200, [{
+                "ID": 2,
+                "endDate": "12-01-2020",
+                "idUser": "ABCDEFG",
+                "refDevice": "PC001",
+                "returnDate": "04-02-2020",
+                "startDate": "04-01-2020"
+            }], done);
+    });
 });
