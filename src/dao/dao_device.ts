@@ -15,8 +15,13 @@ export default class DAODevice extends DAO<Device> {
         const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
         await this.daoReservation.getAllReservationsDevice(row.ref).then(reservations => {
             reservations.forEach(elementRes => {
-                const startDate = elementRes.getStartDate();
-                const endDate = elementRes.getEndDate();
+                var startDate = elementRes.getStartDate();
+                var endDate;
+                if(elementRes.getReturnDate() == null){
+                    endDate = elementRes.getEndDate();
+                }else{
+                    endDate = elementRes.getReturnDate();
+                }
                 device.addLockDays(startDate +','+endDate);
             });
         });
