@@ -5,22 +5,33 @@ import DAOReservation from './dao_reservation';
 export default class DAODevice extends DAO<Device> {
 
     public rowToModel(row: any): Device {
-        // Ne fonctionnera pas
-        const lockDays = [row.startDate,row.endDate];
         const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
-        device.setLockDays(lockDays);
+        return device;
+    }
+
+    public async rowToModelAsync(row: any): Promise<Device> {
+        const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
+        const daoReservation = new DAOReservation();
+        await daoReservation.getAllReservationsDevice(row.ref).then(reservations => {
+            reservations.forEach(elementRes => {
+                const startDate = elementRes.getStartDate();
+                const endDate = elementRes.getEndDate();
+                device.addLockDays(startDate +','+endDate);
+                console.log(device.getLockDays());
+            });
+        });
         return device;
     }
 
     public getAll() : Promise<Device[]> {
-        return this.getAllRows("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as categoryName" +
-            "FROM device d, category c" +
-            "WHERE d.idCategory = c.id");
+        return this.getAllRowsNoCast("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as categoryName " +
+            "FROM device d, category c " +
+            "WHERE d.idCategory = c.id").then(rows => {return rows.map((row) => { await this.rowToModelAsync.bind(this)()})});
     }
 
     public get(refDevice : string) : Promise<Device> {
-        return this.getOneRow("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as category" +
-            "FROM device d, category c" +
+        return this.getOneRowNoCast("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as category " +
+            "FROM device d, category c " +
             "WHERE d.idCategory = c.id AND d.ref=?", refDevice);
     }
 

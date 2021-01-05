@@ -1,7 +1,7 @@
 import DAO from './dao';
 import Reservation from '../model/reservation';
 
-export default class DAOCatgeory extends DAO<Reservation> {
+export default class DAOReservation extends DAO<Reservation> {
 
     public rowToModel(row: any): Reservation {
         return new Reservation(row.ID, row.refDevice, row.idUser, row.startDate, row.endDate, row.returnDate);

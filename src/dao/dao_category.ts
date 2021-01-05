@@ -8,7 +8,11 @@ export default class DAOCategory extends DAO<Category> {
     }
 
     public addCategory(nameCategory : string, lastId : number) : Promise<void> {
-        return this.runQuery("insert into category values(?, ?)", [lastId, nameCategory]);
+        if(lastId < 0){
+            throw new Error("L'id ne peut être négatif");
+        }else{
+            return this.runQuery("insert into category values(?, ?)", [lastId, nameCategory]);
+        }
     }
 
     // Non utilisé

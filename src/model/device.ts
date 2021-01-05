@@ -101,4 +101,8 @@ export default class Device {
     public setLockDays(lockDays : string[]) : void {
         this.lockDays = lockDays;
     }
+
+    public addLockDays(lockDays : string) : void {
+        this.lockDays.push(lockDays);
+    }
 }

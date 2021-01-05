@@ -6,6 +6,7 @@ import { Response } from 'express';
 import Device from '../model/device';
 import DAOCategory from '../dao/dao_category';
 import Category from '../model/category';
+import Reservation from '../model/reservation';
 
 export default class DeviceController extends Controller {
 
@@ -37,6 +38,16 @@ export default class DeviceController extends Controller {
 
     public async getInfoDevice(res : Response, idDevice : string) : Promise<void> {
         this.dao.get(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
+        /*this.dao.get(idDevice).then(device => {
+            this.daoReservation.getAllReservationsDevice(idDevice).then(reservations => {
+                reservations.forEach(elementRes => {
+                    const startDate = elementRes.getStartDate();
+                    const endDate = elementRes.getEndDate();
+                    console.dir(startDate);
+                    device.addLockDays(startDate +','+endDate);
+                });
+            }).catch(this.findError(res));
+        }).catch(this.findError(res));*/
     }
 
     public async borrowDevice(res : Response, idDevice : string, idUser : string) : Promise<void> {
