@@ -1,4 +1,4 @@
-import { DAO } from './dao';
+import DAO from './dao';
 import Category from '../model/category';
 
 export default class DAOCategory extends DAO<Category> {

@@ -1,4 +1,4 @@
-import { DAO } from './dao';
+import DAO from './dao';
 import User from '../model/user';
 import * as config from '../../config.json';
 
