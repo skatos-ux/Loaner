@@ -93,25 +93,25 @@ describe('PUT /user/add', function() {
         createDatabase();
     });
 
-    it('user creation works', function(done) {
+    it('responds error when trying to add user with already existing id', function(done) {
         request(app)
             .put('/api/users/add')
             .set('Content-Type', 'application/json')
             .send({
-                id: "TESTTES",
-                firstName: "Jean",
-                lastName: "Dupont",
-                email: "jdupont@mail.fr",
-                admin: false,
-                temporaryPassword: false
+                id: "ABCDEFG",
+                firstName: "Marche",
+                lastName: "Pas",
+                email: "rien@mail.fr",
+                admin: false
             })
             .expect('Content-Type', /json/)
-            .expect(201, done);
-
-            // TODO : Vérifier la création
+            .expect(400, {
+                error: true,
+                message: "User with this ID already exists"
+            }, done);
     });
 
-    /*it('reponds error for invalid values', function(done) {
+    it('responds error for invalid ID', function(done) {
         request(app)
             .put('/api/users/add')
             .set('Content-Type', 'application/json')
@@ -120,27 +120,43 @@ describe('PUT /user/add', function() {
                 firstName: "Jean",
                 lastName: "Dupont",
                 email: "jdupont@mail.fr",
-                admin: false,
-                temporaryPassword: false
+                admin: false
             })
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
                 message: "Invalid ID"
             }, done);
-    });*/
+    });
 
-    it('reponds error for invalid user with already existing email', function(done) {
+    it('responds error for invalid email', function(done) {
         request(app)
             .put('/api/users/add')
             .set('Content-Type', 'application/json')
             .send({
-                id: "TESTTES",
+                id: "TESTTE1",
+                firstName: "Jean",
+                lastName: "Dupont",
+                email: "cecinestpasunmail.correct",
+                admin: false
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "Invalid email"
+            }, done);
+    });
+
+    it('responds error for invalid user with already existing email', function(done) {
+        request(app)
+            .put('/api/users/add')
+            .set('Content-Type', 'application/json')
+            .send({
+                id: "TESTTE2",
                 firstName: "Jean",
                 lastName: "Dupont",
                 email: "lilianb@mail.fr",
-                admin: false,
-                temporaryPassword: false
+                admin: false
             })
             .expect('Content-Type', /json/)
             .expect(400, {
@@ -148,12 +164,76 @@ describe('PUT /user/add', function() {
                 message: "User with this email already exists"
             }, done);
     });
+
+    it('user creation works', function(done) {
+        request(app)
+            .put('/api/users/add')
+            .set('Content-Type', 'application/json')
+            .send({
+                id: "TESTTE3",
+                firstName: "Jean",
+                lastName: "Dupont",
+                email: "jdupont@mail.fr",
+                admin: false
+            })
+            .expect('Content-Type', /json/)
+            .expect(201, () => {
+                request(app)
+                    .get('/api/users/TESTTE3')
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200, {
+                        id: "TESTTE3",
+                        firstName: "Jean",
+                        lastName: "Dupont",
+                        email: "jdupont@mail.fr",
+                        admin: false,
+                        temporaryPassword: true
+                    }, done);
+            });
+    });
 });
 
 describe('POST /user/modify', function() {
 
     this.beforeEach(() => {
         createDatabase();
+    });
+
+    it('responds error for invalid user ID', function(done) {
+        request(app)
+            .post('/api/users/modify')
+            .set('Content-Type', 'application/json')
+            .send({
+                id: "INVALID",
+                firstName: "Jean",
+                lastName: "Dupont",
+                email: "jdupont@mail.fr",
+                admin: false
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "User with this ID doesn't exists"
+            }, done);
+    });
+
+    it('responds error for invalid user with already existing email', function(done) {
+        request(app)
+            .post('/api/users/modify')
+            .set('Content-Type', 'application/json')
+            .send({
+                id: "HIJKLMN",
+                firstName: "Jean",
+                lastName: "Dupont",
+                email: "lilianb@mail.fr",
+                admin: false
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "User with this email already exists"
+            }, done);
     });
 
     it('user modification works', function(done) {
@@ -165,71 +245,24 @@ describe('POST /user/modify', function() {
                 firstName: "M",
                 lastName: "P",
                 email: "psqrm@mail.fr",
-                admin: false,
-                temporaryPassword: false
+                admin: false
             })
             .expect('Content-Type', /json/)
-            .expect(201, done);
-        
-            // TODO : Vérifier la modification
+            .expect(201, () => {
+                request(app)
+                    .get('/api/users/HIJKLMN')
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200, {
+                        id: "HIJKLMN",
+                        firstName: "M",
+                        lastName: "P",
+                        email: "psqrm@mail.fr",
+                        admin: false,
+                        temporaryPassword: false
+                    }, done);
+            });
     });
-
-    /*it('reponds error for invalid user ID', function(done) {
-        request(app)
-            .post('/api/users/modify')
-            .set('Content-Type', 'application/json')
-            .send({
-                id: "INVALID",
-                firstName: "Jean",
-                lastName: "Dupont",
-                email: "jdupont@mail.fr",
-                admin: false,
-                temporaryPassword: false
-            })
-            .expect('Content-Type', /json/)
-            .expect(400, {
-                error: true,
-                message: "User with this email already exists"
-            }, done);
-    });*/
-
-    /*it('reponds error for invalid values', function(done) {
-        request(app)
-            .post('/api/users/modify')
-            .set('Content-Type', 'application/json')
-            .send({
-                id: "INVAL",
-                firstName: "Jean",
-                lastName: "Dupont",
-                email: "jdupont@mail.fr",
-                admin: false,
-                temporaryPassword: false
-            })
-            .expect('Content-Type', /json/)
-            .expect(400, {
-                error: true,
-                message: "Invalid ID"
-            }, done);
-    });*/
-
-    /*it('reponds error for invalid user with already existing email', function(done) {
-        request(app)
-            .post('/api/users/modify')
-            .set('Content-Type', 'application/json')
-            .send({
-                id: "TESTTES",
-                firstName: "Jean",
-                lastName: "Dupont",
-                email: "lilianb@mail.fr",
-                admin: false,
-                temporaryPassword: false
-            })
-            .expect('Content-Type', /json/)
-            .expect(400, {
-                error: true,
-                message: "User with this email already exists"
-            }, done);
-    });*/
 
 });
 
@@ -239,24 +272,33 @@ describe('DELETE /user/delete/:userId', function() {
         createDatabase();
     });
 
-    it('user deletion works', function(done) {
-        request(app)
-            .delete('/api/users/delete/HIJKLMN')
-            .expect('Content-Type', /json/)
-            .expect(201, done);
-
-        // TODO : Vérifier la suppression
-    });
-
-    /*it('responds error with invalid user id', function(done) {
+    it('responds error with invalid user id', function(done) {
         request(app)
             .delete('/api/users/delete/INVALID')
+            .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
-                message: "Cannot find results"
+                message: "User with this ID doesn't exists"
             }, done);
-    });*/
+    });
+
+    it('user deletion works', function(done) {
+        request(app)
+            .delete('/api/users/delete/HIJKLMN')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(201, () => {
+                request(app)
+                    .get('/api/users/HIJKLMN')
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(400, {
+                        error: true,
+                        message: "Cannot find results"
+                    }, done);
+            });
+    });
 });
 
 describe('GET /user/:userId/history', function() {
@@ -265,20 +307,22 @@ describe('GET /user/:userId/history', function() {
         createDatabase();
     });
 
-    it('user history works', function(done) {
+    it('responds error with invalid user id', function(done) {
         request(app)
-            .get('/api/users/HIJKLMN/history')
-            .expect('Content-Type', /json/)
-            .expect(200, [], done);
-    });
-
-    /*it('responds error with invalid user id', function(done) {
-        request(app)
-            .get('/api/users/HIJKLMN/history')
+            .get('/api/users/INVALID/history')
+            .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
-                message: "Cannot find results"
+                message: "User with this ID doesn't exists"
             }, done);
-    });*/
+    });
+
+    it('user history works', function(done) {
+        request(app)
+            .get('/api/users/HIJKLMN/history')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200, [], done);
+    });
 });

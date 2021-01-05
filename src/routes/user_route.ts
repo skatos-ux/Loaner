@@ -20,33 +20,33 @@ router.get("/all", (req, res) => {
   controller.getAll(res);
 });
 
-router.get("/:idUser", (req, res) => {
-  const idUser = req.params.idUser;
-  controller.getUser(res, idUser);
+router.get("/:userId", (req, res) => {
+  const userId = req.params.userId;
+  controller.getUser(res, userId);
 });
 
 router.put("/add", (req, res) => {
-  // TODO : A deplacer dans le controller
   const info = req.body;
-  const user: User = new User(info.id, info.firstName, info.lastName, info.email, info.admin, info.temporaryPassword);
-  controller.addUser(res, user);
+  controller.addUser(res, info.id, info.firstName, info.lastName, info.email, info.admin);
+  /*const user: User = new User(info.id, info.firstName, info.lastName, info.email, info.admin, info.temporaryPassword);
+  controller.addUser(res, user);*/
 });
 
 router.post("/modify", (req, res) => {
-  // TODO : A deplacer dans le controller
   const info = req.body;
-  const user: User = new User(info.id, info.firstName, info.lastName, info.email, info.admin, info.temporaryPassword);
-  controller.updateUser(res, user);
+  controller.updateUser(res, info.id, info.firstName, info.lastName, info.email, info.admin);
+  /*const user: User = new User(info.id, info.firstName, info.lastName, info.email, info.admin, info.temporaryPassword);
+  controller.updateUser(res, user);*/
 });
 
-router.delete("/delete/:idUser", (req, res) => {
-  const idUser = req.params.idUser;
-  controller.deleteUser(res, idUser);
+router.delete("/delete/:userId", (req, res) => {
+  const userId = req.params.userId;
+  controller.deleteUser(res, userId);
 });
 
-router.get("/:idUser/history", (req, res) => {
-  const idUser = req.params.idUser;
-  controller.getUserHistory(res, idUser);
+router.get("/:userId/history", (req, res) => {
+  const userId = req.params.userId;
+  controller.getUserHistory(res, userId);
 });
 
 export default router;

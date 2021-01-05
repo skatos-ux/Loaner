@@ -11,11 +11,11 @@ export default class DAOUser extends DAO<User> {
     }
 
     public getAll() : Promise<User[]> {
-      return this.getAllRows("SELECT * FROM user")
+      return this.getAllRows("SELECT * FROM user");
     }
 
     public getUser(idUser : string) : Promise<User> {
-      return this.getOneRow("SELECT * FROM user WHERE id=?", [idUser]);
+      return this.getOneRow("SELECT * FROM user WHERE id = ?", [idUser]);
     }
 
     public getLastId() : Promise<User> {
@@ -36,13 +36,22 @@ export default class DAOUser extends DAO<User> {
       return this.runQuery("DELETE FROM user WHERE id = ?", [idUser]);
     }
 
+    public hasUserWithId(idUser : string) : Promise<boolean> {
+      return this.getOneRow("SELECT * FROM user WHERE id = ?", [idUser]).then(() => { return true; }).catch(() => { return false; });
+    }
+
     public hasUserWithEmail(email : string) : Promise<boolean> {
-      return this.getOneRow("SELECT * FROM user WHERE mail=?", [email]).then(() => { return true; }).catch(() => { return false; });
+      return this.getOneRow("SELECT * FROM user WHERE mail = ?", [email]).then(() => { return true; }).catch(() => { return false; });
+    }
+
+    public hasUserWithEmailExcept(email : string, exceptUserId : string) : Promise<boolean> {
+      return this.getOneRow("SELECT * FROM user WHERE mail = ? AND id != ?", [email, exceptUserId])
+        .then(() => { return true; }).catch(() => { return false; });
     }
 
     // Partie authentification
     public checkUser(email : string, password : string) : Promise<User> {
-      return this.getOneRowNoCast("SELECT * FROM user WHERE mail=?", [email])
+      return this.getOneRowNoCast("SELECT * FROM user WHERE mail = ?", [email])
       .then((row) => {
         if(bcrypt.compareSync(password, row.password)) {
           return this.rowToModel(row);
@@ -53,7 +62,7 @@ export default class DAOUser extends DAO<User> {
     }
 
     public changePassword(email : string, newPassword : string) : Promise<void> {
-      return this.runQuery("UPDATE user SET password=?, temporaryPassword=0 WHERE mail=?",
+      return this.runQuery("UPDATE user SET password = ?, temporaryPassword = 0 WHERE mail = ?",
         [bcrypt.hashSync(newPassword, config.hashSaltRounds), email]);
     }
 }

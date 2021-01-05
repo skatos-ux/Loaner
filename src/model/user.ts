@@ -6,7 +6,7 @@ export default class User {
     private admin!: boolean;
     private temporaryPassword!: boolean;
 
-    constructor(id: string, firstName: string, lastName: string, email: string, admin: boolean, temporaryPassword: boolean){
+    constructor(id: string, firstName: string, lastName: string, email: string, admin: boolean, temporaryPassword: boolean = true) {
       this.setId(id);
       this.setFirstName(firstName);
       this.setLastName(lastName);

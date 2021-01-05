@@ -4,7 +4,7 @@ import * as config from '../../config.json';
 const sqlite = verbose();
 const db = new sqlite.Database(config.dbFile);
 
-abstract class DAO<T> {
+export default abstract class DAO<T> {
 
     /*  A faire implémenter par la classe fille
         Permet de transformer une ligne de la base de donnée en objet du modèle */
@@ -71,5 +71,3 @@ abstract class DAO<T> {
         });
     }
 }
-
-export default DAO;
