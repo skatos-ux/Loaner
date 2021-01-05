@@ -12,7 +12,7 @@
     "test:routes": "mocha -r ts-node/register tests/routestests/*.ts",
     "lint": "eslint . --ext .ts",
     "coverage": "nyc npm run test",
-    "create-db": "node ./util/create_db.js --exec --log-queries",
+    "create-db": "ts-node ./util/create_db.ts --exec --log-queries",
     "build:dev": "tsc",
     "build:prod": "npm test && npm run lint && tsc"
   },

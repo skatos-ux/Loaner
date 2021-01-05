@@ -1,11 +1,17 @@
 // Utilitaire permettant de créer à base de données à partir du contenu du fichier "init_db.sql"
 
-const fs = require('fs');
+/*const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
-const config = require('../config.json');
+const config = require('../config.json');*/
 
-const sqlContent = fs.readFileSync('init_db.sql').toString();
-const db = new sqlite3.Database(config.dbFile, (err) => {
+import { readFileSync } from 'fs';
+import { verbose } from 'sqlite3';
+import * as config from '../config.json';
+
+const sqlite = verbose();
+
+const sqlContent = readFileSync('init_db.sql').toString();
+const db = new sqlite.Database(config.dbFile, (err) => {
     if(err) {
         handleError(err);
     }
@@ -25,7 +31,7 @@ if(execute) {
     process.on('exit', closeDatabase);
 }
 
-function createDatabase() {
+function createDatabase() : void {
     db.serialize(() => {
 
         db.run('BEGIN TRANSACTION');
@@ -62,7 +68,7 @@ function createDatabase() {
     });
 }
 
-function closeDatabase() {
+function closeDatabase() : void {
     db.close((err) => {
 
         if (err) {
@@ -75,7 +81,7 @@ function closeDatabase() {
     });
 }
 
-function handleError(err) {
+function handleError(err: Error) : void {
     if(execute) {
         console.error(err);
         process.exit(-1);
@@ -84,4 +90,4 @@ function handleError(err) {
     }
 }
 
-module.exports = createDatabase;
+export default createDatabase;

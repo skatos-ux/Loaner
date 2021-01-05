@@ -5,7 +5,7 @@ import { app } from '../../src/index';
 import * as helper from './routing_tests_helper';
 import * as config from '../../config.json';
 
-const createDatabase = require('../../util/create_db');
+import createDatabase from '../../util/create_db';
 
 describe('POST /auth/login', function() {
     this.beforeAll(() => {

@@ -2,7 +2,7 @@ import request from 'supertest';
 import { app } from '../../src/index';
 import * as helper from './routing_tests_helper';
 
-const createDatabase = require('../../util/create_db');
+import createDatabase from '../../util/create_db';
 
 describe('GET /user/all', function() {
 
