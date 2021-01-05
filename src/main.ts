@@ -1,6 +1,14 @@
 import Vue from 'vue'
+import Vuelidate from 'vuelidate'
+
+// Vuelidate
+Vue.use(Vuelidate)
+
 import App from './App.vue'
 import axios, {AxiosStatic} from "axios";
+
+
+
 import router from './router'
 import store from './store'
 

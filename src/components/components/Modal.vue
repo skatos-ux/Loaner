@@ -54,7 +54,7 @@ export default class Modal extends Vue {
     &--wrapper {
       display: flex;
       justify-content: space-around;
-      align-items: flex-start;
+      align-items: center;
       margin: 0 0 20px 0;
     }
     &--info {
@@ -75,7 +75,6 @@ export default class Modal extends Vue {
       flex-direction: row;
       justify-content: flex-end;
       align-items: center;
-      margin-top: 20px;
     }
   }
 

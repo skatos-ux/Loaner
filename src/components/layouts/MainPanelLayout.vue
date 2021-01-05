@@ -39,14 +39,19 @@
 
           <template v-slot:body>
             <div class="modal__body--wrapper">
-              <input v-model="formAddCategory.name" type="text" class="input" placeholder="Ordinateurs, téléphones...">
+              <input v-model="$v.formAddCategory.name.$model" type="text" class="input" placeholder="Ordinateurs, téléphones...">
             </div>
             <article v-show="backCategoryUpdate" class="message is-info">
               <div class="message-body is-size-7">
                 Mise à jour...
               </div>
             </article>
-            <input @click="addCategory" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
+            <article v-show="!$v.formAddCategory.name.required" class="message is-danger">
+              <div class="message-body is-size-7">
+                Le nom de la catégorie est obligatoire
+              </div>
+            </article>
+            <input @click="addCategory" :disabled="$v.formAddCategory.name.$invalid" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
         </Modal>
         <Modal id="addDevModal" ref="addDeviceModal">
@@ -55,13 +60,13 @@
           </template>
 
           <template v-slot:body>
-
             <div class="modal__body--wrapper">
               <div class="field">
                 <div class="control has-icons-left">
-                  <div class="select">
-                    <select v-model="formAddDevice.category" required>
-                      <option v-for="category in categories" :key="category.name"> {{ category.name}} </option>
+                  <div :class="'select' + isInputInvalid($v.formAddDevice.category.$invalid)">
+                    <select v-model="$v.formAddDevice.category.$model" required>
+                      <option selected disabled value="">Catégorie</option>
+                      <option v-for="(category) in categories" :key="category.name"> {{ category.name}} </option>
                     </select>
                   </div>
                   <div class="icon is-small is-left">
@@ -71,27 +76,32 @@
               </div>
             </div>
             <div class="modal__body--wrapper">
-              <input v-model="formAddDevice.name" id="deviceName" class="input" type="text" required placeholder="Nom de l'appareil">
+              <input v-model="$v.formAddDevice.name.$model" id="deviceName" :class="'input' + isInputInvalid($v.formAddDevice.name.$invalid)" type="text" required placeholder="Nom de l'appareil">
             </div>
             <div class="modal__body--wrapper">
-              <input v-model="formAddDevice.ref" id="deviceRef" class="input left" type="text" required placeholder="Référence">
-              <input v-model="formAddDevice.version" id="deviceVer" class="input right" type="text" required placeholder="Version">
+              <input v-model="$v.formAddDevice.ref.$model" id="deviceRef" :class="'input left' + isInputInvalid($v.formAddDevice.ref.$invalid)" type="text" required placeholder="Référence">
+              <input v-model="$v.formAddDevice.version.$model" id="deviceVer" :class="'input right' + isInputInvalid($v.formAddDevice.version.$invalid)" class="input right" type="text" required placeholder="Version">
             </div>
             <div class="modal__body--wrapper">
-              <input v-model="formAddDevice.photo" id="devicePhoto" class="input left" type="url" required placeholder="URL de l'image">
-              <input v-model="formAddDevice.phone" id="devicePhone" class="input right" type="tel" required placeholder="Numéro de téléphone">
+              <input v-model="$v.formAddDevice.photo.$model" id="devicePhoto" :class="'input left' + isInputInvalid($v.formAddDevice.photo.$invalid)" type="url" required placeholder="URL de l'image (optionnel)">
+              <input v-model="$v.formAddDevice.phone.$model" id="devicePhone" :class="'input right' + isInputInvalid($v.formAddDevice.phone.$invalid)" type="tel" required placeholder="Numéro de téléphone">
             </div>
             <article v-show="backDeviceUpdate" class="message is-info">
               <div class="message-body is-size-7">
                 Mise à jour...
               </div>
             </article>
-            <input @click="addDevice" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
+            <article v-show="$v.formAddDevice.$invalid" class="message is-danger">
+              <div class="message-body is-size-7">
+                Les champs saisis sont incorrects
+              </div>
+            </article>
+            <input @click="addDevice" :disabled="$v.formAddDevice.$invalid" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
         </Modal>
 
       </div>
-      <DeviceCategoryLayout v-for="category in searchedCategories" :key="category.name" :title="category.name">
+      <DeviceCategoryLayout v-for="category in searchedCategories" :key="category.name" :title="category.name" :categoryid="category.ID">
         <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :phone="device.phone" :lockDays="device.lockDays" :photo="device.photo"></Device>
       </DeviceCategoryLayout>
     </div>
@@ -99,15 +109,48 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
+import {Component, Ref, Vue} from 'vue-property-decorator';
 import DeviceCategoryLayout from "@/components/layouts/DeviceCategoryLayout.vue";
 import Device from "@/components/components/Device.vue";
 import Modal from "@/components/components/Modal.vue";
 
 import authHeader from "@/services/auth-header";
+import {required, minLength, url, numeric, maxLength} from 'vuelidate/lib/validators'
 
 @Component({
-  components: {Device, DeviceCategoryLayout, Modal}
+  components: {Device, DeviceCategoryLayout, Modal},
+  validations: {
+    formAddCategory: {
+      name: {
+        required,
+      }
+    },
+    formAddDevice: {
+      name: {
+        required,
+      },
+      category: {
+        required,
+      },
+      ref: {
+        required,
+        minLength: minLength(5),
+        maxLength: maxLength(5),
+      },
+      version: {
+        required,
+        minLength: minLength(3)
+      },
+      photo: {
+        url,
+      },
+      phone: {
+        required,
+        numeric,
+        maxLength: maxLength(7)
+      }
+    }
+  }
 })
 export default class MainPanelLayout extends Vue {
   @Ref() readonly addCategoryModal!: Modal
@@ -117,14 +160,14 @@ export default class MainPanelLayout extends Vue {
   categories = this.$store.state.devices.categories
   user = this.$store.state.auth.user
 
+  backError = false
+  backCategoryUpdate = false
+  backDeviceUpdate = false
+
   formSearch = {
     search: "",
     searchMode: "nom",
   }
-
-  backError = false
-  backCategoryUpdate = false
-  backDeviceUpdate = false
 
   formAddCategory = {
     name: ""
@@ -137,6 +180,14 @@ export default class MainPanelLayout extends Vue {
     version: "",
     photo: "",
     phone: ""
+  }
+
+  isInputInvalid(validator: boolean) {
+    if(validator) {
+      return " is-danger"
+    } else {
+      return ""
+    }
   }
 
   mounted() {
@@ -155,40 +206,43 @@ export default class MainPanelLayout extends Vue {
   }
 
   addCategory() {
-    this.$api.put('/category/add/' + this.formAddCategory.name, {} ,{ headers: authHeader(this.user.token) }).then((res) => {
+    if(!this.$v.formAddCategory.name?.$invalid) {
+      this.$api.put('/category/add/' + this.formAddCategory.name, {} ,{ headers: authHeader(this.user.token) }).then((res) => {
 
-      this.$api.get('/devices/all').then((res) => {
-        this.$store.dispatch('initDevices', res.data)
+        this.$api.get('/devices/all').then((res) => {
+          this.$store.dispatch('initDevices', res.data)
+        }).catch((error) => {
+          this.backError = true
+        })
+        this.backCategoryUpdate = true
+        setTimeout(() => {
+          this.backCategoryUpdate = false
+          window.location.reload()
+        }, 1000)
       }).catch((error) => {
-        console.log(error)
+        this.backError = true
       })
-      this.backCategoryUpdate = true
-      setTimeout(() => {
-        this.backCategoryUpdate = false
-        window.location.reload()
-      }, 1000)
-    }).catch((error) => {
-      this.backError = true
-    })
+    }
   }
 
   addDevice() {
-    this.$api.put("/devices/add", this.formAddDevice, { headers: authHeader(this.user.token) }).then((res) => {
-      this.backDeviceUpdate = true
-      this.$api.get('/devices/all').then((res) => {
-        this.$store.dispatch('initDevices', res.data)
-      }).catch((error) => {
-        console.log(error)
-      })
-      setTimeout(() => {
-        this.backDeviceUpdate = false
-        window.location.reload()
-      }, 1000)
+    if(!this.$v.formAddDevice.$invalid) {
 
-    }).catch((error) => {
-      this.backError = true
-      console.log(error)
-    })
+      this.$api.put("/devices/add", this.formAddDevice, {headers: authHeader(this.user.token)}).then((res) => {
+        this.backDeviceUpdate = true
+        this.$api.get('/devices/all').then((res) => {
+          this.$store.dispatch('initDevices', res.data)
+        }).catch((error) => {
+          this.backError = true
+        })
+        setTimeout(() => {
+          this.backDeviceUpdate = false
+          window.location.reload()
+        }, 1000)
+      }).catch((error) => {
+        this.backError = true
+      })
+    }
   }
 
   changeSearchType(event: { target: HTMLInputElement }) {
