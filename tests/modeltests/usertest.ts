@@ -31,9 +31,9 @@ describe("Tests on user.ts", function() {
 
     
     describe("Testing exceptions", function (){
-        it("Setting an ID lower than 0 should throw an error"), function (){
+        it("Setting an ID lower than 0 should throw an error", function () {
            expect(userTested.setId.bind(userTested,"-1")).to.throw(Error);
-        }
+        });
         it("Setting an empty firstname should throw an error",function (){
             expect(userTested.setFirstName.bind(userTested,"")).to.throw(Error);
         });
