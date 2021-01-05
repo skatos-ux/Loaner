@@ -21,11 +21,17 @@ section {
 .is-target {
   pointer-events: auto;
 }
+.is-pointer {
+  cursor: pointer;
+}
 .success {
   color: green;
 }
 .fail {
   color: red;
+}
+.info {
+  color: blue;
 }
 .fail--hover {
   &:hover {

@@ -8,7 +8,7 @@
         <div class="user__info">{{ email }}</div>
       </div>
       <div class="user__info">
-          <span @click="remUser" class="icon is-small">
+          <span @click="remUser" class="icon is-small is-pointer">
             <font-awesome-icon :icon="['fas', 'trash-alt']" />
           </span>
       </div>

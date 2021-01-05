@@ -7,6 +7,7 @@
 <style lang="scss">
 @import "./scss/globals";
 @import "node_modules/bulma/bulma";
+@import "node_modules/bulma-extensions/dist/css/bulma-extensions.min";
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

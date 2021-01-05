@@ -24,11 +24,28 @@
 
           <template v-slot:body>
             <div class="modal__body--wrapper">
-              <input v-model="formAddAdmin.firstName" type="text" class="input left" placeholder="Prénom">
-              <input v-model="formAddAdmin.lastName" type="text" class="input middle" placeholder="Nom">
-              <input v-model="formAddAdmin.email" type="email" class="input right" placeholder="Email">
+              <input v-model="$v.formAddUser.firstName.$model" type="text" :class="'input left' + isInputInvalid($v.formAddUser.firstName.$invalid)" placeholder="Prénom">
+              <input v-model="$v.formAddUser.lastName.$model" type="text" :class="'input middle' + isInputInvalid($v.formAddUser.lastName.$invalid)" placeholder="Nom">
+              <input v-model="$v.formAddUser.email.$model" type="email" :class="'input middle' + isInputInvalid($v.formAddUser.email.$invalid)" placeholder="Email">
+              <input v-model="$v.formAddUser.admin.$model" id="switchExample" type="checkbox" class="switch right">
+              <label for="switchExample" class="middle">Administrateur</label>
             </div>
-            <input @click="addAdmin" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
+            <article v-show="backUserAdded" class="message is-success">
+              <div class="message-body is-size-7">
+                L'utilisateur à été ajouté avec succès son mot de passe est : {{ temporaryPassword }}
+              </div>
+            </article>
+            <article v-show="backUpdate" class="message is-info">
+              <div class="message-body is-size-7">
+                Mise à jour...
+              </div>
+            </article>
+            <article v-show="$v.formAddUser.$invalid" class="message is-danger">
+              <div class="message-body is-size-7">
+                Les champs saisis sont incorrects
+              </div>
+            </article>
+            <input @click="addUser" :disabled="$v.formAddUser.$invalid" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
         </Modal>
       </div>
@@ -43,8 +60,30 @@ import Modal from "@/components/components/Modal.vue";
 import Device from "@/components/components/Device.vue";
 import User from "@/components/components/User.vue";
 
+import authHeader from "@/services/auth-header";
+import {required, alpha, email} from 'vuelidate/lib/validators'
+
 @Component({
-  components: {User, Device, Modal}
+  components: {User, Device, Modal},
+  validations: {
+    formAddUser: {
+      firstName: {
+        required,
+        alpha
+      },
+      lastName: {
+        required,
+        alpha
+      },
+      email: {
+        required,
+        email
+      },
+      admin: {
+        required
+      }
+    }
+  }
 })
 export default class UsersLayout extends Vue {
   @Ref() readonly addAdminModal!: Modal
@@ -52,15 +91,19 @@ export default class UsersLayout extends Vue {
   users = []
   search = ""
 
-  formAddAdmin = {
+  backUserAdded = false
+  backUpdate = false
+  backError = false
+
+  temporaryPassword = ""
+
+  formAddUser = {
     firstName: "",
     lastName: "",
     email: "",
-    admin: true,
+    admin: false,
     temporaryPassword: true
   }
-
-  backError = false
 
   popUserModal() {
     this.addAdminModal.popModal()
@@ -75,16 +118,36 @@ export default class UsersLayout extends Vue {
     })
   }
 
-  addAdmin() {
-    console.log(this.formAddAdmin)
+  isInputInvalid(validator: boolean) {
+    if(validator) {
+      return " is-danger"
+    } else {
+      return ""
+    }
+  }
 
-    this.$api.post('/users/add', this.formAddAdmin).then((res) => {
-      console.log(res.data)
-    }).catch((error) => {
-      this.backError = true
-      console.log(error)
-    })
+  addUser() {
+    console.log(this.formAddUser)
+    if(!this.$v.formAddUser.$invalid) {
+      this.$api.put('/users/add', this.formAddUser).then((res) => {
+        this.$api.get('/users/all').then((res) => {
+          this.users = res.data
+        }).catch((error) => {
+          this.backError = true
+        })
 
+        this.backUpdate = true
+
+        setTimeout(() => {
+          console.log(res.data)
+          this.backUpdate = false
+          this.backUserAdded = true
+          //window.location.reload()
+        }, 1000)
+      }).catch((error) => {
+          this.backError = true
+      })
+    }
   }
 
   get searchedUsers() {
