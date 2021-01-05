@@ -22,4 +22,8 @@ export default class DAOReservation extends DAO<Reservation> {
     public getAllReservationsDevice(ref : string) : Promise<Reservation[]>{
         return this.getAllRows("Select * from reservation where refDevice = ?", [ref]);
     }
+
+    public hasReservationWithInfos(refDevice : string, idUser : string, startDate : Date, endDate : Date) : Promise<boolean> {
+        return this.getOneRow("select * from reservation where refDevice=? and idUser=? and startDate=? and endDate=? LIMIT 1",[refDevice,idUser, startDate, endDate]).then(() => { return true; }).catch(() => { return false; });
+      }
 }

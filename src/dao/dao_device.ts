@@ -4,6 +4,7 @@ import DAOReservation from './dao_reservation';
 
 export default class DAODevice extends DAO<Device> {
 
+    private daoReservation = new DAOReservation();
     // Non utilisé
     public rowToModel(row: any): Device {
         const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
@@ -12,8 +13,7 @@ export default class DAODevice extends DAO<Device> {
 
     public async rowToModelAsync(row: any): Promise<Device> {
         const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
-        const daoReservation = new DAOReservation();
-        await daoReservation.getAllReservationsDevice(row.ref).then(reservations => {
+        await this.daoReservation.getAllReservationsDevice(row.ref).then(reservations => {
             reservations.forEach(elementRes => {
                 const startDate = elementRes.getStartDate();
                 const endDate = elementRes.getEndDate();
@@ -38,24 +38,8 @@ export default class DAODevice extends DAO<Device> {
             "WHERE d.idCategory = c.id AND d.ref=?", refDevice).then(row => { return this.rowToModelAsync.bind(this)(row); });
     }
 
-    public borrowDevice(idDevice : string, idUser : string, lastId : number) : Promise<void> {
-        // Pour améliorer ca avec SQLite : https://sqlite.org/lang_datefunc.html
-        const today = new Date();
-        const dd = today.getDate();
-        const mm = today.getMonth()+1; 
-        const yyyy = new String(today.getFullYear());
-        let day = new String(dd);
-        let month = new String(mm);
-        if(dd<10) 
-        {
-            day = '0'.concat(dd.toString());
-        }
-        if(mm<10) 
-        {
-            month = '0'.concat(mm.toString());
-        }
-        const date = day+'/'+month+'/'+yyyy;
-        return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[lastId,idDevice,idUser,date,null,null]);
+    public async borrowDevice(idDevice : string, idUser : string, lastId : number, startDate : Date, endDate : Date) : Promise<void> {
+        return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[lastId,idDevice,idUser,startDate,endDate,null]);
     }
 
     public addDevice(device : Device) : Promise<void> {

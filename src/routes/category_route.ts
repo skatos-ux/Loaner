@@ -6,13 +6,6 @@ const router = Router();
 const controller = new CategoryController();
 const controllerAuth = new AuthController();
 
-/*Catégories : /category - Milan
-    Coté admin :
-        - Ajouter des catégories    PUT /add/:nom_categorie (token dans le corps de la requête)
-        - Modifier les catégories   POST /modify (token + informations sur le catégorie dans le corps de la requête)
-        - Supprimer des catégories  DELETE /delete/:id_category (token dans le corps de la requête)
-*/
-
 router.put('/add/:name_Category', (req, res) => {
     if(controllerAuth.checkToken(req,res,true)){
         const nameCategory = req.params.name_Category;
