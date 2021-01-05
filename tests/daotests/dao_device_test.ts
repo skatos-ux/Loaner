@@ -1,10 +1,7 @@
 import DAODevice from '../../src/dao/dao_device';
 import DAOCategory from '../../src/dao/dao_category';
-import Category from '../../src/model/category';
 import Device from '../../src/model/device';
-import { DAO } from '../../src/dao/dao';
 import DAOUser from '../../src/dao/dao_user';
-import User from '../../src/model/user';
 import DAOReservation from '../../src/dao/dao_reservation';
 
 import * as chai from 'chai';

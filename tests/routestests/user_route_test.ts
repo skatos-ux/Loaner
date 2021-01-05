@@ -4,11 +4,7 @@ import { app } from '../../src/index';
 
 import * as helper from './routing_tests_helper';
 
-//import createDatabase from '../../util/create_db';
 const createDatabase = require('../../util/create_db');
-
-// TODO pour tous : Vérifier si le token est valide + est celui d'un admin
-//let token: string, tokenNoAdmin: string, invalidToken: string;
 
 describe('GET /user/all', function() {
 

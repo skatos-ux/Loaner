@@ -14,7 +14,7 @@ export default abstract class DAO<T> {
         sqlQuery : Requête SQL
         params : Paramètre de la requête préparée, peut être ignoré */
     protected getOneRow(sqlQuery : string, params : any = []) : Promise<T> {
-        return this.getOneRowNoCast(sqlQuery, params).then((row) => { return this.rowToModel(row); });
+        return this.getOneRowNoCast(sqlQuery, params).then((row) => { return this.rowToModel.bind(this)(row); });
     }
 
     /*  Pour obtenir une seule ligne d'une requête mais sans conversion vers un objet du modèle
@@ -38,7 +38,7 @@ export default abstract class DAO<T> {
         sqlQuery : Requête SQL
         params : Paramètre de la requête préparée, peut être ignoré */
     protected getAllRows(sqlQuery : string, params : any = []) : Promise<T[]> {
-        return this.getAllRowsNoCast(sqlQuery, params).then((rows) => { return rows.map(this.rowToModel); })
+        return this.getAllRowsNoCast(sqlQuery, params).then((rows) => { return rows.map(this.rowToModel.bind(this)); })
     }
 
     /*  Pour obtenir toutes les lignes d'une requête mais sans conversion vers un objet du modèle
