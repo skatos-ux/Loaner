@@ -38,19 +38,9 @@ export default class DeviceController extends Controller {
 
     public async getInfoDevice(res : Response, idDevice : string) : Promise<void> {
         this.dao.get(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
-        /*this.dao.get(idDevice).then(device => {
-            this.daoReservation.getAllReservationsDevice(idDevice).then(reservations => {
-                reservations.forEach(elementRes => {
-                    const startDate = elementRes.getStartDate();
-                    const endDate = elementRes.getEndDate();
-                    console.dir(startDate);
-                    device.addLockDays(startDate +','+endDate);
-                });
-            }).catch(this.findError(res));
-        }).catch(this.findError(res));*/
     }
 
-    public async borrowDevice(res : Response, idDevice : string, idUser : string) : Promise<void> {
+    public async borrowDevice(res : Response, idDevice : string, idUser : string, startDate : Date, endDate : Date) : Promise<void> {
         let lastId = 0;
         
         try {
@@ -59,7 +49,15 @@ export default class DeviceController extends Controller {
             lastId = 0;
         }
 
-        this.dao.borrowDevice(idDevice, idUser, lastId+1).then(this.editSuccess(res)).catch(this.findError(res));
+        try{
+            if(!(await this.daoReservation.hasReservationWithInfos(idDevice, idUser, startDate, endDate))){
+                this.dao.borrowDevice(idDevice, idUser, lastId+1, startDate, endDate).then(this.editSuccess(res)).catch(this.findError(res));
+            }else{
+                throw new Error("La réservation existe deja");
+            }
+        }catch(err) {
+            this.giveError(err, res);
+        }
     }
 
     public async addDevice(res : Response, ref : string, categoryName : string, name : string, version : string, photo : string, phone: string) : Promise<void> {

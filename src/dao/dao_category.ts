@@ -21,6 +21,7 @@ export default class DAOCategory extends DAO<Category> {
     }
 
     public deleteCategory(idCategory : string) : Promise<void>{
+        this.runQuery("delete from device where idCategory=?", [idCategory]);
         return this.runQuery("delete from category where id=?", [idCategory]);
     }
 
