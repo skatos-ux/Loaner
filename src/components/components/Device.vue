@@ -43,9 +43,14 @@
           <div class="modal__body--info">{{ version }}</div>
           <div class="modal__body--info">{{ reference }}</div>
         </div>
-        <p class="image is-4by3">
+        <p v-show="photo !== ''" class="image is-4by3 modal__body--wrapper">
           <img :src="photo" alt="Photo de l'appareil">
         </p>
+        <article v-show="backUpdate" class="message is-info has-text-centered">
+          <div class="message-body is-size-7">
+            Mise à jour...
+          </div>
+        </article>
         <div v-if="user.admin" class="modal__body--footer">
           <div class="modal__body--info">
             <input @click="deleteDevice" class="button is-danger" type="button" value="Supprimer">
@@ -60,6 +65,7 @@
 import { Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import Modal from "@/components/components/Modal.vue";
 import Litepicker from "litepicker";
+import authHeader from "@/services/auth-header";
 
 @Component({
   components: {Modal}
@@ -86,18 +92,27 @@ export default class Device extends Vue {
     phone: this.phone,
   }
 
+  backUpdate = false
 
   deleteDevice() {
-    console.log("delete")
 
-    this.deviceInfoModal.depopModal()
+    this.$api.post("/devices/delete/" + this.item.reference, {}, { headers: authHeader(this.user.token) }).then((res) => {
+      this.$api.get('/devices/all').then((res) => {
+        this.$store.dispatch('initDevices', res.data)
+      }).catch((error) => {
+        console.log(error)
+      })
+      this.backUpdate = true
+      setTimeout(() => {
+        this.backUpdate = false
+        window.location.reload()
+      }, 1000)
 
-
-    this.$api.post("/device/" + this.item.identifier).then((res) => {
-      console.log(res.data)
     }).catch((error) => {
       console.log(error)
     })
+
+
   }
   addToCart(){
     this.$store.dispatch('addToCart', this.item)

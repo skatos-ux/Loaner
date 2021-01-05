@@ -41,6 +41,11 @@
             <div class="modal__body--wrapper">
               <input v-model="formAddCategory.name" type="text" class="input" placeholder="Ordinateurs, téléphones...">
             </div>
+            <article v-show="backCategoryUpdate" class="message is-info">
+              <div class="message-body is-size-7">
+                Mise à jour...
+              </div>
+            </article>
             <input @click="addCategory" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
         </Modal>
@@ -55,7 +60,7 @@
               <div class="field">
                 <div class="control has-icons-left">
                   <div class="select">
-                    <select>
+                    <select v-model="formAddDevice.category" required>
                       <option v-for="category in categories" :key="category.name"> {{ category.name}} </option>
                     </select>
                   </div>
@@ -69,13 +74,18 @@
               <input v-model="formAddDevice.name" id="deviceName" class="input" type="text" required placeholder="Nom de l'appareil">
             </div>
             <div class="modal__body--wrapper">
-              <input v-model="formAddDevice.reference" id="deviceRef" class="input left" type="text" required placeholder="Référence">
+              <input v-model="formAddDevice.ref" id="deviceRef" class="input left" type="text" required placeholder="Référence">
               <input v-model="formAddDevice.version" id="deviceVer" class="input right" type="text" required placeholder="Version">
             </div>
             <div class="modal__body--wrapper">
               <input v-model="formAddDevice.photo" id="devicePhoto" class="input left" type="url" required placeholder="URL de l'image">
               <input v-model="formAddDevice.phone" id="devicePhone" class="input right" type="tel" required placeholder="Numéro de téléphone">
             </div>
+            <article v-show="backDeviceUpdate" class="message is-info">
+              <div class="message-body is-size-7">
+                Mise à jour...
+              </div>
+            </article>
             <input @click="addDevice" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
         </Modal>
@@ -104,7 +114,7 @@ export default class MainPanelLayout extends Vue {
   @Ref() readonly addDeviceModal!: Modal
 
   filters = this.$store.state.web.filters
-  categories = this.$store.state.db.deviceCategories
+  categories = this.$store.state.devices.categories
   user = this.$store.state.auth.user
 
   formSearch = {
@@ -113,6 +123,8 @@ export default class MainPanelLayout extends Vue {
   }
 
   backError = false
+  backCategoryUpdate = false
+  backDeviceUpdate = false
 
   formAddCategory = {
     name: ""
@@ -121,7 +133,7 @@ export default class MainPanelLayout extends Vue {
   formAddDevice = {
     name: "",
     category: "",
-    reference: "",
+    ref: "",
     version: "",
     photo: "",
     phone: ""
@@ -129,13 +141,7 @@ export default class MainPanelLayout extends Vue {
 
   mounted() {
     this.$api.get('/devices/all').then((res) => {
-      console.log(res.data)
-    }).catch((error) => {
-      console.log(error)
-    })
-
-    this.$api.get('/category/all').then((res) => {
-      console.log(res.data)
+      this.$store.dispatch('initDevices', res.data)
     }).catch((error) => {
       console.log(error)
     })
@@ -150,15 +156,35 @@ export default class MainPanelLayout extends Vue {
 
   addCategory() {
     this.$api.put('/category/add/' + this.formAddCategory.name, {} ,{ headers: authHeader(this.user.token) }).then((res) => {
-      console.log(res.data)
+
+      this.$api.get('/devices/all').then((res) => {
+        this.$store.dispatch('initDevices', res.data)
+      }).catch((error) => {
+        console.log(error)
+      })
+      this.backCategoryUpdate = true
+      setTimeout(() => {
+        this.backCategoryUpdate = false
+        window.location.reload()
+      }, 1000)
     }).catch((error) => {
       this.backError = true
     })
   }
 
   addDevice() {
-    this.$api.post("/devices/add", this.formAddDevice).then((res) => {
-      console.log(res)
+    this.$api.put("/devices/add", this.formAddDevice, { headers: authHeader(this.user.token) }).then((res) => {
+      this.backDeviceUpdate = true
+      this.$api.get('/devices/all').then((res) => {
+        this.$store.dispatch('initDevices', res.data)
+      }).catch((error) => {
+        console.log(error)
+      })
+      setTimeout(() => {
+        this.backDeviceUpdate = false
+        window.location.reload()
+      }, 1000)
+
     }).catch((error) => {
       this.backError = true
       console.log(error)
@@ -173,8 +199,6 @@ export default class MainPanelLayout extends Vue {
     let search = this.formSearch.search
     let categories = this.categories
 
-
-
     if(!search) {
       return categories
     }
@@ -182,16 +206,24 @@ export default class MainPanelLayout extends Vue {
     search = search.toLowerCase()
 
     if(this.formSearch.searchMode === "nom") {
-      categories = categories.filter((category: any) =>{
+
+      const searchedCategories: Array<any> = []
+      categories.map((category: any) => {
         const test = category.devices.filter((device: any) => {
           if(device.name.toLowerCase().indexOf(search) !== -1) {
             return device
           }
         })
+
         if (test?.length) {
-          return test
+          const newCategory: any = {}
+          newCategory.ID = category.ID
+          newCategory.name = category.name
+          newCategory.devices = test
+          searchedCategories.push(newCategory)
         }
       })
+      categories = searchedCategories
     }
     else if(this.formSearch.searchMode === "catégorie") {
       categories = categories.filter((category: any) => {
@@ -201,16 +233,23 @@ export default class MainPanelLayout extends Vue {
       })
     }
     else if(this.formSearch.searchMode === "référence") {
-      categories = categories.filter((category: any) =>{
+      const searchedCategories: Array<any> = []
+      categories.map((category: any) => {
         const test = category.devices.filter((device: any) => {
           if(device.ref.toLowerCase().indexOf(search) !== -1) {
             return device
           }
         })
+
         if (test?.length) {
-          return test
+          const newCategory: any = {}
+          newCategory.ID = category.ID
+          newCategory.name = category.name
+          newCategory.devices = test
+          searchedCategories.push(newCategory)
         }
       })
+      categories = searchedCategories
     }
 
     return categories

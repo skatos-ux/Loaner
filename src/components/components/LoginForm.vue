@@ -1,18 +1,9 @@
 <template>
   <form @submit="loginForm" class="section--2 login__form p-4 m-6 animate__animated animate__fadeIn">
     <div class="field">
-      <label class="label is-size-7 has-text-left">Prénom</label>
+      <label class="label is-size-7 has-text-left">Email</label>
       <div class="control has-icons-left">
-        <input v-model="form.firstName" class="input" type="text" required>
-        <span class="icon is-small is-left">
-          <font-awesome-icon :icon="['fas', 'user']" />
-        </span>
-      </div>
-    </div>
-    <div class="field">
-      <label class="label is-size-7 has-text-left">Nom</label>
-      <div class="control has-icons-left">
-        <input v-model="form.lastName" class="input" type="text" required>
+        <input v-model="form.email" class="input" type="email" required>
         <span class="icon is-small is-left">
           <font-awesome-icon :icon="['fas', 'user']" />
         </span>
@@ -49,10 +40,14 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class LoginForm extends Vue {
+
   form =  {
+    email: '',
+    password: '',
+  }
+
+  user = {
     id: null,
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
     token: '',
@@ -68,15 +63,16 @@ export default class LoginForm extends Vue {
     input!.className +=  " control is-loading"
     event.preventDefault()
 
+    console.log(this.form)
 
     this.$api.post("/auth/login", this.form).then((res) => {
-      this.form.id = res.data.user.id
-      this.form.email = res.data.user.email
-      this.form.token = res.data.token
-      this.form.admin = res.data.user.admin
-      this.form.temporaryPassword = res.data.user.temporaryPassword
+      this.user.id = res.data.user.id
+      this.user.email= res.data.user.email
+      this.user.token = res.data.token
+      this.user.admin = res.data.user.admin
+      this.user.temporaryPassword = res.data.user.temporaryPassword
       if(res.data.auth) {
-        this.$store.dispatch('login', this.form)
+        this.$store.dispatch('login', this.user)
         this.$router.push("/mainpage/dashboard")
       } else {
         this.failLogin = true

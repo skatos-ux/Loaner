@@ -1,9 +1,9 @@
 <template>
   <div class="mainpage">
-    <div v-if="user.admin" class="mainpage__header">
+    <div class="mainpage__header">
       <NavBar/>
     </div>
-    <div :class="'mainpage__body' + adminLayout()">
+    <div class="mainpage__body">
       <router-view></router-view>
     </div>
   </div>
@@ -25,13 +25,6 @@ export default class MainPage extends Vue {
     }
   }
 
-  adminLayout() {
-    if(this.user.admin){
-      return "--admin"
-    } else {
-      return ""
-    }
-  }
 }
 </script>
 
@@ -50,13 +43,7 @@ export default class MainPage extends Vue {
     &__body {
       position: relative;
       width: 100%;
-      height: calc(100% - #{$dashboard-margin * 2});
-
-      &--admin {
-        position: relative;
-        width: 100%;
-        height: calc(100% - #{$navbar-height} - #{$dashboard-margin * 2});
-      }
+      height: calc(100% - #{$navbar-height} - #{$dashboard-margin * 2});
     }
   }
 </style>
