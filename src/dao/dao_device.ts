@@ -1,4 +1,4 @@
-import { DAO } from './dao';
+import DAO from './dao';
 import Device from '../model/device';
 import DAOReservation from './dao_reservation';
 

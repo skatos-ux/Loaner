@@ -1,4 +1,4 @@
-import { DAO } from './dao';
+import DAO from './dao';
 import Reservation from '../model/reservation';
 
 export default class DAOCatgeory extends DAO<Reservation> {
