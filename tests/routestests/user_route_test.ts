@@ -2,10 +2,13 @@ import request from 'supertest';
 
 import { app } from '../../src/index';
 
+import * as helper from './routing_tests_helper';
+
 //import createDatabase from '../../util/create_db';
 const createDatabase = require('../../util/create_db');
 
 // TODO pour tous : Vérifier si le token est valide + est celui d'un admin
+//let token: string, tokenNoAdmin: string, invalidToken: string;
 
 describe('GET /user/all', function() {
 
@@ -17,7 +20,7 @@ describe('GET /user/all', function() {
         request(app)
             .get('/api/users/all')
             .set('Accept', 'application/json')
-            //.set("x-access-token", TOKEN)
+            .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
@@ -26,6 +29,7 @@ describe('GET /user/all', function() {
         request(app)
             .get('/api/users/all')
             .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(200, [{
                 id: "ABCDEFG",
@@ -44,6 +48,8 @@ describe('GET /user/all', function() {
                 temporaryPassword: false
             }], done);
     });
+
+    helper.checkAllTokens(() => request(app).get('/api/users/all'));
 });
 
 describe('GET /user/:userId', function() {
@@ -56,6 +62,7 @@ describe('GET /user/:userId', function() {
         request(app)
             .get('/api/users/ABCDEFG')
             .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
@@ -64,6 +71,7 @@ describe('GET /user/:userId', function() {
         request(app)
             .get('/api/users/ABCDEFG')
             .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(200, {
                 id: "ABCDEFG",
@@ -79,12 +87,15 @@ describe('GET /user/:userId', function() {
         request(app)
             .get('/api/users/invalid')
             .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
                 message: "Cannot find results"
             }, done);
     });
+
+    helper.checkAllTokens(() => request(app).get('/api/users/ABCDEFG'));
 });
 
 describe('PUT /user/add', function() {
@@ -97,6 +108,7 @@ describe('PUT /user/add', function() {
         request(app)
             .put('/api/users/add')
             .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
             .send({
                 id: "ABCDEFG",
                 firstName: "Marche",
@@ -115,6 +127,7 @@ describe('PUT /user/add', function() {
         request(app)
             .put('/api/users/add')
             .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
             .send({
                 id: "INVAL",
                 firstName: "Jean",
@@ -133,6 +146,7 @@ describe('PUT /user/add', function() {
         request(app)
             .put('/api/users/add')
             .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
             .send({
                 id: "TESTTE1",
                 firstName: "Jean",
@@ -151,6 +165,7 @@ describe('PUT /user/add', function() {
         request(app)
             .put('/api/users/add')
             .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
             .send({
                 id: "TESTTE2",
                 firstName: "Jean",
@@ -165,10 +180,22 @@ describe('PUT /user/add', function() {
             }, done);
     });
 
+    helper.checkAllTokens(() => request(app)
+        .put('/api/users/add')
+        .set('Content-Type', 'application/json')
+        .send({
+            id: "TESTTE3",
+            firstName: "Jean",
+            lastName: "Dupont",
+            email: "jdupont@mail.fr",
+            admin: false
+        }));
+
     it('user creation works', function(done) {
         request(app)
             .put('/api/users/add')
             .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
             .send({
                 id: "TESTTE3",
                 firstName: "Jean",
@@ -181,6 +208,7 @@ describe('PUT /user/add', function() {
                 request(app)
                     .get('/api/users/TESTTE3')
                     .set('Accept', 'application/json')
+                    .set("x-access-token", helper.getToken())
                     .expect('Content-Type', /json/)
                     .expect(200, {
                         id: "TESTTE3",
@@ -204,6 +232,7 @@ describe('POST /user/modify', function() {
         request(app)
             .post('/api/users/modify')
             .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
             .send({
                 id: "INVALID",
                 firstName: "Jean",
@@ -222,6 +251,7 @@ describe('POST /user/modify', function() {
         request(app)
             .post('/api/users/modify')
             .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
             .send({
                 id: "HIJKLMN",
                 firstName: "Jean",
@@ -236,10 +266,22 @@ describe('POST /user/modify', function() {
             }, done);
     });
 
+    helper.checkAllTokens(() => request(app)
+        .post('/api/users/modify')
+        .set('Content-Type', 'application/json')
+        .send({
+            id: "HIJKLMN",
+            firstName: "M",
+            lastName: "P",
+            email: "psqrm@mail.fr",
+            admin: false
+        }));
+
     it('user modification works', function(done) {
         request(app)
             .post('/api/users/modify')
             .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
             .send({
                 id: "HIJKLMN",
                 firstName: "M",
@@ -252,6 +294,7 @@ describe('POST /user/modify', function() {
                 request(app)
                     .get('/api/users/HIJKLMN')
                     .set('Accept', 'application/json')
+                    .set("x-access-token", helper.getToken())
                     .expect('Content-Type', /json/)
                     .expect(200, {
                         id: "HIJKLMN",
@@ -276,6 +319,7 @@ describe('DELETE /user/delete/:userId', function() {
         request(app)
             .delete('/api/users/delete/INVALID')
             .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
@@ -283,15 +327,20 @@ describe('DELETE /user/delete/:userId', function() {
             }, done);
     });
 
+    helper.checkAllTokens(() => request(app)
+        .delete('/api/users/delete/HIJKLMN'));
+
     it('user deletion works', function(done) {
         request(app)
             .delete('/api/users/delete/HIJKLMN')
             .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(201, () => {
                 request(app)
                     .get('/api/users/HIJKLMN')
                     .set('Accept', 'application/json')
+                    .set("x-access-token", helper.getToken())
                     .expect('Content-Type', /json/)
                     .expect(400, {
                         error: true,
@@ -311,6 +360,7 @@ describe('GET /user/:userId/history', function() {
         request(app)
             .get('/api/users/INVALID/history')
             .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
@@ -318,10 +368,14 @@ describe('GET /user/:userId/history', function() {
             }, done);
     });
 
+    helper.checkAllTokens(() => request(app)
+        .get('/api/users/HIJKLMN/history'));
+
     it('user history works', function(done) {
         request(app)
             .get('/api/users/HIJKLMN/history')
             .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(200, [], done);
     });
