@@ -1,5 +1,7 @@
 // supertest doc : https://github.com/visionmedia/supertest/
 
+// Permet de simplifier la rédaction des tests sur les routes
+
 import * as jwt from 'jsonwebtoken';
 import * as config from '../../config.json';
 import request from 'supertest';
@@ -83,13 +85,28 @@ function checkNoAdminToken(test : request.Test) : void {
     });
 }
 
+function checkUserToken(test : request.Test) : void {
+
+    checkHasTokens();
+
+    it('responds error with invalid user ID token', function(done) {
+        test
+            .set('Accept', 'application/json')
+            .set("x-access-token", token)
+            .expect('Content-Type', /json/)
+            .expect(401, {
+                error: true,
+                message: "Invalid user"
+            }, done);
+    });
+}
+
 type TestCreatorCallback = () => request.Test;
 
 function checkAllTokens(testCreator: TestCreatorCallback) : void {
-    
     checkNoToken(testCreator());
     checkInvalidToken(testCreator());
     checkNoAdminToken(testCreator());
 }
 
-export { generateTokens, checkNoToken, checkInvalidToken, checkNoAdminToken, checkAllTokens, getToken };
+export { generateTokens, checkNoToken, checkInvalidToken, checkNoAdminToken, checkUserToken, checkAllTokens, getToken };

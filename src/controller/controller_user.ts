@@ -42,11 +42,16 @@ export default class UserController extends Controller {
 
             const password = generatePassword({ length: 10, numbers: true });
             
-            this.dao.addUser(user, password).then(this.editSuccess(res)).catch(this.findError(res));
+            this.dao.addUser(user, password).then(() => {
+              this.giveSuccess({
+                user: user,
+                password: password
+              }, res);
+            }).catch(this.findError(res));
+            
           } else {
             this.giveError(new Error("User with this ID already exists"), res);
           }
-
         } catch (err) {
           this.giveError(err, res);
         }

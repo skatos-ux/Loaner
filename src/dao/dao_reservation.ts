@@ -4,22 +4,22 @@ import Reservation from '../model/reservation';
 export default class DAOReservation extends DAO<Reservation> {
 
     public rowToModel(row: any): Reservation {
-        return new Reservation(row.ID, row.refDevice, row.idUser, row.startDate, row.endDate, row.returnDate);
+        return new Reservation(row.id, row.refDevice, row.idUser, row.startDate, row.endDate, row.returnDate);
     }
 
     public getLastId() : Promise<Reservation>{
-        return this.getOneRow('select * from reservation order by id DESC LIMIT 1');
+        return this.getOneRow('SELECT * FROM reservation ORDER BY id DESC LIMIT 1');
     }
 
-    public historyDevice(idDevice : string) : Promise<Reservation []> {
-        return this.getAllRows('select * from reservation where refDevice=?', [idDevice]);
+    public historyDevice(idDevice : string) : Promise<Reservation[]> {
+        return this.getAllRows('SELECT * FROM reservation WHERE refDevice = ?', [idDevice]);
     }
     
     public getUserHistory(idUser : string) : Promise<Reservation[]> {
-        return this.getAllRows("SELECT * FROM reservation WHERE iduser = ?", [idUser]);
+        return this.getAllRows("SELECT * FROM reservation WHERE idUser = ?", [idUser]);
     }
 
     public getAllReservationsDevice(ref : string) : Promise<Reservation[]>{
-        return this.getAllRows("Select * from reservation where refDevice = ?", [ref]);
+        return this.getAllRows("SELECT * FROM reservation WHERE refDevice = ?", [ref]);
     }
 }

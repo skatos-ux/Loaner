@@ -17,8 +17,6 @@ Utilisateurs : /users - Lilian
  X   - Historique des emprunts pour un utilisateur   GET /:id_utilisateur/history
 
 Matériels : /devices - Milan / Yohan
-    -> reservation : renvoyer sous le format : lockDays = [ ['start1', 'end1'], ['start2', 'end2'] ]
-    -> end = (returnDate == null) ? endDate : returnDate
     X  - Liste de tous les matériels   GET /all
     X  - Obtenir les informations d'un matériel (pas sur)     GET /:id_materiel
     X - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all?nom_filtre=valeur_filtre&...

@@ -10,7 +10,7 @@ router.post('/login', (req, res) => {
     controller.authentificate(info.email, info.password, req, res);
 });
 
-router.post('/change/password', (req, res) => {
+router.post('/password/change', (req, res) => {
     const info = req.body;
     controller.changePassword(info.email, info.oldPassword, info.newPassword, req, res);
 });
