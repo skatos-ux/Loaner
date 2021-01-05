@@ -13,40 +13,34 @@ const controller = new UserController();
  //    - Supprimer un utilisateur          DELETE /delete/:id_utilisateur
  //    - Historique des emprunts pour un utilisateur   GET /:id_utilisateur/history
 
- 
- // TODO : check des tokens pour les fonctions admins
 
 router.get("/all", (req, res) => {
-  controller.getAll(res);
+  controller.getAll(req, res);
 });
 
-router.get("/:idUser", (req, res) => {
-  const idUser = req.params.idUser;
-  controller.getUser(res, idUser);
+router.get("/:userId", (req, res) => {
+  const userId = req.params.userId;
+  controller.getUser(req, res, userId);
 });
 
 router.put("/add", (req, res) => {
-  // TODO : A deplacer dans le controller
   const info = req.body;
-  const user: User = new User(info.id, info.firstName, info.lastName, info.email, info.admin, info.temporaryPassword);
-  controller.addUser(res, user);
+  controller.addUser(req, res, info.id, info.firstName, info.lastName, info.email, info.admin);
 });
 
 router.post("/modify", (req, res) => {
-  // TODO : A deplacer dans le controller
   const info = req.body;
-  const user: User = new User(info.id, info.firstName, info.lastName, info.email, info.admin, info.temporaryPassword);
-  controller.updateUser(res, user);
+  controller.updateUser(req, res, info.id, info.firstName, info.lastName, info.email, info.admin);
 });
 
-router.delete("/delete/:idUser", (req, res) => {
-  const idUser = req.params.idUser;
-  controller.deleteUser(res, idUser);
+router.delete("/delete/:userId", (req, res) => {
+  const userId = req.params.userId;
+  controller.deleteUser(req, res, userId);
 });
 
-router.get("/:idUser/history", (req, res) => {
-  const idUser = req.params.idUser;
-  controller.getUserHistory(res, idUser);
+router.get("/:userId/history", (req, res) => {
+  const userId = req.params.userId;
+  controller.getUserHistory(req, res, userId);
 });
 
 export default router;
