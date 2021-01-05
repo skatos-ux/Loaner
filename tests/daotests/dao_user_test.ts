@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
 import Reservation from '../../src/model/reservation';
-import { DAO } from '../../src/dao/dao';
+
 const assert = chai.assert;
 const expect = chai.expect;
 
@@ -118,23 +118,6 @@ describe("Tests on dao_user.ts",function(){
         })
     });
 
-    
-
-    describe("Tests on getUserHistory() method",function(){
-
-        it("The result type must be an array of reservation", async function(){
-            const result = await DAOTested.getUserHistory(usertest.getId());
-            assert.isTrue(Array.isArray(result));
-                
-            /*
-            result.forEach(element => {
-                expect(element instanceof Reservation).to.be.true;
-                
-            });
-            */
-        });
-    });
-
     describe("Tests on authenticate", function(){
 
         it("Checking the actual password should not throw error",async function(){
@@ -146,10 +129,6 @@ describe("Tests on dao_user.ts",function(){
 
             expect(DAOTested.checkUser(usertest.getEmail(),"newtest")).not.to.be.rejected;
         });
-    });
-
-    describe("Tests on changePassword() method", function(){
-
     });
 
     describe("Tests on deleteUser() method",function(){
