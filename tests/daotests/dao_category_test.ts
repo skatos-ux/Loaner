@@ -162,7 +162,6 @@ describe("Tests on dao_category.ts",function (){
             //expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9997")).to.throw(Error);
            //expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9996")).to.throw(Error);
 
-           //Test bloquant que la suppression ait fonctionné ou pas
            expect(DAOCategTested.deleteCategory(-1)).to.be.rejected;
         });
         

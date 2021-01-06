@@ -39,6 +39,7 @@ describe("Test on device.ts", function(){
         assert.equal(devTested.getVersion(),"1.0");
         assert.equal(devTested.getPhoto(),"url");
         assert.equal(devTested.getPhone(),"0707070707");
+        assert.isTrue(Array.isArray(devTested.getLockDays()));
     })
 
     it("Device Modification test", function (){
