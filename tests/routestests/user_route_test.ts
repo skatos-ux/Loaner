@@ -6,8 +6,8 @@ import createDatabase from '../../util/create_db';
 
 describe('GET /user/all', function() {
 
-    this.beforeAll(() => {
-        createDatabase();
+    this.beforeAll(async () => {
+        await createDatabase();
     });
 
     it('responds with json', function(done) {
@@ -48,8 +48,8 @@ describe('GET /user/all', function() {
 
 describe('GET /user/:userId', function() {
 
-    this.beforeAll(() => {
-        createDatabase();
+    this.beforeAll(async () => {
+        await createDatabase();
     });
 
     it('responds with json', function(done) {
@@ -94,8 +94,8 @@ describe('GET /user/:userId', function() {
 
 describe('PUT /user/add', function() {
 
-    this.beforeEach(() => {
-        createDatabase();
+    this.beforeEach(async () => {
+        await createDatabase();
     });
 
     it('responds error when trying to add user with already existing id', function(done) {
@@ -218,8 +218,8 @@ describe('PUT /user/add', function() {
 
 describe('POST /user/modify', function() {
 
-    this.beforeEach(() => {
-        createDatabase();
+    this.beforeEach(async () => {
+        await createDatabase();
     });
 
     it('responds error for invalid user ID', function(done) {
@@ -305,8 +305,8 @@ describe('POST /user/modify', function() {
 
 describe('DELETE /user/delete/:userId', function() {
 
-    this.beforeEach(() => {
-        createDatabase();
+    this.beforeEach(async () => {
+        await createDatabase();
     });
 
     it('responds error with invalid user id', function(done) {
@@ -346,8 +346,8 @@ describe('DELETE /user/delete/:userId', function() {
 
 describe('GET /user/:userId/history', function() {
 
-    this.beforeEach(() => {
-        createDatabase();
+    this.beforeEach(async () => {
+        await createDatabase();
     });
 
     it('responds error with invalid user id', function(done) {
@@ -372,12 +372,12 @@ describe('GET /user/:userId/history', function() {
             .set("x-access-token", helper.getToken())
             .expect('Content-Type', /json/)
             .expect(200, [{
-                "ID": 2,
-                "endDate": "12-01-2020",
-                "idUser": "ABCDEFG",
-                "refDevice": "PC001",
-                "returnDate": "04-02-2020",
-                "startDate": "04-01-2020"
+                ID: 2,
+                endDate: "2020-01-12",
+                idUser: "ABCDEFG",
+                refDevice: "PC001",
+                returnDate: "2020-02-04",
+                startDate: "2020-01-04"
             }], done);
     });
 });

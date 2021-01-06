@@ -8,7 +8,7 @@ export default abstract class DAO<T> {
 
     /*  A faire implémenter par la classe fille
         Permet de transformer une ligne de la base de donnée en objet du modèle */
-    public abstract rowToModel(row: any) : T;
+    protected abstract rowToModel(row: any) : T;
 
     /*  Pour obtenir une seule ligne d'une requête
         sqlQuery : Requête SQL

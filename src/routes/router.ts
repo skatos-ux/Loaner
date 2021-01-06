@@ -10,7 +10,7 @@ Racine : /api
 Utilisateurs : /users - Lilian
  Coté admin :
  X   - Liste de tous les utilisateurs    GET /all
- X   - Obtenir les informations d'un utilisateur (pas sur)     GET /:id_utilisateur
+ X   - Obtenir les informations d'un utilisateur     GET /:id_utilisateur
  X   - Ajouter un utilisateur            PUT /add (informations de l'utilisateur dans le corps de la requête)
  X   - Modifier un utilisateur           POST /modify (informations de l'utilisateur dans le corps de la requête)
  X   - Supprimer un utilisateur          DELETE /delete/:id_utilisateur
@@ -18,8 +18,8 @@ Utilisateurs : /users - Lilian
 
 Matériels : /devices - Milan / Yohan
     X  - Liste de tous les matériels   GET /all
-    X  - Obtenir les informations d'un matériel (pas sur)     GET /:id_materiel
-    X - Filtrer une recherche de matériel selon un filtre (à voir si cummulable)  GET /all?nom_filtre=valeur_filtre&...
+    X  - Obtenir les informations d'un matériel     GET /:id_materiel
+    X - Filtrer une recherche de matériel selon un filtre GET /all?nom_filtre=valeur_filtre&...
         - Nom (name)
         - Ref (ref)
         - Catégorie (category)

@@ -103,10 +103,12 @@ function checkUserToken(test : request.Test) : void {
 
 type TestCreatorCallback = () => request.Test;
 
-function checkAllTokens(testCreator: TestCreatorCallback) : void {
+function checkAllTokens(testCreator: TestCreatorCallback, checkAdmin = true) : void {
     checkNoToken(testCreator());
     checkInvalidToken(testCreator());
-    checkNoAdminToken(testCreator());
+    if(checkAdmin) {
+        checkNoAdminToken(testCreator());
+    }
 }
 
 export { generateTokens, checkNoToken, checkInvalidToken, checkNoAdminToken, checkUserToken, checkAllTokens, getToken };

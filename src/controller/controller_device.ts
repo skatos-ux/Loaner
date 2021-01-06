@@ -2,17 +2,19 @@ import Controller from './controller';
 import DAODevice from '../dao/dao_device';
 import DAOReservation from '../dao/dao_reservation';
 
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import Device from '../model/device';
 import DAOCategory from '../dao/dao_category';
 import Category from '../model/category';
 import Reservation from '../model/reservation';
+import AuthController from './controller_auth';
 
 export default class DeviceController extends Controller {
 
     private dao = new DAODevice();
     private daoReservation = new DAOReservation();
     private daoCategory = new DAOCategory();
+    private auth = new AuthController();
 
     private async mapToCategories(devices : Device[]) : Promise<Category[]> {
 
@@ -30,17 +32,33 @@ export default class DeviceController extends Controller {
         return categories;
     }
 
-    public async getAll(res : Response) : Promise<void> {
-        this.dao.getAll().then(devices => {
-            this.mapToCategories(devices).then(this.findSuccess(res)).catch(this.findError(res));
-        }).catch(this.findError(res));
+    public async getAll(req : Request, res : Response) : Promise<void> {
+        try {
+            if(this.auth.checkToken(req, res)) {
+                this.dao.getAll().then(devices => {
+                    this.mapToCategories(devices).then(this.findSuccess(res)).catch(this.findError(res));
+                }).catch(this.findError(res));
+            }
+        } catch (err) {
+            this.giveError(err, res);
+        }
     }
 
-    public async getInfoDevice(res : Response, idDevice : string) : Promise<void> {
-        this.dao.get(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
+    public async getInfoDevice(req : Request, res : Response, refDevice : string) : Promise<void> {
+        try {
+            if(this.auth.checkToken(req, res)) {
+                if(await this.dao.hasDeviceWithRef(refDevice)) {
+                    this.dao.get(refDevice).then(this.findSuccess(res)).catch(this.findError(res));
+                } else {
+                    throw new Error("Invalid device reference");
+                }
+            }
+        } catch (err) {
+            this.giveError(err, res);
+        }
     }
 
-    public async borrowDevice(res : Response, idDevice : string, idUser : string, startDate : Date, endDate : Date) : Promise<void> {
+    public async borrowDevice(req : Request, res : Response, idDevice : string, idUser : string, startDate : Date, endDate : Date) : Promise<void> {
         let lastId = 0;
         
         try {
@@ -53,14 +71,15 @@ export default class DeviceController extends Controller {
             if(!(await this.daoReservation.hasReservationWithInfos(idDevice, idUser, startDate, endDate))){
                 this.dao.borrowDevice(idDevice, idUser, lastId+1, startDate, endDate).then(this.editSuccess(res)).catch(this.findError(res));
             }else{
-                throw new Error("La réservation existe deja");
+                throw new Error("Reservation already exists");
             }
         }catch(err) {
             this.giveError(err, res);
         }
     }
 
-    public async addDevice(res : Response, ref : string, categoryName : string, name : string, version : string, photo : string, phone: string) : Promise<void> {
+    public async addDevice(req : Request, res : Response, ref : string, categoryName : string, name : string, version : string,
+        photo : string, phone: string) : Promise<void> {
         
         try {
             const cat = await this.daoCategory.getByName(categoryName);
@@ -71,72 +90,67 @@ export default class DeviceController extends Controller {
         }
     }
 
-    public async deleteDevice(res : Response, idDevice : string) : Promise<void> {
+    public async deleteDevice(req : Request, res : Response, idDevice : string) : Promise<void> {
         this.dao.deleteDevice(idDevice).then(this.editSuccess(res)).catch(this.findError(res));
     }
 
-    public async historyDevice(res : Response, idDevice : string) : Promise<void> {
+    public async historyDevice(req : Request, res : Response, idDevice : string) : Promise<void> {
         this.daoReservation.historyDevice(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
-    public async filterDevice(res : Response, params: any) {
+    public async filterDevice(req : Request, res : Response, params: any) {
 
-        let name = "";
-        let ref = "";
-        let categoryID = -1;
+        try {
 
-        for(const param in params) {
+            if(this.auth.checkToken(req, res)) {
+                let name = "";
+                let ref = "";
+                let categoryID = -1;
 
-            const value = params[param];
+                for(const param in params) {
 
-            if(param == "name") {
-                if(typeof value == "string") {
-                    name = value;
-                } else {
-                    this.giveError(new Error("'name' is not a string"), res);
-                    return;
-                }
-            } else if(param == "ref") {
-                if(typeof value == "string") {
-                    ref = value;
-                } else {
-                    this.giveError(new Error("'ref' is not a string"), res);
-                    return;
-                }
-            } else if(param == "category") {
+                    const value = params[param];
 
-                if(typeof value == "string") {
+                    if(param == "name") {
+                        if(typeof value == "string") {
+                            name = value;
+                        } else {
+                            throw new Error("'name' is not a string");
+                        }
+                    } else if(param == "ref") {
+                        if(typeof value == "string") {
+                            ref = value;
+                        } else {
+                            throw new Error("'ref' is not a string");
+                        }
+                    } else if(param == "category") {
 
-                    const daoCat = new DAOCategory();
+                        if(typeof value == "string") {
 
-                    try {
+                            const daoCat = new DAOCategory();
+                            const d = await daoCat.getByName(value);
+                            categoryID = d.getID();
 
-                        const d = await daoCat.getByName(value);
+                        } else {
+                            throw new Error("'availability' is not a string");
+                        }
 
-                        categoryID = d.getID();
-
-                    } catch(err) {
-                        this.giveError(err, res);
-                        return;
+                    } else {
+                        throw new Error("Invalid parameter '" + param + "'");
                     }
-
-                } else {
-                    this.giveError(new Error("'availability' is not a string"), res);
-                    return;
                 }
 
-            } else {
-                this.giveError(new Error("Invalid parameter '" + param + "'"), res);
-                return;
+                this.dao.getDevicesByFilter(name, ref, categoryID).then(devices => {
+                    this.mapToCategories(devices).then(this.findSuccess(res)).catch(this.findError(res));
+                }).catch(this.findError(res));
             }
-        }
 
-        this.dao.getDevicesByFilter(name, ref, categoryID).then(devices => {
-            this.mapToCategories(devices).then(this.findSuccess(res)).catch(this.findError(res));
-        }).catch(this.findError(res));
+        } catch (err) {
+            this.giveError(err, res);
+        }
     }
 
-    public async getCategoryByName(res : Response, name : string) : Promise<void>{
+    public async getCategoryByName(req : Request, res : Response, name : string) : Promise<void>{
         this.daoCategory.getByName(name).then(this.findSuccess(res)).catch(this.findError(res));
     }
 }

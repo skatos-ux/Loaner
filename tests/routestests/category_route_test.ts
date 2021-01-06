@@ -6,8 +6,8 @@ import createDatabase from '../../util/create_db';
 
 describe('PUT /category/add/:category_name', function() {
 
-    this.beforeEach(() => {
-        createDatabase();
+    this.beforeEach(async () => {
+        await createDatabase();
     });
 
     it('responds error when too long name is given', function(done) {
@@ -48,8 +48,8 @@ describe('PUT /category/add/:category_name', function() {
 
 describe('POST /category/modify', function() {
 
-    this.beforeEach(() => {
-        createDatabase();
+    this.beforeEach(async () => {
+        await createDatabase();
     });
 
     it('responds error when not existing category name is given', function(done) {
@@ -128,8 +128,8 @@ describe('POST /category/modify', function() {
 
 describe('POST /category/delete/:id_category', function() {
 
-    this.beforeEach(() => {
-        createDatabase();
+    this.beforeEach(async () => {
+        await createDatabase();
     });
 
     it('responds error when category ID is not a number', function(done) {

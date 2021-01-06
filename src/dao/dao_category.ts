@@ -3,7 +3,7 @@ import Category from '../model/category';
 
 export default class DAOCategory extends DAO<Category> {
 
-    public rowToModel(row: any): Category {
+    protected rowToModel(row: any): Category {
         return new Category(row.id, row.name);
     }
 

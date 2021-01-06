@@ -8,8 +8,8 @@ import * as config from '../../config.json';
 import createDatabase from '../../util/create_db';
 
 describe('POST /auth/login', function() {
-    this.beforeAll(() => {
-        createDatabase();
+    this.beforeAll(async () => {
+        await createDatabase();
     });
 
     it('authentification works', function(done) {
@@ -87,8 +87,8 @@ describe('POST /auth/login', function() {
 
 describe('POST /auth/password/change', function() {
 
-    this.beforeEach(() => {
-        createDatabase();
+    this.beforeEach(async () => {
+        await createDatabase();
     });
 
     it('responds error if new password is empty', function(done) {

@@ -3,7 +3,7 @@ import Reservation from '../model/reservation';
 
 export default class DAOReservation extends DAO<Reservation> {
 
-    public rowToModel(row: any): Reservation {
+    protected rowToModel(row: any): Reservation {
         return new Reservation(row.id, row.refDevice, row.idUser, row.startDate, row.endDate, row.returnDate);
     }
 

@@ -5,13 +5,14 @@ import DAOReservation from './dao_reservation';
 export default class DAODevice extends DAO<Device> {
 
     private daoReservation = new DAOReservation();
+    
     // Non utilisé
-    public rowToModel(row: any): Device {
+    protected rowToModel(row: any) : Device {
         const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
         return device;
     }
 
-    public async rowToModelAsync(row: any): Promise<Device> {
+    protected async rowToModelAsync(row: any) : Promise<Device> {
         const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
         await this.daoReservation.getAllReservationsDevice(row.ref).then(reservations => {
             reservations.forEach(elementRes => {
@@ -22,7 +23,7 @@ export default class DAODevice extends DAO<Device> {
                 }else{
                     endDate = elementRes.getReturnDate();
                 }
-                device.addLockDays(startDate +','+endDate);
+                device.addLockDays(startDate + ',' + endDate);
             });
         });
         return device;
@@ -38,7 +39,7 @@ export default class DAODevice extends DAO<Device> {
     }
 
     public get(refDevice : string) : Promise<Device> {
-        return this.getOneRowNoCast("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as category " +
+        return this.getOneRowNoCast("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as categoryName " +
             "FROM device d, category c " +
             "WHERE d.idCategory = c.id AND d.ref=?", refDevice).then(row => { return this.rowToModelAsync.bind(this)(row); });
     }
@@ -80,12 +81,16 @@ export default class DAODevice extends DAO<Device> {
         }
 
 
-        return this.getAllRowsNoCast("SELECT ref, d.name as name, version, photo, phone, c.name as category " +
+        return this.getAllRowsNoCast("SELECT ref, d.name as name, version, photo, phone, c.id as categoryID, c.name as categoryName " +
             "FROM device d, category c " +
             "WHERE d.idCategory = c.id AND " + sqlWhens.join(" AND ")
             , params).then(async (rows) => {
                 const promises: Promise<Device>[] = rows.map(this.rowToModelAsync.bind(this));
                 return Promise.all(promises);
             });
+    }
+
+    public hasDeviceWithRef(ref: string) : Promise<boolean> {
+        return this.hasRow("SELECT * FROM device WHERE ref = ?", [ref]);
     }
 }

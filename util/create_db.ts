@@ -1,9 +1,5 @@
 // Utilitaire permettant de créer à base de données à partir du contenu du fichier "init_db.sql"
 
-/*const fs = require('fs');
-const sqlite3 = require('sqlite3').verbose();
-const config = require('../config.json');*/
-
 import { readFileSync } from 'fs';
 import { verbose } from 'sqlite3';
 import * as config from '../config.json';
@@ -24,48 +20,54 @@ const execute = process.argv.includes("--exec");
 if(execute) {
     console.log("Création de la base de données...");
 
-    createDatabase();
+    createDatabase().then(closeDatabase)
 
-    closeDatabase();
 } else {
     process.on('exit', closeDatabase);
 }
 
-function createDatabase() : void {
-    db.serialize(() => {
-
-        db.run('BEGIN TRANSACTION');
-
-        lines.forEach((query) => {
-            if(query && query.trim()) {
-                query = query.trim();
-    
-                if(query.startsWith("--")) {
-                    const pos = query.indexOf("\n");
-    
-                    if(pos != -1) {
-                        query = query.substring(pos + 1);
-                    } else {
-                        return;
-                    }
-                }
-    
-                query = query.replace("\n", "");
-    
-                if(logQueries) {
-                    console.log(query);
-                }
-    
-                db.run(query, (err) => {
-                    if(err) {
-                        handleError(err);
-                    }
-                });
+function executeQuery(query : string) : Promise<void> {
+    return new Promise((resolve, reject) => {
+        db.run(query, (err) => {
+            if(err) {
+                handleError(err);
+                reject(err);
             }
-        });
-        
-        db.run('COMMIT');
+
+            resolve();
+        })
     });
+}
+
+async function createDatabase() : Promise<void> {
+    
+    await executeQuery('BEGIN TRANSACTION');
+
+    for(let query of lines) {
+        if(query && query.trim()) {
+            query = query.trim();
+
+            if(query.startsWith("--")) {
+                const pos = query.indexOf("\n");
+
+                if(pos != -1) {
+                    query = query.substring(pos + 1);
+                } else {
+                    return;
+                }
+            }
+
+            query = query.replace("\n", "");
+
+            if(logQueries) {
+                console.log(query);
+            }
+            
+            await executeQuery(query);
+        }
+    }
+    
+    await executeQuery('COMMIT');
 }
 
 function closeDatabase() : void {
