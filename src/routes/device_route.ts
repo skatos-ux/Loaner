@@ -52,7 +52,7 @@ router.post('/:device_ref/borrow/:id_user', (req,res) => {
         } else {
             controller.borrowDevice(req, res, refDevice, idUser, d1, d2);
         }
-    }
+   // }
 });
 
 router.put('/add', (req,res) =>{
