@@ -28,8 +28,8 @@ export default class DAOUser extends DAO<User> {
     }
 
     public updateUser(user : User) : Promise<void> {
-      const query = "UPDATE user SET firstname = ?, lastname = ?, mail = ?, admin = ? WHERE id = ?";
-      return this.runQuery(query, [user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getId()]);
+      return this.runQuery("UPDATE user SET firstname = ?, lastname = ?, mail = ?, admin = ? WHERE id = ?", 
+        [user.getFirstName(), user.getLastName(), user.getEmail(), user.isAdmin(), user.getId()]);
     }
 
     public deleteUser(idUser : string) : Promise<void> {
@@ -37,16 +37,15 @@ export default class DAOUser extends DAO<User> {
     }
 
     public hasUserWithId(idUser : string) : Promise<boolean> {
-      return this.getOneRow("SELECT * FROM user WHERE id = ?", [idUser]).then(() => { return true; }).catch(() => { return false; });
+      return this.hasRow("SELECT * FROM user WHERE id = ?", [idUser]);
     }
 
     public hasUserWithEmail(email : string) : Promise<boolean> {
-      return this.getOneRow("SELECT * FROM user WHERE mail = ?", [email]).then(() => { return true; }).catch(() => { return false; });
+      return this.hasRow("SELECT * FROM user WHERE mail = ?", [email]);
     }
 
     public hasUserWithEmailExcept(email : string, exceptUserId : string) : Promise<boolean> {
-      return this.getOneRow("SELECT * FROM user WHERE mail = ? AND id != ?", [email, exceptUserId])
-        .then(() => { return true; }).catch(() => { return false; });
+      return this.hasRow("SELECT * FROM user WHERE mail = ? AND id != ?", [email, exceptUserId]);
     }
 
     /*public getUserByEmail(email: string) : Promise<User> {

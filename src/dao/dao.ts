@@ -56,6 +56,21 @@ export default abstract class DAO<T> {
         });
     }
 
+    /*  Permet de vérifier si une ligne correspond à la requête existe
+        sqlQuery : Requête SQL
+        params : Paramètre de la requête préparée, peut être ignoré */
+    protected hasRow(sqlQuery : string, params : any) : Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            db.get(sqlQuery, params, (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row != null);
+                }
+            });
+        });
+    }
+
     /*  Pour simplement exécuter une requête
         sqlQuery : Requête SQL
         params : Paramètre de la requête préparée, peut être ignoré */

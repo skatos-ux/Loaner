@@ -4,27 +4,21 @@ import AuthController from '../controller/controller_auth';
 
 const router = Router();
 const controller = new CategoryController();
-const controllerAuth = new AuthController();
 
-router.put('/add/:name_Category', (req, res) => {
-    if(controllerAuth.checkToken(req,res,true)){
-        const nameCategory = req.params.name_Category;
-        controller.addCategory(res, nameCategory);
-    }
-});
-
-router.delete('/delete/:id_category', (req, res) => {
-    if(controllerAuth.checkToken(req,res,true)){
-        const idCategory = req.params.id_category;
-        controller.deleteCategory(res, idCategory);
-    }
+router.put('/add/:categoryName', (req, res) => {
+    const categoryName = req.params.categoryName;
+    controller.addCategory(req, res, categoryName);
 });
 
 router.post('/modify', (req, res) => {
-    if(controllerAuth.checkToken(req,res,true)){
-        const names = req.body;
-        controller.modifyCategory(res, names.oldName, names.newName);
-    }
+    const names = req.body;
+    controller.modifyCategory(req, res, names.oldName, names.newName);
+});
+
+
+router.delete('/delete/:id_category', (req, res) => {
+    const idCategory = req.params.id_category;
+    controller.deleteCategory(req, res, idCategory);
 });
 
 export default router;

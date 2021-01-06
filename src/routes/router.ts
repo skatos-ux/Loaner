@@ -34,7 +34,7 @@ Catégories : /category - Milan
     Coté admin :
     X    - Ajouter des catégories    PUT /add/:nom_categorie (token dans le corps de la requête)
     X    - Modifier les catégories   POST /modify (token + informations sur le catégorie dans le corps de la requête)
-    X    - Supprimer des catégories  DELETE /delete/:id_category (token dans le corps de la requête)
+    X    - Supprimer des catégories  DELETE /delete/:id_categorie (token dans le corps de la requête)
 
 Authentification : /auth - Yohan
     X - Faire s'authentifier un utilisateur (renvoie un token de connexion)   POST /auth/login (informations d'authentification de l'utilisateur)
@@ -42,7 +42,6 @@ Authentification : /auth - Yohan
 */
 
 const router = express.Router();
-
 
 router.use('/devices', device_route);
 router.use('/users', user_route);

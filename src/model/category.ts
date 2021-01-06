@@ -6,8 +6,8 @@ export default class Category {
     private devices!: Device[];
 
     constructor(ID : number, name : string) {
-        this.ID = ID;
-        this.name = name;
+        this.setID(ID);
+        this.setName(name);
         this.devices = [];
     }
 
@@ -34,7 +34,7 @@ export default class Category {
 
     public setName(name : string) : void {
 
-        if(!name || name.length == 0 || name.length > 255) {
+        if(name == null || name.length == 0 || name.length > 255) {
             throw new Error("Invalid name");
         }
 

@@ -7,12 +7,8 @@ export default class DAOCategory extends DAO<Category> {
         return new Category(row.id, row.name);
     }
 
-    public addCategory(nameCategory : string, lastId : number) : Promise<void> {
-        if(lastId < 0){
-            throw new Error("L'id ne peut être négatif");
-        }else{
-            return this.runQuery("insert into category values(?, ?)", [lastId, nameCategory]);
-        }
+    public addCategory(category : Category) : Promise<void> {
+        return this.runQuery("INSERT INTO category VALUES(?, ?)", [category.getID(), category.getName()]);
     }
 
     // Non utilisé
@@ -20,20 +16,33 @@ export default class DAOCategory extends DAO<Category> {
         return this.getAllRows("SELECT * FROM category");
     }
 
-    public deleteCategory(idCategory : string) : Promise<void>{
-        this.runQuery("delete from device where idCategory=?", [idCategory]);
-        return this.runQuery("delete from category where id=?", [idCategory]);
+    public deleteCategory(idCategory : number) : Promise<void> {
+
+        if(idCategory < 0) {
+            throw new Error("Invalid category ID");
+        }
+
+        this.runQuery("DELETE FROM device WHERE idCategory = ?", [idCategory]);
+        return this.runQuery("DELETE FROM category WHERE id = ?", [idCategory]);
     }
 
-    public modifyCategory(oldName : string, newName : string) : Promise<void>{
-        return this.runQuery('update category set name=? where name=?', [newName, oldName]);
+    public modifyCategory(id : number, newName : string) : Promise<void>{
+        return this.runQuery('update category set name = ? where id = ?', [newName, id]);
     }
 
     public getLastId() : Promise<Category>{
-        return this.getOneRow('select * from category order by id DESC LIMIT 1');
+        return this.getOneRow('SELECT * FROM category ORDER BY id DESC LIMIT 1');
+    }
+
+    public hasCategoryWithID(id : number) : Promise<boolean> {
+        return this.hasRow("SELECT * FROM category WHERE id = ?", [id]);
+    }
+
+    public hasCategoryWithName(name : string) : Promise<boolean> {
+        return this.hasRow("SELECT * FROM category WHERE name = ?", [name]);
     }
 
     public getByName(name: string) : Promise<Category> {
-        return this.getOneRow("SELECT * FROM category WHERE name=?", name).catch(() => { throw new Error("Invalid category name"); });
+        return this.getOneRow("SELECT * FROM category WHERE name = ?", name).catch(() => { throw new Error("Invalid category name"); });
     }
 }

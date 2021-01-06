@@ -124,7 +124,7 @@ describe("Tests on dao_category.ts",function (){
         }
 
         it("A new category added should be seen in a SELECT request later",async function(){
-            DAOCategTested.addCategory("TestCategory",9999);
+            DAOCategTested.addCategory(new Category(9999, "TestCategory"));
             const result = await resultGetCategory("TestCategory");
             assert.isNotNull(result);
             expect(result.getID()).to.equal(9999);
@@ -142,7 +142,7 @@ describe("Tests on dao_category.ts",function (){
         */
 
         it("Adding category with a negative ID should throw an error",async function() {
-           expect(await DAOCategTested.addCategory.bind(DAOCategTested,"TestCategory2",-1)).to.throw(Error);
+           expect(await DAOCategTested.addCategory.bind(DAOCategTested,new Category(-1, "TestCategory2"))).to.throw(Error);
         });
     });
 
@@ -153,7 +153,7 @@ describe("Tests on dao_category.ts",function (){
         }
 
         it("A deleted category should not be in a query later",async function() {
-            expect(await DAOCategTested.deleteCategory.bind(DAOCategTested,"9999")).not.to.throw(Error);
+            expect(await DAOCategTested.deleteCategory.bind(DAOCategTested,9999)).not.to.throw(Error);
         });
     
         //The previous category we tried to add should not be added, so theses deletion should not work
@@ -163,7 +163,7 @@ describe("Tests on dao_category.ts",function (){
            //expect(DAOCategTested.deleteCategory.bind(DAOCategTested,"9996")).to.throw(Error);
 
            //Test bloquant que la suppression ait fonctionné ou pas
-           expect(DAOCategTested.deleteCategory("-1")).to.be.rejected;
+           expect(DAOCategTested.deleteCategory(-1)).to.be.rejected;
         });
         
     });
