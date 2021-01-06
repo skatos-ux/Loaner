@@ -50,7 +50,7 @@ export default class DeviceController extends Controller {
         }
 
         try{
-            if(!(await this.daoReservation.hasReservationWithInfos(idDevice, idUser, startDate, endDate))){
+            if(!(await this.daoReservation.hasReservationWithInfos(idDevice, startDate))){
                 this.dao.borrowDevice(idDevice, idUser, lastId+1, startDate, endDate).then(this.editSuccess(res)).catch(this.findError(res));
             }else{
                 throw new Error("La réservation existe deja");

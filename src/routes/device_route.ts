@@ -28,10 +28,10 @@ router.get('/:id_device', (req,res) => {
 
 router.post('/:id_device/borrow/:id_user', (req,res) => {
     const idUser = req.params.id_user;
-    if(controllerAuth.checkToken(req,res,false, idUser)) {
+    //if(controllerAuth.checkToken(req,res,false, idUser)) {
         const idDevice = req.params.id_device;
-        const d1 = req.body.loanDays[0];
-        const d2 = req.body.loanDays[1];
+        const d1 = req.body.startDate;
+        const d2 = req.body.endDate;
 
         const startDateTab = d1.split('-');
         const endDateTab = d2.split('-');
@@ -51,7 +51,7 @@ router.post('/:id_device/borrow/:id_user', (req,res) => {
         }else{
             controller.borrowDevice(res, idDevice, idUser, d1, d2);
         }
-    }
+   // }
 });
 
 router.put('/add', (req,res) =>{
