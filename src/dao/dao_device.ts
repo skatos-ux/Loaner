@@ -53,7 +53,7 @@ export default class DAODevice extends DAO<Device> {
     }
 
     public deleteDevice(refDevice : string) : Promise<void> {
-        return this.runQuery('delete from device where ref=?', [refDevice]);
+        return this.runQuery('DELETE FROM device WHERE ref = ?', [refDevice]);
     }
 
     public getDevicesByFilter(name: string, ref: string, categoryID: number) : Promise<Device[]> {

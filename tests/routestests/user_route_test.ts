@@ -10,6 +10,8 @@ describe('GET /user/all', function() {
         await createDatabase();
     });
 
+    helper.checkAllTokens(() => request(app).get('/api/users/all'));
+
     it('responds with json', function(done) {
         request(app)
             .get('/api/users/all')
@@ -42,8 +44,6 @@ describe('GET /user/all', function() {
                 temporaryPassword: false
             }], done);
     });
-
-    helper.checkAllTokens(() => request(app).get('/api/users/all'));
 });
 
 describe('GET /user/:userId', function() {

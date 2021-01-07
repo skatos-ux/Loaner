@@ -41,7 +41,10 @@ describe('GET /devices/all', function() {
                             version: "1.0",
                             photo: "https://media.ldlc.com/r1600/ld/products/00/05/30/35/LD0005303584_2.jpg",
                             phone: "0123456789",
-                            lockDays: ["2020-01-05,2020-01-08", "2020-01-07,2020-02-08"]
+                            lockDays: [
+                                ["2020-01-05", "2020-01-08"],
+                                ["2020-01-07", "2020-02-08"]
+                            ]
                         }, {
                             ref: "AN002",
                             categoryID: 1,
@@ -63,7 +66,9 @@ describe('GET /devices/all', function() {
                         version: "1.0",
                         photo: "https://static.acer.com/up/Resource/Acer/Laptops/Spin_5/Image/20180824/acer-Spin_5_SP513-53N-main.png",
                         phone: "",
-                        lockDays: ["2020-01-04,2020-02-04"]
+                        lockDays: [
+                            ["2020-01-04", "2020-02-04"]
+                        ]
                     }]
                 }, {
                     ID: 3,
@@ -120,7 +125,10 @@ describe('GET /devices/:device_ref', function() {
                     version: "1.0",
                     photo: "https://media.ldlc.com/r1600/ld/products/00/05/30/35/LD0005303584_2.jpg",
                     phone: "0123456789",
-                    lockDays: ["2020-01-05,2020-01-08", "2020-01-07,2020-02-08"]
+                    lockDays: [
+                        ["2020-01-05", "2020-01-08"],
+                        ["2020-01-07", "2020-02-08"]
+                    ]
                 });
             })
             .end(done);
@@ -216,7 +224,10 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         version: "1.0",
                         photo: "https://media.ldlc.com/r1600/ld/products/00/05/30/35/LD0005303584_2.jpg",
                         phone: "0123456789",
-                        lockDays: ["2020-01-05,2020-01-08", "2020-01-07,2020-02-08"]
+                        lockDays: [
+                            ["2020-01-05", "2020-01-08"],
+                            ["2020-01-07,2020-02-08"]
+                        ]
                     }]
                 }, {
                     ID: 2,
@@ -250,7 +261,10 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         version: "1.0",
                         photo: "https://media.ldlc.com/r1600/ld/products/00/05/30/35/LD0005303584_2.jpg",
                         phone: "0123456789",
-                        lockDays: ["2020-01-05,2020-01-08", "2020-01-07,2020-02-08"]
+                        lockDays: [
+                            ["2020-01-05", "2020-01-08"],
+                            ["2020-01-07", "2020-02-08"]
+                        ]
                     }]
                     }, {
                         ID: 2,
@@ -288,7 +302,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         version: "1.0",
                         photo: "https://static.acer.com/up/Resource/Acer/Laptops/Spin_5/Image/20180824/acer-Spin_5_SP513-53N-main.png",
                         phone: "",
-                        lockDays: ["2020-01-04,2020-02-04"]
+                        lockDays: ["2020-01-04", "2020-02-04"]
                     }]
                 }, {
                     ID: 3,
@@ -322,7 +336,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         version: "1.0",
                         photo: "https://static.acer.com/up/Resource/Acer/Laptops/Spin_5/Image/20180824/acer-Spin_5_SP513-53N-main.png",
                         phone: "",
-                        lockDays: ["2020-01-04,2020-02-04"]
+                        lockDays: ["2020-01-04", "2020-02-04"]
                     }]
                 }, {
                     ID: 3,
@@ -334,7 +348,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
     });
 });
 
-describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
+/*describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
 
     this.beforeEach(async () => {
         await createDatabase();
@@ -348,7 +362,7 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 lockDays: [
-                    "2020-02-15","2020-02-01"
+                    ["2020-02-15", "2020-02-01"]
                 ]
             })
             .expect('Content-Type', /json/)
@@ -372,16 +386,18 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
         .set('Content-Type', 'application/json')
         .send({
             lockDays: [
-                "2020-02-05,2020-02-15"
+                ["2020-02-05", "2020-02-15"]
             ]
         }));
+
+    // TODO : Test si pas de lockDays données
 
     helper.checkUserToken(request(app)
         .post('/api/devices/AN001/borrow/HIJKLM')
         .set('Content-Type', 'application/json')
         .send({
             lockDays: [
-                "2020-02-05,2020-02-15"
+                ["2020-02-05", "2020-02-15"]
             ]
         }));
 
@@ -399,4 +415,130 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
             .expect('Content-Type', /json/)
             .expect(201, done);
     });
+});*/
+
+
+describe('PUT /devices/add/', function() {
+
+    this.beforeEach(async () => {
+        await createDatabase();
+    });
+
+    it('responds error when category name is invalid', function(done) {
+        request(app)
+            .put('/api/devices/add')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                ref: "AN003",
+                name: "Honor 10",
+                category: "EXISTEPAS",
+                version: "1.0",
+                photo: "",
+                phone: "+33606060606"
+            })
+            .expect(400, {
+                error: true,
+                message: "Invalid category name"
+            }, done);
+    });
+
+    it('responds error when reference is invalid', function(done) {
+        request(app)
+            .put('/api/devices/add')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                ref: "PASVALIDE",
+                name: "Honor 10",
+                category: "Téléphones",
+                version: "1.0",
+                photo: "",
+                phone: "+33606060606"
+            })
+            .expect(400, {
+                error: true,
+                message: "Invalid reference"
+            }, done);
+    });
+
+    it('responds error when category is missing', function(done) {
+        request(app)
+            .put('/api/devices/add')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                ref: "AN003",
+                name: "Honor 10",
+                version: "1.0",
+                photo: "",
+                phone: "+33606060606"
+            })
+            .expect(400, {
+                error: true,
+                message: "Missing category name"
+            }, done);
+    });
+
+    helper.checkAllTokens(() => request(app)
+        .put('/api/devices/add')
+        .set('Content-Type', 'application/json')
+        .send({
+            ref: "AN003",
+            name: "Honor 10",
+            category: "Téléphones",
+            version: "1.0",
+            photo: "",
+            phone: "+33606060606"
+        }));
+
+    it('adding device works', function(done) {
+        request(app)
+            .put('/api/devices/add')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                ref: "AN003",
+                name: "Honor 10",
+                category: "Téléphones",
+                version: "1.0",
+                photo: "",
+                phone: "+33606060606"
+            })
+            .expect(201, done);
+    });
+});
+
+// Test à faire si implémenté : /devices/modify/
+
+describe('DELETE /devices/delete/:device_id', function() {
+
+    this.beforeEach(async () => {
+        await createDatabase();
+    });
+
+    it('responds error when device reference is invalid', function(done) {
+        request(app)
+            .delete('/api/devices/delete/PASVALID')
+            .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .expect(400, {
+                error: true,
+                message: "Invalid device reference"
+            }, done);
+    });
+
+    helper.checkAllTokens(() => request(app).delete('/api/devices/delete/AN001'));
+
+    it('deleting a device works', function(done) {
+        request(app)
+            .delete('/api/devices/delete/AN001')
+            .set("x-access-token", helper.getToken())
+            .expect(201, done);
+    });
+
 });

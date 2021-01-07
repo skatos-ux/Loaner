@@ -1,6 +1,6 @@
-// supertest doc : https://github.com/visionmedia/supertest/
-
 // Permet de simplifier la rédaction des tests sur les routes
+
+// TODO : vérifier si des objets sont manquant quand envoie d'un requete avec un corps
 
 import * as jwt from 'jsonwebtoken';
 import * as config from '../../config.json';
@@ -11,9 +11,6 @@ let token: string, tokenNoAdmin: string, invalidToken: string;
 function checkHasTokens() : void {
     if(!token || !tokenNoAdmin || !invalidToken) {
         [token, tokenNoAdmin, invalidToken] = generateTokens();
-        /*console.log("token : " + token);
-        console.log("token no admin : " + tokenNoAdmin);
-        console.log("invalid token : " + invalidToken);*/
     }
 }
 

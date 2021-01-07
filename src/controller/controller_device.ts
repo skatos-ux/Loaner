@@ -6,7 +6,6 @@ import { Request, Response } from 'express';
 import Device from '../model/device';
 import DAOCategory from '../dao/dao_category';
 import Category from '../model/category';
-import Reservation from '../model/reservation';
 import AuthController from './controller_auth';
 
 export default class DeviceController extends Controller {
@@ -90,8 +89,20 @@ export default class DeviceController extends Controller {
         }
     }
 
-    public async deleteDevice(req : Request, res : Response, idDevice : string) : Promise<void> {
-        this.dao.deleteDevice(idDevice).then(this.editSuccess(res)).catch(this.findError(res));
+    public async deleteDevice(req : Request, res : Response, deviceRef : string) : Promise<void> {
+        try {
+
+            if(this.auth.checkToken(req, res, true)) {
+                if(await this.dao.hasDeviceWithRef(deviceRef)) {
+                    this.dao.deleteDevice(deviceRef).then(this.editSuccess(res)).catch(this.findError(res));
+                } else {
+                    throw new Error("Invalid device reference");
+                }
+            }
+
+        } catch (err) {
+             this.giveError(err, res);   
+        }
     }
 
     public async historyDevice(req : Request, res : Response, idDevice : string) : Promise<void> {
@@ -150,7 +161,7 @@ export default class DeviceController extends Controller {
         }
     }
 
-    public async getCategoryByName(req : Request, res : Response, name : string) : Promise<void>{
+    public async getCategoryByName(res : Response, name : string) : Promise<void>{
         this.daoCategory.getByName(name).then(this.findSuccess(res)).catch(this.findError(res));
     }
 }

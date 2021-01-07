@@ -142,23 +142,14 @@ describe('POST /auth/password/change', function() {
             }, done);
     });
 
-    helper.checkNoToken(request(app)
+    helper.checkAllTokens(() => request(app)
         .post('/api/auth/password/change')
         .set('Content-Type', 'application/json')
         .send({
-            email: "lilianb@mail.fr",
-            oldPassword: "fromage",
-            newPassword: "salade"
-        }));
-
-    helper.checkInvalidToken(request(app)
-        .post('/api/auth/password/change')
-        .set('Content-Type', 'application/json')
-        .send({
-            email: "lilianb@mail.fr",
-            oldPassword: "fromage",
-            newPassword: "salade"
-        }));
+            email: "mpsqr@mail.fr",
+            oldPassword: "bourbe",
+            newPassword: "bourbier"
+        }), false);
 
     helper.checkUserToken(request(app)
         .post('/api/auth/password/change')

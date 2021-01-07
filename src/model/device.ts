@@ -55,7 +55,8 @@ export default class Device {
 
     // Setters
     public setRef(ref : string) : void {
-        if(ref.length != 5) {
+
+        if(!ref || ref.length != 5) {
             throw new Error("Invalid reference");
         }
 
@@ -64,7 +65,7 @@ export default class Device {
 
     public setName(name : string) : void {
 
-        if(name.length == 0 || name.length > 30) {
+        if(!name || name.length == 0 || name.length > 30) {
             throw new Error("Invalid name");
         }
 
@@ -73,7 +74,7 @@ export default class Device {
 
     public setVersion(version : string) : void {
 
-        if(version.length < 3 || version.length > 15) {
+        if(!version || version.length < 3 || version.length > 15) {
             throw new Error("Invalid version");
         }
 
@@ -82,6 +83,7 @@ export default class Device {
 
     public setPhoto(photo : string) : void {
         
+        // Peux mener à une faille XSS
         /*if(photo.length == 0) {
             throw new Error("Invalid photo");
         }*/
@@ -99,10 +101,20 @@ export default class Device {
     }
 
     public setLockDays(lockDays : string[]) : void {
+
+        if(!lockDays) {
+            throw new Error("Invalid lock days");
+        }
+
         this.lockDays = lockDays;
     }
 
-    public addLockDays(lockDays : string) : void {
-        this.lockDays.push(lockDays);
+    public addLockDays(lockDay : string) : void {
+
+        if(!lockDay) {
+            throw new Error("Invalid lock day to add");
+        }
+        
+        this.lockDays.push(lockDay);
     }
 }
