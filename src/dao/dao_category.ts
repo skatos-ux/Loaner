@@ -19,7 +19,7 @@ export default class DAOCategory extends DAO<Category> {
     public deleteCategory(idCategory : number) : Promise<void> {
 
         if(idCategory < 0) {
-            throw new Error("Invalid category ID");
+            return Promise.reject(new Error("Invalid category ID"));
         }
 
         this.runQuery("DELETE FROM device WHERE idCategory = ?", [idCategory]);

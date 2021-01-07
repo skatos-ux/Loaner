@@ -9,7 +9,7 @@ describe("Tests on category.ts", function() {
     it("Category Creation",function(){
         assert.equal(catTested.getID(),1);
         assert.equal(catTested.getName(),"Test");
-        assert.isTrue(Array.isArray(catTested.getDevices));
+        assert.isArray(catTested.getDevices());
     });
 
     it("Id Modification",function(){

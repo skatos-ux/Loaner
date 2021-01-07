@@ -23,8 +23,8 @@ export default class DAOReservation extends DAO<Reservation> {
         return this.getAllRows("SELECT * FROM reservation WHERE refDevice = ?", [ref]);
     }
 
-    public hasReservationWithInfos(refDevice : string, startDate : Date) : Promise<boolean> {
-        return this.hasRow("select * from reservation where refDevice=? and startDate=? LIMIT 1",
-            [refDevice,startDate]);
-      }
+    public hasReservationWithInfos(refDevice : string, startDate : Date, endDate : Date) : Promise<boolean> {
+        return this.hasRow("SELECT * FROM reservation WHERE refDevice = ? AND ((startDate <= ? AND endDate >= ?) OR (startDate >= ? AND endDate <= ?))",
+            [refDevice, startDate, startDate, endDate, endDate]);
+    }
 }

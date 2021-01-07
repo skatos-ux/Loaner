@@ -39,26 +39,13 @@ router.post('/:device_ref/borrow/:id_user', (req,res) => {
                 throw new Error("No lockDays given");
             }
 
-            const d1 = req.body.lockDays[0];
-            const d2 = req.body.lockDays[1];
-
-            const startDateTab = d1.split('-');
-            const endDateTab = d2.split('-');
-
-            const startDate = new Date();
-            const endDate = new Date();
-            startDate.setFullYear(startDateTab[0]);
-            startDate.setMonth(startDateTab[1]);
-            startDate.setDate(startDateTab[2]);
-
-            endDate.setFullYear(endDateTab[0]);
-            endDate.setMonth(endDateTab[1]);
-            endDate.setDate(endDateTab[2]);
+            const startDate = req.body.loanDays[0];
+            const endDate = req.body.loanDays[1];
 
             if(startDate > endDate) {
                 throw new Error('Start date is after end date');
             } else {
-                controller.borrowDevice(req, res, refDevice, idUser, d1, d2);
+                controller.borrowDevice(req, res, refDevice, idUser, startDate, endDate);
             }
         }
     } catch (err) {

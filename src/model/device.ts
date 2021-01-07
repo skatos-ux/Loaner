@@ -6,7 +6,7 @@ export default class Device {
     private version!: string;
     private photo!: string;
     private phone!: string;
-    private lockDays!: string[];
+    private lockDays!: string[][];
 
     constructor(ref : string, categoryID: number, categoryName: string, name : string, version : string, photo : string, phone : string) {
         this.setRef(ref);
@@ -16,7 +16,7 @@ export default class Device {
         this.setVersion(version);
         this.setPhoto(photo);
         this.setPhone(phone);
-        this.setLockDays([]);
+        this.lockDays = [];
     }
 
     // Getters
@@ -48,7 +48,7 @@ export default class Device {
         return this.phone;
     }
 
-    public getLockDays() : string[] {
+    public getLockDays() : string[][] {
         return this.lockDays;
     }
 
@@ -100,21 +100,7 @@ export default class Device {
         this.phone = phone;
     }
 
-    public setLockDays(lockDays : string[]) : void {
-
-        if(!lockDays) {
-            throw new Error("Invalid lock days");
-        }
-
-        this.lockDays = lockDays;
-    }
-
-    public addLockDays(lockDay : string) : void {
-
-        if(!lockDay) {
-            throw new Error("Invalid lock day to add");
-        }
-        
-        this.lockDays.push(lockDay);
+    public addLockDays(lockDays : string[]) : void {
+        this.lockDays.push(lockDays);
     }
 }

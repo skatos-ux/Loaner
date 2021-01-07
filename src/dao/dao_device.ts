@@ -16,17 +16,31 @@ export default class DAODevice extends DAO<Device> {
         const device = new Device(row.ref, row.categoryID, row.categoryName, row.name, row.version, row.photo, row.phone);
         await this.daoReservation.getAllReservationsDevice(row.ref).then(reservations => {
             reservations.forEach(elementRes => {
-                var startDate = elementRes.getStartDate();
-                var endDate;
-                if(elementRes.getReturnDate() == null){
+                const startDate = elementRes.getStartDate();
+                let endDate;
+                if(elementRes.hasReturnDate()){
                     endDate = elementRes.getEndDate();
                 }else{
                     endDate = elementRes.getReturnDate();
                 }
-                device.addLockDays(startDate + ',' + endDate);
+                device.addLockDays([startDate, endDate].map(this.convertDate));
             });
         });
         return device;
+    }
+
+    protected convertDate(date : Date) : string {
+
+        let month = "" + (date.getMonth() + 1);
+        let day = "" + date.getDate();
+        let year = date.getFullYear();
+
+        if (month.length < 2) 
+            month = "0" + month;
+        if (day.length < 2) 
+            day = "0" + day;
+
+        return [year, month, day].join('-');
     }
 
     public getAll() : Promise<Device[]> {

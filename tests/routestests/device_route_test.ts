@@ -226,7 +226,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         phone: "0123456789",
                         lockDays: [
                             ["2020-01-05", "2020-01-08"],
-                            ["2020-01-07,2020-02-08"]
+                            ["2020-01-07", "2020-02-08"]
                         ]
                     }]
                 }, {
@@ -302,7 +302,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         version: "1.0",
                         photo: "https://static.acer.com/up/Resource/Acer/Laptops/Spin_5/Image/20180824/acer-Spin_5_SP513-53N-main.png",
                         phone: "",
-                        lockDays: ["2020-01-04", "2020-02-04"]
+                        lockDays: [["2020-01-04", "2020-02-04"]]
                     }]
                 }, {
                     ID: 3,
@@ -336,7 +336,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         version: "1.0",
                         photo: "https://static.acer.com/up/Resource/Acer/Laptops/Spin_5/Image/20180824/acer-Spin_5_SP513-53N-main.png",
                         phone: "",
-                        lockDays: ["2020-01-04", "2020-02-04"]
+                        lockDays: [["2020-01-04", "2020-02-04"]]
                     }]
                 }, {
                     ID: 3,
@@ -361,7 +361,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                lockDays: [
+                loanDays: [
                     ["2020-02-15", "2020-02-01"]
                 ]
             })
@@ -376,8 +376,8 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
         .post('/api/devices/AN001/borrow/ABCDEFG')
         .set('Content-Type', 'application/json')
         .send({
-            lockDays: [
-                "2020-02-05,2020-02-15"
+            loanDays: [
+                ["2020-02-05", "2020-02-15"]
             ]
         }));
 
@@ -385,7 +385,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
         .post('/api/devices/AN001/borrow/ABCDEFG')
         .set('Content-Type', 'application/json')
         .send({
-            lockDays: [
+            loanDays: [
                 ["2020-02-05", "2020-02-15"]
             ]
         }));
@@ -396,7 +396,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
         .post('/api/devices/AN001/borrow/HIJKLM')
         .set('Content-Type', 'application/json')
         .send({
-            lockDays: [
+            loanDays: [
                 ["2020-02-05", "2020-02-15"]
             ]
         }));
@@ -408,7 +408,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                lockDays: [
+                loanDays: [
                     "2020-02-05","2020-02-15"
                 ]
             })

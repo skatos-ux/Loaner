@@ -2,11 +2,36 @@ export default class Reservation {
     private ID!: number;
     private refDevice!: string;
     private idUser!: string;
-    private startDate!: Date;
-    private endDate!: Date;
-    private returnDate!: Date;
+    private startDate!: string;
+    private endDate!: string;
+    private returnDate!: string;
 
-    constructor(ID : number, refDevice: string, idUser : string, startDate : Date, endDate : Date, returnDate : Date) {
+    constructor(ID : number, refDevice: string, idUser : string, startDate : string, endDate : string, returnDate : string) {
+
+        if(!ID || ID < 0) {
+            throw new Error("Invalid ID");
+        }
+
+        if(!refDevice || refDevice.length != 5) {
+            throw new Error("Invalid device reference");
+        }
+
+        if(!idUser || idUser.length != 7) {
+            throw new Error("Invalid user id");
+        }
+
+        if(!startDate || startDate.length != 10) {
+            throw new Error("Invalid start date");
+        }
+
+        if(!endDate || endDate.length != 10) {
+            throw new Error("Invalid end date");
+        }
+
+        if(endDate && endDate.length != 10) {
+            throw new Error("Invalid return date");
+        }
+
         this.ID = ID;
         this.refDevice = refDevice;
         this.idUser = idUser;
@@ -28,14 +53,23 @@ export default class Reservation {
     }
 
     public getStartDate() : Date {
-        return this.startDate;
+        return new Date(this.startDate);
     }
 
     public getEndDate() : Date {
-        return this.endDate;
+        return new Date(this.endDate);
+    }
+
+    public hasReturnDate() : boolean {
+        return !this.returnDate;
     }
 
     public getReturnDate() : Date {
-        return this.returnDate;
+
+        if(!this.returnDate) {
+            throw new Error("Return date is undefined");
+        }
+
+        return new Date(this.returnDate);
     }
 }

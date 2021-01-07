@@ -59,7 +59,7 @@ export default class DeviceController extends Controller {
 
     public async borrowDevice(req : Request, res : Response, idDevice : string, idUser : string, startDate : Date, endDate : Date) : Promise<void> {
         let lastId = 0;
-        
+
         try {
             lastId = (await this.daoReservation.getLastId()).getID();
         } catch {
@@ -67,7 +67,10 @@ export default class DeviceController extends Controller {
         }
 
         try{
-            if(!(await this.daoReservation.hasReservationWithInfos(idDevice, startDate))){
+            if(startDate > endDate){
+                throw new Error("Invalid Dates");
+            }
+            if(!(await this.daoReservation.hasReservationWithInfos(idDevice, startDate, endDate))){
                 this.dao.borrowDevice(idDevice, idUser, lastId+1, startDate, endDate).then(this.editSuccess(res)).catch(this.findError(res));
             }else{
                 throw new Error("Reservation already exists");
