@@ -31,27 +31,9 @@ router.post('/:device_ref/borrow/:id_user', (req,res) => {
     const idUser = req.params.id_user;
     if(controllerAuth.checkToken(req, res, false, idUser)) {
         const refDevice = req.params.device_ref;
-        const d1 = req.body.loanDays[0];
-        const d2 = req.body.loanDays[1];
-
-        const startDateTab = d1.split('-');
-        const endDateTab = d2.split('-');
-
-        const startDate = new Date();
-        const endDate = new Date();
-        startDate.setFullYear(startDateTab[0]);
-        startDate.setMonth(startDateTab[1]);
-        startDate.setDate(startDateTab[2]);
-
-        endDate.setFullYear(endDateTab[0]);
-        endDate.setMonth(endDateTab[1]);
-        endDate.setDate(endDateTab[2]);
-
-        if(startDate > endDate) {
-            throw new Error('La date de début est postérieure à la date de fin');
-        } else {
-            controller.borrowDevice(req, res, refDevice, idUser, d1, d2);
-        }
+        const startDate = req.body.startDate;
+        const endDate = req.body.endDate;
+        controller.borrowDevice(req, res, refDevice, idUser, startDate, endDate);
    }
 });
 

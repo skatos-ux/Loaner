@@ -23,7 +23,7 @@ export default class DAODevice extends DAO<Device> {
                 }else{
                     endDate = elementRes.getReturnDate();
                 }
-                device.addLockDays(startDate + ',' + endDate);
+                device.addLockDays(new Array(startDate,endDate));
             });
         });
         return device;
