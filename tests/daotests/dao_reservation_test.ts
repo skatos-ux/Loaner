@@ -132,27 +132,24 @@ describe("Tests on dao_reservation.ts", function(){
             assert.isAbove(booking.getEndDate().getTime(),booking.getStartDate().getTime());
            });
         });
-    })
+    });
     
     describe("Tests on hasReservationWithInfos() method", function(){
 
+        // En JavaScript, les mois commencent par 0 et non par 1
         it("An existing reservation must be seen in the database",async function(){
-            const result = await DAOTested.hasReservationWithInfos("AN001", new Date(2020, 1, 5), new Date(2020, 1, 8));
+            const result = await DAOTested.hasReservationWithInfos("AN001", new Date(2021, 0, 5), new Date(2021, 0, 8));
             expect(result).to.be.true;
-        })
+        });
 
         it("An inexisting reservation must not appear in the database",async function(){
             
-            expect(await DAOTested.hasReservationWithInfos("AN003", new Date(2020, 1, 5), new Date(2020, 1, 8))).to.be.false;
-            expect(await DAOTested.hasReservationWithInfos("AN001", new Date(2020, 1, 5), new Date(2020, 1, 8))).to.be.false;
-            expect(await DAOTested.hasReservationWithInfos("AN003", new Date(2020, 1, 6), new Date(2020, 1, 8))).to.be.false;
-            expect(await DAOTested.hasReservationWithInfos("AN003", new Date(2020, 1, 5), new Date(2020, 2, 12))).to.be.false;
-            expect(await DAOTested.hasReservationWithInfos("AN003", new Date(2020, 3, 27), new Date(2020, 1, 8))).to.be.false;
-            //expect(await DAOTested.hasReservationWithInfos("AN003", "HIJKLMN", null, new Date(2020, 1, 8))).to.be.false;
-            //expect(await DAOTested.hasReservationWithInfos("AN003", "HIJKLMN", new Date(2020, 1, 5), null)).to.be.false;
-            //expect(await DAOTested.hasReservationWithInfos(null, "HIJKLMN", new Date(2020, 1, 5), new Date(2020, 1, 8))).to.be.false;
-            //expect(await DAOTested.hasReservationWithInfos("AN003", null, new Date(2020, 1, 5), new Date(2020, 1, 8))).to.be.false;
-
-        })
-    })
-})
+            expect(await DAOTested.hasReservationWithInfos("AN003", new Date(2021, 0, 5), new Date(2021, 0, 8))).to.be.false;
+            expect(await DAOTested.hasReservationWithInfos("AN001", new Date(2021, 0, 1), new Date(2021, 0, 4))).to.be.false;
+            expect(await DAOTested.hasReservationWithInfos("AN001", new Date(2021, 1, 9), new Date(2021, 1, 20))).to.be.false;
+            expect(await DAOTested.hasReservationWithInfos("AN003", new Date(2021, 0, 6), new Date(2021, 0, 8))).to.be.false;
+            expect(await DAOTested.hasReservationWithInfos("AN003", new Date(2021, 0, 5), new Date(2021, 1, 12))).to.be.false;
+            expect(await DAOTested.hasReservationWithInfos("AN003", new Date(2021, 2, 27), new Date(2021, 0, 8))).to.be.false;
+        });
+    });
+});

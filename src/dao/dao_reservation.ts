@@ -24,7 +24,7 @@ export default class DAOReservation extends DAO<Reservation> {
     }
 
     public hasReservationWithInfos(refDevice : string, startDate : Date, endDate : Date) : Promise<boolean> {
-        return this.hasRow("SELECT * FROM reservation WHERE refDevice = ? AND ((startDate <= ? AND endDate >= ?) OR (startDate >= ? AND endDate <= ?))",
-            [refDevice, startDate, startDate, endDate, endDate]);
+        return this.hasRow("SELECT * FROM reservation WHERE refDevice = ? AND startDate <= ? AND endDate >= ?",
+            [refDevice, Reservation.convertDate(endDate), Reservation.convertDate(startDate)]);
     }
 }
