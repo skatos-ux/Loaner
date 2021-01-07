@@ -31,8 +31,8 @@ router.post('/:device_ref/borrow/:id_user', (req,res) => {
     const idUser = req.params.id_user;
     if(controllerAuth.checkToken(req, res, false, idUser)) {
         const refDevice = req.params.device_ref;
-        const startDate = req.body.startDate;
-        const endDate = req.body.endDate;
+        const startDate = req.body.loanDays[0];
+        const endDate = req.body.loanDays[1];
         controller.borrowDevice(req, res, refDevice, idUser, startDate, endDate);
    }
 });
