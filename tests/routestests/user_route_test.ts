@@ -373,11 +373,11 @@ describe('GET /user/:userId/history', function() {
             .expect('Content-Type', /json/)
             .expect(200, [{
                 ID: 2,
-                endDate: "2020-01-12",
+                endDate: "2021-01-12",
                 idUser: "ABCDEFG",
                 refDevice: "PC001",
-                returnDate: "2020-02-04",
-                startDate: "2020-01-04"
+                returnDate: "2021-02-04",
+                startDate: "2021-01-04"
             }], done);
     });
 });

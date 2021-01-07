@@ -42,8 +42,8 @@ describe('GET /devices/all', function() {
                             photo: "https://media.ldlc.com/r1600/ld/products/00/05/30/35/LD0005303584_2.jpg",
                             phone: "0123456789",
                             lockDays: [
-                                ["2020-01-05", "2020-01-08"],
-                                ["2020-01-07", "2020-02-08"]
+                                ["2021-01-05", "2021-01-08"],
+                                ["2021-01-07", "2021-02-08"]
                             ]
                         }, {
                             ref: "AN002",
@@ -67,7 +67,7 @@ describe('GET /devices/all', function() {
                         photo: "https://static.acer.com/up/Resource/Acer/Laptops/Spin_5/Image/20180824/acer-Spin_5_SP513-53N-main.png",
                         phone: "",
                         lockDays: [
-                            ["2020-01-04", "2020-02-04"]
+                            ["2021-01-04", "2021-02-04"]
                         ]
                     }]
                 }, {
@@ -126,8 +126,8 @@ describe('GET /devices/:device_ref', function() {
                     photo: "https://media.ldlc.com/r1600/ld/products/00/05/30/35/LD0005303584_2.jpg",
                     phone: "0123456789",
                     lockDays: [
-                        ["2020-01-05", "2020-01-08"],
-                        ["2020-01-07", "2020-02-08"]
+                        ["2021-01-05", "2021-01-08"],
+                        ["2021-01-07", "2021-02-08"]
                     ]
                 });
             })
@@ -225,8 +225,8 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         photo: "https://media.ldlc.com/r1600/ld/products/00/05/30/35/LD0005303584_2.jpg",
                         phone: "0123456789",
                         lockDays: [
-                            ["2020-01-05", "2020-01-08"],
-                            ["2020-01-07", "2020-02-08"]
+                            ["2021-01-05", "2021-01-08"],
+                            ["2021-01-07", "2021-02-08"]
                         ]
                     }]
                 }, {
@@ -262,8 +262,8 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         photo: "https://media.ldlc.com/r1600/ld/products/00/05/30/35/LD0005303584_2.jpg",
                         phone: "0123456789",
                         lockDays: [
-                            ["2020-01-05", "2020-01-08"],
-                            ["2020-01-07", "2020-02-08"]
+                            ["2021-01-05", "2021-01-08"],
+                            ["2021-01-07", "2021-02-08"]
                         ]
                     }]
                     }, {
@@ -302,7 +302,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         version: "1.0",
                         photo: "https://static.acer.com/up/Resource/Acer/Laptops/Spin_5/Image/20180824/acer-Spin_5_SP513-53N-main.png",
                         phone: "",
-                        lockDays: [["2020-01-04", "2020-02-04"]]
+                        lockDays: [["2021-01-04", "2021-02-04"]]
                     }]
                 }, {
                     ID: 3,
@@ -336,7 +336,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
                         version: "1.0",
                         photo: "https://static.acer.com/up/Resource/Acer/Laptops/Spin_5/Image/20180824/acer-Spin_5_SP513-53N-main.png",
                         phone: "",
-                        lockDays: [["2020-01-04", "2020-02-04"]]
+                        lockDays: [["2021-01-04", "2021-02-04"]]
                     }]
                 }, {
                     ID: 3,
@@ -348,7 +348,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
     });
 });
 
-/*describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
+describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
 
     this.beforeEach(async () => {
         await createDatabase();
@@ -361,45 +361,116 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                loanDays: [
-                    ["2020-02-15", "2020-02-01"]
-                ]
+                loanDays: ["2021-02-30", "2021-02-15"]
             })
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
-                message: ""
+                message: "Invalid startDate or endDate"
             }, done);
     });
 
-    helper.checkNoToken(request(app)
-        .post('/api/devices/AN001/borrow/ABCDEFG')
+    it('responds error when no loanDays are given', function(done) {
+        request(app)
+            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "No loanDays given"
+            }, done);
+    });
+
+    it('responds error when loanDays is not an array', function(done) {
+        request(app)
+            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                loanDays: 67
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "Invalid loanDays"
+            }, done);
+    });
+
+    it('responds error when less than two loanDays are given', function(done) {
+        request(app)
+            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                loanDays: ["2020-04-12"]
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "Invalid loanDays count"
+            }, done);
+    });
+
+    it('responds error when more than two loanDays are given', function(done) {
+        request(app)
+            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                loanDays: ["2020-04-12", "2020-04-14", "2020-04-16"]
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "Invalid loanDays count"
+            }, done);
+    });
+
+    it('responds error when there already is a reservation in the given period', function(done) {
+        request(app)
+            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                loanDays: ["2021-01-02", "2021-01-15"]
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "Reservation already exists"
+            }, done);
+    });
+
+    it('responds error when one date is invalid', function(done) {
+        request(app)
+            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                loanDays: ["01-s", "2021-01-15"]
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "Invalid startDate or endDate"
+            }, done);
+    });
+
+    const testFunc = (userId: string) => request(app)
+        .post('/api/devices/AN001/borrow/' + userId)
         .set('Content-Type', 'application/json')
         .send({
-            loanDays: [
-                ["2020-02-05", "2020-02-15"]
-            ]
-        }));
+            loanDays: ["2021-02-05", "2021-02-15"]
+        });
 
-    helper.checkInvalidToken(request(app)
-        .post('/api/devices/AN001/borrow/ABCDEFG')
-        .set('Content-Type', 'application/json')
-        .send({
-            loanDays: [
-                ["2020-02-05", "2020-02-15"]
-            ]
-        }));
-
-    // TODO : Test si pas de lockDays données
-
-    helper.checkUserToken(request(app)
-        .post('/api/devices/AN001/borrow/HIJKLM')
-        .set('Content-Type', 'application/json')
-        .send({
-            loanDays: [
-                ["2020-02-05", "2020-02-15"]
-            ]
-        }));
+    helper.checkAllTokens(() => { return testFunc("ABCDEFG"); }, false);
+    helper.checkUserToken(testFunc("HIJKLM"));
 
     it('borrow devices works', function(done) {
         request(app)
@@ -408,14 +479,12 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                loanDays: [
-                    "2020-02-05","2020-02-15"
-                ]
+                loanDays: ["2021-05-05", "2021-05-15"]
             })
             .expect('Content-Type', /json/)
             .expect(201, done);
     });
-});*/
+});
 
 
 describe('PUT /devices/add/', function() {
@@ -464,6 +533,25 @@ describe('PUT /devices/add/', function() {
             }, done);
     });
 
+    it('responds error when reference is missing', function(done) {
+        request(app)
+            .put('/api/devices/add')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                name: "Honor 10",
+                category: "Téléphones",
+                version: "1.0",
+                photo: "",
+                phone: "+33606060606"
+            })
+            .expect(400, {
+                error: true,
+                message: "Missing reference"
+            }, done);
+    });
+
     it('responds error when category is missing', function(done) {
         request(app)
             .put('/api/devices/add')
@@ -480,6 +568,26 @@ describe('PUT /devices/add/', function() {
             .expect(400, {
                 error: true,
                 message: "Missing category name"
+            }, done);
+    });
+
+    it('responds error when reference already exists', function(done) {
+        request(app)
+            .put('/api/devices/add')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                ref: "AN001",
+                name: "Honor 10",
+                category: "Téléphones",
+                version: "1.0",
+                photo: "",
+                phone: "+33606060606"
+            })
+            .expect(400, {
+                error: true,
+                message: "Device reference is already used"
             }, done);
     });
 

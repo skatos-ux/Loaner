@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import CategoryController from '../controller/controller_category';
-import AuthController from '../controller/controller_auth';
 
 const router = Router();
 const controller = new CategoryController();

@@ -48,16 +48,4 @@ router.use('/users', user_route);
 router.use('/category', category_route);
 router.use('/auth', auth_route);
 
-/*router.get('/test', (req, res, next) => {
-    throw new Error("Test");
-    next();
-});
-
-router.use((err: Error, _ : express.Request, res : express.Response) => {
-    res.status(500).json({
-        error: true,
-        message: err.message
-    });
-});*/
-
 export default router;

@@ -142,23 +142,18 @@ describe('POST /auth/password/change', function() {
             }, done);
     });
 
-    helper.checkAllTokens(() => request(app)
+    const testFunc = () => request(app)
         .post('/api/auth/password/change')
         .set('Content-Type', 'application/json')
         .send({
             email: "mpsqr@mail.fr",
             oldPassword: "bourbe",
             newPassword: "bourbier"
-        }), false);
+        });
 
-    helper.checkUserToken(request(app)
-        .post('/api/auth/password/change')
-        .set('Content-Type', 'application/json')
-        .send({
-            email: "mpsqr@mail.fr",
-            oldPassword: "bourbe",
-            newPassword: "bourbier"
-        }));
+    helper.checkAllTokens(testFunc, false);
+
+    helper.checkUserToken(testFunc());
 
     it('password change works', function(done) {
         request(app)

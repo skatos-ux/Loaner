@@ -15,12 +15,4 @@ router.post('/password/change', (req, res) => {
     controller.changePassword(info.email, info.oldPassword, info.newPassword, req, res);
 });
 
-
-// Utilisé pour du déboggage
-router.get('/check', (req, res) => {
-    if(controller.checkToken(req, res)) {
-        res.json({ connected: "true" });
-    }
-});
-
 export default router;

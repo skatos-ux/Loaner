@@ -40,6 +40,6 @@ INSERT INTO user VALUES("ABCDEFG", "Lilian", "Bethus", "lilianb@mail.fr", 1,
 INSERT INTO user VALUES("HIJKLMN", "Milan", "Pasquereau", "mpsqr@mail.fr", 0,
     "$2a$10$6Id/sE6Ocg8/iV9I75NGxupqxirjMCpZ7Q0tWTI/6VAcr.fP2WBmi", 0); -- Version hachée du mot de passe "bourbe"
 
-INSERT INTO reservation VALUES(1, "AN001", "HIJKLMN", "2020-01-05", "2020-01-08", NULL);
-INSERT INTO reservation VALUES(2, "PC001", "ABCDEFG", "2020-01-04", "2020-01-12", "2020-02-04");
-INSERT INTO reservation VALUES(3, "AN001", "HIJKLMN", "2020-01-07", "2020-02-08", NULL);
+INSERT INTO reservation VALUES(1, "AN001", "HIJKLMN", "2021-01-05", "2021-01-08", NULL);
+INSERT INTO reservation VALUES(2, "PC001", "ABCDEFG", "2021-01-04", "2021-01-12", "2021-02-04");
+INSERT INTO reservation VALUES(3, "AN001", "HIJKLMN", "2021-01-07", "2021-02-08", NULL);

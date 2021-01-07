@@ -6,23 +6,27 @@ import * as jwt from 'jsonwebtoken';
 import * as config from '../../config.json';
 import request from 'supertest';
 
+// Tokens
+// token = Token administrateur pour l'utilisateur Lilian
+// tokenNoAdmin = Token classique pour l'utilisateur Milan
+// invalidToken = Token "token" modifié afin qu'il soit volontairement invalide
 let token: string, tokenNoAdmin: string, invalidToken: string;
 
+// Vérifie si les tokens ont été générés et les génèrent si besoin
 function checkHasTokens() : void {
     if(!token || !tokenNoAdmin || !invalidToken) {
         [token, tokenNoAdmin, invalidToken] = generateTokens();
     }
 }
 
+// Retourne 
 function getToken() : string {
-
     checkHasTokens();
-
     return token;
 }
 
+// Génère les tokens
 function generateTokens() : string[] {
-
     const token = jwt.sign({ id: "ABCDEFG", admin: true }, config.jwtSecret, {
         expiresIn: "1h"
     });
@@ -36,8 +40,8 @@ function generateTokens() : string[] {
     return [token, tokenNoAdmin, invalidToken];
 }
 
+// Permet de tester si une erreur est bien renvoyée lorsque aucun token n'est passé à l'API
 function checkNoToken(test : request.Test) : void {
-
     checkHasTokens();
 
     it('responds error with no token', function(done) {
@@ -50,6 +54,7 @@ function checkNoToken(test : request.Test) : void {
     });
 }
 
+// Permet de tester si une erreur est bien renvoyée lorsqu'un token non valide n'est passé à l'API
 function checkInvalidToken(test : request.Test) : void {
 
     checkHasTokens();
@@ -66,6 +71,7 @@ function checkInvalidToken(test : request.Test) : void {
     });
 }
 
+// Permet de tester si une erreur est bien renvoyée lorsqu'un token non administrateur n'est passé à l'API
 function checkNoAdminToken(test : request.Test) : void {
 
     checkHasTokens();
@@ -82,6 +88,8 @@ function checkNoAdminToken(test : request.Test) : void {
     });
 }
 
+// Permet de tester si une erreur est bien renvoyée lorsque le token passé à l'API ne correspond pas au bon utilisateur
+// Utilise le token de base pour Lilian, doit donc etre testé dans la requete avec l'utilisateur Milan
 function checkUserToken(test : request.Test) : void {
 
     checkHasTokens();
@@ -98,8 +106,11 @@ function checkUserToken(test : request.Test) : void {
     });
 }
 
+// Prototype de la fonction permettant de créer des tests
 type TestCreatorCallback = () => request.Test;
 
+// Permet de tester les 3 premiers types de tests sur les tokens
+// La fonction passé doit permettre à cette méthode de générer le test approprié (un test ne pouvant pas servir deux fois)
 function checkAllTokens(testCreator: TestCreatorCallback, checkAdmin = true) : void {
     checkNoToken(testCreator());
     checkInvalidToken(testCreator());

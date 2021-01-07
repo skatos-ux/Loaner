@@ -15,7 +15,7 @@ export default class DeviceController extends Controller {
     private daoCategory = new DAOCategory();
     private auth = new AuthController();
 
-    private async mapToCategories(devices : Device[]) : Promise<Category[]> {
+    private async mapToCategories(devices: Device[]): Promise<Category[]> {
 
         const categories: Category[] = await this.daoCategory.getAll();
 
@@ -31,9 +31,9 @@ export default class DeviceController extends Controller {
         return categories;
     }
 
-    public async getAll(req : Request, res : Response) : Promise<void> {
+    public async getAll(req: Request, res: Response): Promise<void> {
         try {
-            if(this.auth.checkToken(req, res)) {
+            if (this.auth.checkToken(req, res)) {
                 this.dao.getAll().then(devices => {
                     this.mapToCategories(devices).then(this.findSuccess(res)).catch(this.findError(res));
                 }).catch(this.findError(res));
@@ -43,10 +43,10 @@ export default class DeviceController extends Controller {
         }
     }
 
-    public async getInfoDevice(req : Request, res : Response, refDevice : string) : Promise<void> {
+    public async getInfoDevice(req: Request, res: Response, refDevice: string): Promise<void> {
         try {
-            if(this.auth.checkToken(req, res)) {
-                if(await this.dao.hasDeviceWithRef(refDevice)) {
+            if (this.auth.checkToken(req, res)) {
+                if (await this.dao.hasDeviceWithRef(refDevice)) {
                     this.dao.get(refDevice).then(this.findSuccess(res)).catch(this.findError(res));
                 } else {
                     throw new Error("Invalid device reference");
@@ -57,46 +57,68 @@ export default class DeviceController extends Controller {
         }
     }
 
-    public async borrowDevice(req : Request, res : Response, idDevice : string, idUser : string, startDate : Date, endDate : Date) : Promise<void> {
-        let lastId = 0;
+    public async borrowDevice(req: Request, res: Response, deviceRef: string, userId: string, startDateStr: string, endDateStr: string): Promise<void> {
 
         try {
-            lastId = (await this.daoReservation.getLastId()).getID();
-        } catch {
-            lastId = 0;
-        }
 
-        try{
-            if(startDate > endDate){
-                throw new Error("Invalid Dates");
+            if(this.auth.checkToken(req, res, false, userId)) {
+
+                const startDateTime = Date.parse(startDateStr);
+                const endDateTime = Date.parse(endDateStr);
+
+                if(isNaN(startDateTime) || isNaN(endDateTime) || startDateTime > endDateTime) {
+                    throw new Error("Invalid startDate or endDate");
+                }
+
+                const startDate = new Date(startDateTime);
+                const endDate = new Date(endDateTime);
+
+                if (!(await this.daoReservation.hasReservationWithInfos(deviceRef, startDate, endDate))) {
+
+                    let lastId = 0;
+
+                    try {
+                        lastId = (await this.daoReservation.getLastId()).getID();
+                    } catch {
+                        lastId = 0;
+                    }
+
+                    this.dao.borrowDevice(deviceRef, userId, lastId + 1, startDate, endDate).then(this.editSuccess(res)).catch(this.findError(res));
+
+                } else {
+                    throw new Error("Reservation already exists");
+                }
             }
-            if(!(await this.daoReservation.hasReservationWithInfos(idDevice, startDate, endDate))){
-                this.dao.borrowDevice(idDevice, idUser, lastId+1, startDate, endDate).then(this.editSuccess(res)).catch(this.findError(res));
-            }else{
-                throw new Error("Reservation already exists");
-            }
-        }catch(err) {
+
+        } catch (err) {
             this.giveError(err, res);
         }
     }
 
-    public async addDevice(req : Request, res : Response, ref : string, categoryName : string, name : string, version : string,
-        photo : string, phone: string) : Promise<void> {
-        
-        try {
-            const cat = await this.daoCategory.getByName(categoryName);
-            const device = new Device(ref, cat.getID(), cat.getName(), name, version, photo, phone)
-            this.dao.addDevice(device).then(this.editSuccess(res)).catch(this.findError(res));
-        } catch(err) {
-            this.giveError(err, res);
-        }
-    }
+    public async addDevice(req: Request, res: Response, ref: string, categoryName: string, name: string, version: string,
+        photo: string, phone: string): Promise<void> {
 
-    public async deleteDevice(req : Request, res : Response, deviceRef : string) : Promise<void> {
         try {
 
             if(this.auth.checkToken(req, res, true)) {
-                if(await this.dao.hasDeviceWithRef(deviceRef)) {
+                if(!(await this.dao.hasDeviceWithRef(ref))) {
+                    const cat = await this.daoCategory.getByName(categoryName);
+                    const device = new Device(ref, cat.getID(), cat.getName(), name, version, photo, phone);
+                    this.dao.addDevice(device).then(this.editSuccess(res)).catch(this.findError(res));
+                } else {
+                    throw new Error("Device reference is already used");
+                }
+            }
+        } catch (err) {
+            this.giveError(err, res);
+        }
+    }
+
+    public async deleteDevice(req: Request, res: Response, deviceRef: string): Promise<void> {
+        try {
+
+            if (this.auth.checkToken(req, res, true)) {
+                if (await this.dao.hasDeviceWithRef(deviceRef)) {
                     this.dao.deleteDevice(deviceRef).then(this.editSuccess(res)).catch(this.findError(res));
                 } else {
                     throw new Error("Invalid device reference");
@@ -104,42 +126,42 @@ export default class DeviceController extends Controller {
             }
 
         } catch (err) {
-             this.giveError(err, res);   
+            this.giveError(err, res);
         }
     }
 
-    public async historyDevice(req : Request, res : Response, idDevice : string) : Promise<void> {
+    public async historyDevice(req: Request, res: Response, idDevice: string): Promise<void> {
         this.daoReservation.historyDevice(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
-    public async filterDevice(req : Request, res : Response, params: any) {
+    public async filterDevice(req: Request, res: Response, params: any) {
 
         try {
+            if (this.auth.checkToken(req, res)) {
 
-            if(this.auth.checkToken(req, res)) {
                 let name = "";
                 let ref = "";
                 let categoryID = -1;
 
-                for(const param in params) {
+                for (const param in params) {
 
                     const value = params[param];
 
-                    if(param == "name") {
-                        if(typeof value == "string") {
+                    if (param == "name") {
+                        if (typeof value == "string") {
                             name = value;
                         } else {
                             throw new Error("'name' is not a string");
                         }
-                    } else if(param == "ref") {
-                        if(typeof value == "string") {
+                    } else if (param == "ref") {
+                        if (typeof value == "string") {
                             ref = value;
                         } else {
                             throw new Error("'ref' is not a string");
                         }
-                    } else if(param == "category") {
+                    } else if (param == "category") {
 
-                        if(typeof value == "string") {
+                        if (typeof value == "string") {
 
                             const daoCat = new DAOCategory();
                             const d = await daoCat.getByName(value);
@@ -164,7 +186,7 @@ export default class DeviceController extends Controller {
         }
     }
 
-    public async getCategoryByName(res : Response, name : string) : Promise<void>{
+    public async getCategoryByName(res: Response, name: string): Promise<void> {
         this.daoCategory.getByName(name).then(this.findSuccess(res)).catch(this.findError(res));
     }
 }
