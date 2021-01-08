@@ -348,7 +348,7 @@ describe('GET /devices/all?filter_name=filter_value&...', function() {
     });
 });
 
-describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
+describe('POST /devices/borrow/:id_utilisateur', function() {
 
     this.beforeEach(async () => {
         await createDatabase();
@@ -356,25 +356,64 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
 
     it('responds error when startDate is after endDate', function(done) {
         request(app)
-            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .post('/api/devices/borrow/ABCDEFG')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                loanDays: ["2021-02-30", "2021-02-15"]
+                commands: [{
+                    ref: "AN001",
+                    loanDays: ["2021-02-30", "2021-02-15"]
+                }]
             })
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
-                message: "Invalid startDate or endDate"
+                message: "Start date is after end date"
+            }, done);
+    });
+
+    it('responds error when no commands are given', function(done) {
+        request(app)
+            .post('/api/devices/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "No commands given"
+            }, done);
+    });
+
+    it('responds error when no reference are given', function(done) {
+        request(app)
+            .post('/api/devices/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .set("x-access-token", helper.getToken())
+            .send({
+                commands: [{
+                    loanDays: ["2021-01-02", "2021-01-15"]
+                }]
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "No reference given"
             }, done);
     });
 
     it('responds error when no loanDays are given', function(done) {
         request(app)
-            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .post('/api/devices/borrow/ABCDEFG')
             .set('Accept', 'application/json')
             .set("x-access-token", helper.getToken())
+            .set("x-access-token", helper.getToken())
+            .send({
+                commands: [{
+                    ref: "AN001"
+                }]
+            })
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
@@ -384,12 +423,15 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
 
     it('responds error when loanDays is not an array', function(done) {
         request(app)
-            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .post('/api/devices/borrow/ABCDEFG')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                loanDays: 67
+                commands: [{
+                    ref: "AN001",
+                    loanDays: 67
+                }]
             })
             .expect('Content-Type', /json/)
             .expect(400, {
@@ -400,12 +442,15 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
 
     it('responds error when less than two loanDays are given', function(done) {
         request(app)
-            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .post('/api/devices/borrow/ABCDEFG')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                loanDays: ["2020-04-12"]
+                commands: [{
+                    ref: "AN001",
+                    loanDays: ["2020-04-12"]
+                }]
             })
             .expect('Content-Type', /json/)
             .expect(400, {
@@ -416,12 +461,15 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
 
     it('responds error when more than two loanDays are given', function(done) {
         request(app)
-            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .post('/api/devices/borrow/ABCDEFG')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                loanDays: ["2020-04-12", "2020-04-14", "2020-04-16"]
+                commands: [{
+                    ref: "AN001",
+                    loanDays: ["2020-04-12", "2020-04-14", "2020-04-16"]
+                }]
             })
             .expect('Content-Type', /json/)
             .expect(400, {
@@ -432,12 +480,15 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
 
     it('responds error when there already is a reservation in the given period', function(done) {
         request(app)
-            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .post('/api/devices/borrow/ABCDEFG')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                loanDays: ["2021-01-02", "2021-01-15"]
+                commands: [{
+                    ref: "AN001",
+                    loanDays: ["2021-01-02", "2021-01-15"]
+                }]
             })
             .expect('Content-Type', /json/)
             .expect(400, {
@@ -446,27 +497,52 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
             }, done);
     });
 
-    it('responds error when one date is invalid', function(done) {
+    it('responds error when start date is invalid', function(done) {
         request(app)
-            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .post('/api/devices/borrow/ABCDEFG')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                loanDays: ["01-s", "2021-01-15"]
+                commands: [{
+                    ref: "AN001",
+                    loanDays: ["01-s", "2021-01-15"]
+                }]
             })
             .expect('Content-Type', /json/)
             .expect(400, {
                 error: true,
-                message: "Invalid startDate or endDate"
+                message: "Invalid start date"
+            }, done);
+    });
+
+    it('responds error when end date is invalid', function(done) {
+        request(app)
+            .post('/api/devices/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                commands: [{
+                    ref: "AN001",
+                    loanDays: ["2021-01-20", "20-s"]
+                }]
+            })
+            .expect('Content-Type', /json/)
+            .expect(400, {
+                error: true,
+                message: "Invalid end date"
             }, done);
     });
 
     const testFunc = (userId: string) => request(app)
-        .post('/api/devices/AN001/borrow/' + userId)
+        .post('/api/devices/borrow/' + userId)
         .set('Content-Type', 'application/json')
         .send({
-            loanDays: ["2021-02-05", "2021-02-15"]
+            commands: [{
+                ref: "AN001",
+                loanDays: ["2021-02-05", "2021-02-15"]
+            }]
         });
 
     helper.checkAllTokens(() => { return testFunc("ABCDEFG"); }, false);
@@ -474,12 +550,37 @@ describe('POST /devices/:id_materiel/borrow/:id_utilisateur', function() {
 
     it('borrow devices works', function(done) {
         request(app)
-            .post('/api/devices/AN001/borrow/ABCDEFG')
+            .post('/api/devices/borrow/ABCDEFG')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .set("x-access-token", helper.getToken())
             .send({
-                loanDays: ["2021-05-05", "2021-05-15"]
+                commands: [{
+                    ref: "AN001",
+                    loanDays: ["2021-05-05", "2021-05-15"]
+                }]
+            })
+            .expect('Content-Type', /json/)
+            .expect(201, done);
+    });
+
+    it('borrow multiple devices works', function(done) {
+        request(app)
+            .post('/api/devices/borrow/ABCDEFG')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .set("x-access-token", helper.getToken())
+            .send({
+                commands: [
+                    {
+                        ref: "AN001",
+                        loanDays: ["2021-05-05", "2021-05-15"]
+                    },
+                    {
+                        ref: "AN002",
+                        loanDays: ["2021-05-05", "2021-05-15"]
+                    }
+                ]
             })
             .expect('Content-Type', /json/)
             .expect(201, done);

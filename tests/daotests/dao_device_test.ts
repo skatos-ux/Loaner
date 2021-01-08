@@ -5,6 +5,10 @@ import DAOReservation from '../../src/dao/dao_reservation';
 
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import Reservation from '../../src/model/reservation';
+
+import createDatabase from '../../util/create_db';
+
 const assert = chai.assert;
 const expect = chai.expect;
 
@@ -13,18 +17,12 @@ chai.use(chaiAsPromised);
 const DAObooking = new DAOReservation();
 const DAOTested = new DAODevice();
 const DAOcat = new DAOCategory();
- /* TODO:
-- Vérifier que les types des variabes soient du même type que les attributs de la classe;
-- Vérifier que chaque appareil appartiennent à une categorie existante
-- Vérifier que chaque appareil ait une reference égale à 5 caractères
-- vérifier que chaque appareil ait un nom non null
-- Vérifier qu'une version soit inscrite entre 3 et 15 caractères
-- Vérifier que chaque version est supérieure à 0.0
--
--Tester la suppression d'une category
-*/
 
  describe("Tests onf dao_device.ts", function() {
+
+    this.beforeAll(async () => {
+        await createDatabase();
+    });
 
     describe("Tests on getAll() method",function() {
 
@@ -172,33 +170,6 @@ const DAOcat = new DAOCategory();
             expect(result.getPhoto()).to.equal("");
             expect(result.getPhone()).to.equal("0778787878");
         });
-
-        /*
-        //Theses devices are not compliant and should not be created neither added to the database
-        //The tests fails because of the user creation, so the constructor tests are made in usertest.ts
-        it("Adding a device with invalid references should throw error", async function (){
-            expect(DAOTested.addDevice(new Device("test",1,"Téléphones","Second test","1.0","","0778787878"))).to.be.rejected;
-            expect(DAOTested.addDevice(new Device("test33",1,"Téléphones","Third test","1.0","","0778787878"))).to.be.rejected;
-        });
-        
-        it("Adding a device with an invalid category should throw an error", async function (){
-            expect(DAOTested.addDevice(new Device("test4",9999,"CategoryTest","Category test","1.0","","0778787878"))).to.be.rejected;
-        });
-        
-        it("Adding a device with invalid version number should throw an error", async function(){
-            expect
-           expect(DAOTested.addDevice(new Device("test5",1,"Téléphones","Version test","4447.09984145115621441","","0778787878"))).to.be.rejected;
-           expect(DAOTested.addDevice(new Device("test6",1,"Téléphones","Version test 2","1.","2.","0778787878"))).to.be.rejected;
-           expect(DAOTested.addDevice(new Device("test7",1,"Téléphones","Version test 3","testversion","","0778787878"))).to.be.rejected;
-        });
-        
-        it("Adding a device with an invalid phone number should throw an error"), async function(){
-            expect(DAOTested.addDevice(new Device("test8",1,"Téléphones","Phone Number test","1.0","","+337787878787878787878787878"))).to.be.rejected;
-            expect(DAOTested.addDevice(new Device("test9",1,"Téléphones","Phone Number test","1.0","","++33778787878"))).to.be.rejected;
-            expect(DAOTested.addDevice(new Device("test10",1,"Téléphones","Phone Number test","1.0","","842+541616541"))).to.be.rejected;
-            expect(DAOTested.addDevice(new Device("test11",1,"Téléphones","Phone Number test","1.0","","testPhone"))).to.be.rejected;
-        }
-        */
     });
 
     describe("Tests on deleteDevice() method",function() {
@@ -224,23 +195,17 @@ const DAOcat = new DAOCategory();
 
     describe("Tests on borrowDevice() method",function() {
 
-        const startDate = new Date('14/01/2020');
-        const endDate = new Date('04/02/2020');
-        
-        it("Booking a device which doesn't exist should throw error",async function(){
-            const reservationID = await  DAObooking.getLastId();
-            expect(DAOTested.borrowDevice("TESTB","ABCDEFG",reservationID.getID()+1, startDate, endDate)).to.be.rejected;
+        const startDate = '2021-01-14';
+        const endDate = '2021-02-04';
+
+        it("Adding a reservation with existing ID throw an error", async function(){
+            const reservationID = await DAObooking.getLastId();
+            expect(DAOTested.borrowDevice([new Reservation(reservationID, "TESTB", "ABCDEFG", startDate, endDate)])).to.be.rejected;
         });
 
-        it("Borrow a wrong reference device should throw an error",async function(){
-            const reservationID = await  DAObooking.getLastId();
-            expect(DAOTested.borrowDevice("toolongref","ABCDEFG",reservationID.getID()+2, startDate, endDate)).to.be.rejected;
-            expect(DAOTested.borrowDevice("ref","ABCDEFG",reservationID.getID()+3, startDate, endDate)).to.be.rejected;
-        });
-
-        it("Booking a device as a invalid user should throw error",async function(){
-            const reservationID = await  DAObooking.getLastId();
-            expect(DAOTested.borrowDevice("AN001","testUserRef",reservationID.getID()+4, startDate, endDate)).to.be.rejected;
+        it("Booking a device should throw error", async function(){
+            const reservationID = await DAObooking.getLastId();
+            expect(DAOTested.borrowDevice([new Reservation(reservationID + 1, "TESTB", "ABCDEFG", startDate, endDate)])).to.not.be.rejected;
         });
     });    
 
@@ -258,7 +223,6 @@ const DAOcat = new DAOCategory();
                 assert.equal(device.getName(),"Test filters");
             })
 
-            //Test à modifier selon l'implémentation du code
             result = await DAOTested.getDevicesByFilter("","test1",-1);
             result.forEach(function(device){
                 assert.equal(device.getRef(),"test1");

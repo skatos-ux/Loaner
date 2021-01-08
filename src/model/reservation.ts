@@ -38,6 +38,10 @@ export default class Reservation {
         this.startDate = startDate;
         this.endDate = endDate;
         this.returnDate = returnDate;
+
+        if(this.getStartDate() > this.getEndDate()) {
+            throw new Error("Start date is after end date")
+        }
     }
 
     private checkDate(dateString : string) : boolean {
@@ -52,7 +56,7 @@ export default class Reservation {
         return this.refDevice;
     }
 
-    public getUser(): string {
+    public getUserID(): string {
         return this.idUser;
     }
 

@@ -1,5 +1,8 @@
 import DAOUser from '../../src/dao/dao_user';
-import User from '../../src/model/user'
+import User from '../../src/model/user';
+
+import createDatabase from '../../util/create_db';
+
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -13,6 +16,10 @@ const DAOTested = new DAOUser();
 const usertest = new User("EEEEEEE","Tester","Testing","Testtest@gmail.com",false,false);
 
 describe("Tests on dao_user.ts",function(){
+
+    this.beforeAll(async () => {
+        await createDatabase();
+    });
 
     describe("Tests on getAll() method",function() {
 

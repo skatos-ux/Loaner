@@ -2,6 +2,8 @@ import DAOReservation from '../../src/dao/dao_reservation';
 import DAOUser from '../../src/dao/dao_user';
 import DAODevice from '../../src/dao/dao_device';
 
+import createDatabase from '../../util/create_db';
+
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import Reservation from '../../src/model/reservation';
@@ -16,11 +18,15 @@ const DAOdevice = new DAODevice();
 
 describe("Tests on dao_reservation.ts", function(){
 
+    this.beforeAll(async () => {
+        await createDatabase();
+    });
+
     describe("Tests on getLastid() method",function(){
 
         it("The Id must be positive", async function(){
             const result = await DAOTested.getLastId();
-            assert.isAbove(result.getID(),0)
+            assert.isAbove(result, 0);
         })
         
     });
@@ -37,7 +43,7 @@ describe("Tests on dao_reservation.ts", function(){
 
             result.forEach(function(booking){
                 users.forEach(function(user){
-                    if(booking.getUser()==user.getId()) check = true; 
+                    if(booking.getUserID() == user.getId()) check = true; 
                 });
             });
 
@@ -101,7 +107,6 @@ describe("Tests on dao_reservation.ts", function(){
                     }
 
                     assert.isAbove(booking.getEndDate().getTime(),booking.getStartDate().getTime());
-
                });
             });
             

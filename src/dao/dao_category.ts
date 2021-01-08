@@ -30,8 +30,9 @@ export default class DAOCategory extends DAO<Category> {
         return this.runQuery('update category set name = ? where id = ?', [newName, id]);
     }
 
-    public getLastId() : Promise<Category>{
-        return this.getOneRow('SELECT * FROM category ORDER BY id DESC LIMIT 1');
+    public getLastId() : Promise<number>{
+        //return this.getOneRow('SELECT * FROM category ORDER BY id DESC LIMIT 1');
+        return this.getOneRowNoCast('SELECT id FROM category ORDER BY id DESC LIMIT 1').then(row => { return row.id; }).catch(() => { return 1; });
     }
 
     public hasCategoryWithID(id : number) : Promise<boolean> {

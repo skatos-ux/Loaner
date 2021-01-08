@@ -14,15 +14,9 @@ export default class CategoryController extends Controller {
             if(this.auth.checkToken(req, res, true)) {
                 
                 if(!(await this.dao.hasCategoryWithName(name))) {
-                    let lastId = 0;
+                    const lastId = await this.dao.getLastId() + 1;
 
-                    try {
-                        lastId = (await this.dao.getLastId()).getID();
-                    } catch {
-                        lastId = 0;
-                    }
-
-                    const category = new Category(lastId + 1, name);
+                    const category = new Category(lastId, name);
                     
                     this.dao.addCategory(category).then(this.editSuccess(res)).catch(this.findError(res));
                 } else {

@@ -12,7 +12,9 @@
     "lint": "eslint . --ext .ts",
     "coverage": "nyc npm run test",
     "create-db": "ts-node ./util/create_db.ts --exec --log-queries",
-    "build": "tsc"
+    "build:dev": "tsc",
+    "build:prod": "tsc -p tsconfig.production.json",
+    "build-util": "tsc util/create_db.ts --include src/config.json --outDir dist_util"
   },
   "repository": {
     "type": "git",

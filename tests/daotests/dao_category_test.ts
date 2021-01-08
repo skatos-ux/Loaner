@@ -2,6 +2,8 @@
 import DAOCategory from '../../src/dao/dao_category';
 import Category from '../../src/model/category';
 
+import createDatabase from '../../util/create_db';
+
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 const assert = chai.assert;
@@ -12,6 +14,10 @@ chai.use(chaiAsPromised);
 const DAOCategTested = new DAOCategory();
 
 describe("Tests on dao_category.ts",function (){
+
+    this.beforeAll(async () => {
+        await createDatabase();
+    });
 
     describe("Tests on getAll() method",function (){
 
@@ -84,7 +90,7 @@ describe("Tests on dao_category.ts",function (){
 
         it("Last Id created must be positive", async function(){
             const result = await resultGetLastId();
-            assert.isAbove(result.getID(),0);
+            assert.isAbove(result,0);
         });
     });
 

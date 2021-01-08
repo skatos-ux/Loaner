@@ -17,7 +17,7 @@ describe("Tests on reservation.ts", function() {
         const reservation = new Reservation(1, deviceRef, userId, startDate, endDate, returnDate);
         assert.equal(reservation.getID(), 1);
         assert.equal(reservation.getDevice(), deviceRef);
-        assert.equal(reservation.getUser(), userId);
+        assert.equal(reservation.getUserID(), userId);
         assert.equal(reservation.getStartDate().toISOString(), startDateISO);
         assert.equal(reservation.getEndDate().toISOString(), endDateISO);
         assert.isTrue(reservation.hasReturnDate());
@@ -28,7 +28,7 @@ describe("Tests on reservation.ts", function() {
         const reservation = new Reservation(1, deviceRef, userId, startDate, endDate);
         assert.equal(reservation.getID(), 1);
         assert.equal(reservation.getDevice(), deviceRef);
-        assert.equal(reservation.getUser(), userId);
+        assert.equal(reservation.getUserID(), userId);
         assert.equal(reservation.getStartDate().toISOString(), startDateISO);
         assert.equal(reservation.getEndDate().toISOString(), endDateISO);
         assert.isFalse(reservation.hasReturnDate());

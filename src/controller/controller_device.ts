@@ -7,6 +7,7 @@ import Device from '../model/device';
 import DAOCategory from '../dao/dao_category';
 import Category from '../model/category';
 import AuthController from './controller_auth';
+import Reservation from '../model/reservation';
 
 export default class DeviceController extends Controller {
 
@@ -57,46 +58,73 @@ export default class DeviceController extends Controller {
         }
     }
 
-    public async borrowDevice(req : Request, res : Response, devices : string[], idUser : string) : Promise<void> {
-        let lastId = 0;
+    public async borrowDevice(req : Request, res : Response, commands : any[], userId : string) : Promise<void> {
 
         try {
-            lastId = (await this.daoReservation.getLastId()).getID();
-        } catch {
-            lastId = 0;
-        }
+            if(this.auth.checkToken(req, res, false, userId)) {
 
-        try{
-            await Promise.all(devices.map(async (device : any) => {
-                if(device[1] > device[2]){
-                    throw new Error("Invalid Dates");
-                }
-                device.push(++lastId);
-                
-                if(await this.daoReservation.hasReservationWithInfos(device[0], device[1], device[2])){
-                    throw new Error("Reservation already exists");
-                }
-            }));
-            this.dao.borrowDevice(devices, idUser).then(this.editSuccess(res)).catch(this.findError(res));
+                let lastId = await this.daoReservation.getLastId() + 1;
+
+                const reservations = await Promise.all(commands.map(async (device : any) => {
+
+                    if (!device.ref) {
+                        throw new Error("No reference given");
+                    }
+
+                    const ref = device.ref;
+
+                    if (!device.loanDays) {
+                        throw new Error("No loanDays given");
+                    }
+
+                    if(typeof device.loanDays != "object" || device.loanDays.length == undefined) {
+                        throw new Error("Invalid loanDays");
+                    }
+
+                    if(device.loanDays.length != 2) {
+                        throw new Error("Invalid loanDays count");
+                    }
+
+                    const startDate = device.loanDays[0];
+                    const endDate = device.loanDays[1];
+
+                    const reservation = new Reservation(lastId++, ref, userId, startDate, endDate);
+
+                    if(await this.daoReservation.hasReservationWithInfos(ref, new Date(startDate), new Date(endDate))) {
+                        throw new Error("Reservation already exists");
+                    }
+
+                    return reservation;
+                }));
+
+                this.dao.borrowDevice(reservations).then(this.editSuccess(res)).catch(this.findError(res));
+            }
+
         } catch(err) {
             this.giveError(err, res);
         }
-
     }
 
     public async addDevice(req : Request, res : Response, ref : string, categoryName : string, name : string, version : string,
         photo : string, phone: string) : Promise<void> {
         
         try {
-            const cat = await this.daoCategory.getByName(categoryName);
-            const device = new Device(ref, cat.getID(), cat.getName(), name, version, photo, phone)
-            this.dao.addDevice(device).then(this.editSuccess(res)).catch(this.findError(res));
+            if(this.auth.checkToken(req, res, true)) {
+                if(!(await this.dao.hasDeviceWithRef(ref))) {
+                    const cat = await this.daoCategory.getByName(categoryName);
+                    const device = new Device(ref, cat.getID(), cat.getName(), name, version, photo, phone);
+                    this.dao.addDevice(device).then(this.editSuccess(res)).catch(this.findError(res));
+                } else {
+                    throw new Error("Device reference is already used");
+                }
+            }
         } catch(err) {
             this.giveError(err, res);
         }
     }
 
     public async deleteDevice(req : Request, res : Response, deviceRef : string) : Promise<void> {
+
         try {
 
             if(this.auth.checkToken(req, res, true)) {
@@ -112,6 +140,7 @@ export default class DeviceController extends Controller {
         }
     }
 
+    // Pas utilisé
     public async historyDevice(req : Request, res : Response, idDevice : string) : Promise<void> {
         this.daoReservation.historyDevice(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
     }

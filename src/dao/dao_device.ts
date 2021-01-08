@@ -1,6 +1,7 @@
 import DAO from './dao';
 import Device from '../model/device';
 import DAOReservation from './dao_reservation';
+import Reservation from '../model/reservation';
 
 export default class DAODevice extends DAO<Device> {
 
@@ -35,10 +36,18 @@ export default class DAODevice extends DAO<Device> {
             "WHERE d.idCategory = c.id AND d.ref=?", refDevice).then(row => { return this.rowToModelAsync.bind(this)(row); });
     }
 
-    public async borrowDevice(devices : string[], idUser : string) : Promise<void> {
-        devices.forEach((device : any) => {
+    //public async borrowDevice(devices : string[], idUser : string) : Promise<void> {
+        public async borrowDevice(reservations : Reservation[]) : Promise<void[]> {
+        /*devices.forEach((device : any) => {
             return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[device[3],device[0],idUser,device[1],device[2],null]);
+        });*/
+
+        const promises = reservations.map(reservation => {
+            return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[reservation.getID(), reservation.getDevice(), reservation.getUserID(),
+                reservation.getStartDate(), reservation.getEndDate(), (reservation.hasReturnDate()) ? reservation.getReturnDate() : null]);
         });
+
+        return Promise.all(promises);
     }
 
     public addDevice(device : Device) : Promise<void> {

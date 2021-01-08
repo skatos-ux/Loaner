@@ -25,28 +25,12 @@ router.post('/borrow/:id_user', (req, res) => {
     try {
         const userId = req.params.id_user;
         const commands = req.body.commands;
-
-        var devices = commands.map((device: any) => {
-            return new Array(device.reference, device.loanDays[0], device.loanDays[1]);
-        });
         
         if(!commands){
-            throw new Error("No devices given");
+            throw new Error("No commands given");
         }
-
-        /*if (!loanDays) {
-            throw new Error("No loanDays given");
-        }
-
-        if(typeof loanDays != "object" || loanDays.length == undefined) {
-            throw new Error("Invalid loanDays");
-        }
-
-        if(loanDays.length != 2) {
-            throw new Error("Invalid loanDays count");
-        }*/
-
-        controller.borrowDevice(req, res, devices, userId);
+        
+        controller.borrowDevice(req, res, commands, userId);
         
     } catch (err) {
         controller.giveError(err, res);

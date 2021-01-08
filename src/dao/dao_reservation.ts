@@ -7,8 +7,8 @@ export default class DAOReservation extends DAO<Reservation> {
         return new Reservation(row.id, row.refDevice, row.idUser, row.startDate, row.endDate, row.returnDate);
     }
 
-    public getLastId() : Promise<Reservation>{
-        return this.getOneRow('SELECT * FROM reservation ORDER BY id DESC LIMIT 1');
+    public getLastId() : Promise<number> {
+        return this.getOneRowNoCast('SELECT id FROM reservation ORDER BY id DESC LIMIT 1').then(row => { return row.id; }).catch(() => { return 1; });
     }
 
     public historyDevice(idDevice : string) : Promise<Reservation[]> {
@@ -24,7 +24,9 @@ export default class DAOReservation extends DAO<Reservation> {
     }
 
     public hasReservationWithInfos(refDevice : string, startDate : Date, endDate : Date) : Promise<boolean> {
+        /*return this.hasRow("SELECT * FROM reservation WHERE refDevice = ? AND startDate <= ? AND endDate >= ?",
+            [refDevice, endDate, startDate]);*/
         return this.hasRow("SELECT * FROM reservation WHERE refDevice = ? AND startDate <= ? AND endDate >= ?",
-            [refDevice, endDate, startDate]);
+            [refDevice, Reservation.convertDate(endDate), Reservation.convertDate(startDate)]);
     }
 }
