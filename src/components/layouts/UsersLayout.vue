@@ -19,18 +19,19 @@
 
         <Modal id="addAdminModal" ref="addAdminModal">
           <template v-slot:header>
-            <p class="modal-card-title">Ajouter un administrateur</p>
+            <p class="modal-card-title">Ajouter un utilisateur</p>
           </template>
 
           <template v-slot:body>
             <div class="modal__body--wrapper">
-              <input v-model="$v.formAddUser.firstName.$model" type="text" :class="'input left' + isInputInvalid($v.formAddUser.firstName.$invalid)" placeholder="Prénom">
+              <input v-model="$v.formAddUser.id.$model" type="text" :class="'input left' + isInputInvalid($v.formAddUser.id.$invalid)" placeholder="Matricule">
+              <input v-model="$v.formAddUser.firstName.$model" type="text" :class="'input middle' + isInputInvalid($v.formAddUser.firstName.$invalid)" placeholder="Prénom">
               <input v-model="$v.formAddUser.lastName.$model" type="text" :class="'input middle' + isInputInvalid($v.formAddUser.lastName.$invalid)" placeholder="Nom">
               <input v-model="$v.formAddUser.email.$model" type="email" :class="'input middle' + isInputInvalid($v.formAddUser.email.$invalid)" placeholder="Email">
               <input v-model="$v.formAddUser.admin.$model" id="switchExample" type="checkbox" class="switch right">
               <label for="switchExample" class="middle">Administrateur</label>
             </div>
-            <article v-show="backUserAdded" class="message is-success">
+            <article v-show="backUserAddedSuccess" class="message is-success">
               <div class="message-body is-size-7">
                 L'utilisateur à été ajouté avec succès son mot de passe est : {{ temporaryPassword }}
               </div>
@@ -43,6 +44,11 @@
             <article v-show="$v.formAddUser.$invalid" class="message is-danger">
               <div class="message-body is-size-7">
                 Les champs saisis sont incorrects
+              </div>
+            </article>
+            <article v-show="backUserAddedError" class="message is-danger">
+              <div class="message-body is-size-7">
+                {{ errorMsg }}
               </div>
             </article>
             <input @click="addUser" :disabled="$v.formAddUser.$invalid" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
@@ -61,12 +67,18 @@ import Device from "@/components/components/Device.vue";
 import User from "@/components/components/User.vue";
 
 import authHeader from "@/services/auth-header";
-import {required, alpha, email} from 'vuelidate/lib/validators'
+import {required, alpha, email, alphaNum, minLength, maxLength} from 'vuelidate/lib/validators'
 
 @Component({
   components: {User, Device, Modal},
   validations: {
     formAddUser: {
+      id: {
+        required,
+        alphaNum,
+        minLength: minLength(7),
+        maxLength: maxLength(7)
+      },
       firstName: {
         required,
         alpha
@@ -88,16 +100,24 @@ import {required, alpha, email} from 'vuelidate/lib/validators'
 export default class UsersLayout extends Vue {
   @Ref() readonly addAdminModal!: Modal
 
+  user = this.$store.state.auth.user
+
   users = []
   search = ""
 
-  backUserAdded = false
+  backUserAddedSuccess = false
+  backUserAddedError = false
+
+
   backUpdate = false
   backError = false
+  errorMsg = ""
+
 
   temporaryPassword = ""
 
   formAddUser = {
+    id: null,
     firstName: "",
     lastName: "",
     email: "",
@@ -105,12 +125,13 @@ export default class UsersLayout extends Vue {
     temporaryPassword: true
   }
 
+
   popUserModal() {
     this.addAdminModal.popModal()
   }
 
   mounted() {
-    this.$api.get('/users/all').then((res) => {
+    this.$api.get('/users/all', { headers: authHeader(this.user.token) }).then((res) => {
       this.users = res.data
     }).catch((error) => {
       this.backError = true
@@ -129,8 +150,8 @@ export default class UsersLayout extends Vue {
   addUser() {
     console.log(this.formAddUser)
     if(!this.$v.formAddUser.$invalid) {
-      this.$api.put('/users/add', this.formAddUser).then((res) => {
-        this.$api.get('/users/all').then((res) => {
+      this.$api.put('/users/add', this.formAddUser, { headers: authHeader(this.user.token) }).then((res) => {
+        this.$api.get('/users/all', { headers: authHeader(this.user.token) }).then((res) => {
           this.users = res.data
         }).catch((error) => {
           this.backError = true
@@ -138,14 +159,27 @@ export default class UsersLayout extends Vue {
 
         this.backUpdate = true
 
+
         setTimeout(() => {
-          console.log(res.data)
+          this.temporaryPassword = res.data.password
           this.backUpdate = false
-          this.backUserAdded = true
-          //window.location.reload()
+          this.backUserAddedSuccess = true
         }, 1000)
       }).catch((error) => {
+        console.log(error.response.data)
+        if(error.response) {
+          if(error.response.data.message === "User with this ID already exists") {
+            this.backUserAddedError = true
+            this.errorMsg = "Un utilisateur existe déjà avec ce matricule, veuillez en choisir un autre"
+          }
+          else if(error.response.data.message === "User with this email already exists"){
+            this.backUserAddedError = true
+            this.errorMsg = "Un utilisateur existe déjà avec cet email, veuillez en choisir un autre"
+          }
+        }
+        else {
           this.backError = true
+        }
       })
     }
   }
