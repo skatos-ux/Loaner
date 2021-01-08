@@ -134,7 +134,7 @@ export default class DeviceController extends Controller {
         this.daoReservation.historyDevice(idDevice).then(this.findSuccess(res)).catch(this.findError(res));
     }
 
-    public async filterDevice(req: Request, res: Response, params: any) {
+    public async filterDevice(req: Request, res: Response, params: any) : Promise<void> {
 
         try {
             if (this.auth.checkToken(req, res)) {

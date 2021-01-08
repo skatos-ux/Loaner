@@ -12,31 +12,36 @@ export default class AuthController extends Controller {
     
     public async authentificate(email : string, password : string, req : Request, res : Response) : Promise<void> {
 
-        if(this.hasToken(req)) {
-            this.giveError(new Error("You already have a token"), res);
-            return;
-        }
+        try {
+            if(this.hasToken(req)) {
+                throw new Error("You already have a token");
+            }
 
-        this.dao.checkUser(email, password)
-        .then((user) => {
-            const token = jwt.sign({ id: user.getId(), admin: user.isAdmin() }, config.jwtSecret, {
-                expiresIn: "1h"
+            this.dao.checkUser(email, password)
+            .then((user) => {
+                const token = jwt.sign({ id: user.getId(), admin: user.isAdmin() }, config.jwtSecret, {
+                    expiresIn: "1h"
+                });
+
+                this.giveSuccess({
+                    auth: true,
+                    token: token,
+                    user: user
+                }, res);
+            })
+            .catch(() => {
+                this.giveError(new Error("Invalid name or password"), res);
             });
 
-            this.giveSuccess({
-                auth: true,
-                token: token,
-                user: user
-            }, res);
-        })
-        .catch((err : Error) => {
-            this.giveError(new Error("Invalid name or password"), res);
-        });
+        } catch (err) {
+            this.giveError(err, res);
+        }
     }
 
     public async changePassword(email : string, oldPassword : string, newPassword : string,
         req : Request, res : Response) : Promise<void> {
-
+        
+        try {
             if(newPassword.length == 0) {
                 this.giveError(new Error("New password can't be empty"), res);
                 return;
@@ -53,9 +58,12 @@ export default class AuthController extends Controller {
                     .catch(this.findError(res));
                 }
             })
-            .catch((err : Error) => {
+            .catch(() => {
                 this.giveError(new Error("Invalid name or old password"), res);
             });
+        } catch (err) {
+            this.giveError(err, res);
+        }
     }
 
     public hasToken(req : Request) : boolean {

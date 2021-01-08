@@ -1,7 +1,6 @@
 import DAODevice from '../../src/dao/dao_device';
 import DAOCategory from '../../src/dao/dao_category';
 import Device from '../../src/model/device';
-import DAOUser from '../../src/dao/dao_user';
 import DAOReservation from '../../src/dao/dao_reservation';
 
 import * as chai from 'chai';
@@ -12,7 +11,6 @@ const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 const DAObooking = new DAOReservation();
-const DAOuser = new DAOUser();
 const DAOTested = new DAODevice();
 const DAOcat = new DAOCategory();
  /* TODO:
@@ -44,11 +42,11 @@ const DAOcat = new DAOCategory();
             const existingCategories = await DAOcat.getAll();
             const result = await resultAllDevices();
 
-            var check = false;
+            let check = false;
 
             //Testing for every device that its category is member of the categories of the database
-            result.map((device : any) => {
-                existingCategories.map((category:any) => {
+            result.map((device) => {
+                existingCategories.map((category) => {
                     if(device.getCategoryID() == category.getID()) check = true;
                 });
             });
@@ -118,7 +116,7 @@ const DAOcat = new DAOCategory();
         it("The device must match an existing category", async function(){
             const existingCategories = await DAOcat.getAll();
 
-            var check = false;
+            let check = false;
 
             //Testing that its category is member of the categories of the database
             existingCategories.forEach(function(category){

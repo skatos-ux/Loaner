@@ -33,7 +33,7 @@ describe("Tests on dao_reservation.ts", function(){
             
             const result = await DAOTested.historyDevice("AN001");
             
-            var check = false;
+            let check = false;
 
             result.forEach(function(booking){
                 users.forEach(function(user){
@@ -49,7 +49,7 @@ describe("Tests on dao_reservation.ts", function(){
             
             const result = await DAOTested.historyDevice("AN001");
             
-            var check = false;
+            let check = false;
 
             result.forEach(function(booking){
                 devices.forEach(function(device){

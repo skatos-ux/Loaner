@@ -3,8 +3,6 @@ import User from '../../src/model/user'
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import Reservation from '../../src/model/reservation';
-
 const assert = chai.assert;
 const expect = chai.expect;
 
@@ -12,7 +10,7 @@ chai.use(chaiAsPromised);
 
 const DAOTested = new DAOUser();
 
-var usertest = new User("EEEEEEE","Tester","Testing","Testtest@gmail.com",false,false);
+const usertest = new User("EEEEEEE","Tester","Testing","Testtest@gmail.com",false,false);
 
 describe("Tests on dao_user.ts",function(){
 
@@ -43,15 +41,7 @@ describe("Tests on dao_user.ts",function(){
             result.map((user:User) => {
                 assert.match(user.getEmail(),/^[^@\s]+@[^@\s]+\.[^@\s]+$/);
             })
-        })
-
-        // ?????
-        /*it("All registered users must have a definitive password", async function(){
-            const result = await DAOTested.getAll();
-            result.map((user:User) => {
-                assert.isFalse(user.hasTemporaryPassword());
-            })
-        })*/
+        });
     });
 
     describe("Tests on getUser() method",function(){
@@ -65,21 +55,10 @@ describe("Tests on dao_user.ts",function(){
         it("The user must have a valid email", async function(){
             const result = await DAOTested.getUser("ABCDEFG");
             assert.match(result.getEmail(),/^[^@\s]+@[^@\s]+\.[^@\s]+$/);
-        })
-
-        // Non ???
-        /*it("All registered users must have a definitive password", async function(){
-            const result = await DAOTested.getUser("ABCDEGF");
-            assert.isFalse(result.hasTemporaryPassword());
-        })*/
+        });
     });
 
     describe("Tests on getLastId() method", function(){
-        /*
-        it("The Last id must be positive",async function(){
-            const result = await DAOTested.getLastId();
-            assert.isAbove(result.getId(),0);
-        })*/
 
         it("The last id must not be empty", async function(){
             const result = await DAOTested.getLastId();

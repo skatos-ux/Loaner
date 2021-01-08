@@ -1,6 +1,6 @@
 import Device from '../../src/model/device';
 
-import { assert, expect, should } from 'chai';
+import { assert, expect } from 'chai';
 
 const devTested = new Device("test1",2,"Ordinateur","PremierTest","1.0","url","0707070707");
 

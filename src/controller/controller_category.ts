@@ -61,7 +61,7 @@ export default class CategoryController extends Controller {
         try {
             if(this.auth.checkToken(req, res, true)) {
 
-                let idCat = Number.parseInt(idCategory);
+                const idCat = Number.parseInt(idCategory);
 
                 if(Number.isNaN(idCat)) {
                     throw new Error("Category ID is not a number");
