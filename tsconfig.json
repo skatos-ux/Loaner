@@ -15,7 +15,8 @@
     "baseUrl": ".",
     "types": [
       "webpack-env",
-      "jest"
+      "jest",
+      "cypress"
     ],
     "paths": {
       "@/*": [
@@ -35,7 +36,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "tests/e2e/specs/Main_Dashboard_test.js"  ],
   "exclude": [
     "node_modules"
   ]
