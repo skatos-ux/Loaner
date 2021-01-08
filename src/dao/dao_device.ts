@@ -35,8 +35,10 @@ export default class DAODevice extends DAO<Device> {
             "WHERE d.idCategory = c.id AND d.ref=?", refDevice).then(row => { return this.rowToModelAsync.bind(this)(row); });
     }
 
-    public async borrowDevice(idDevice : string, idUser : string, lastId : number, startDate : Date, endDate : Date) : Promise<void> {
-        return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[lastId,idDevice,idUser,startDate,endDate,null]);
+    public async borrowDevice(devices : string[], idUser : string) : Promise<void> {
+        devices.forEach((device : any) => {
+            return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[device[3],device[0],idUser,device[1],device[2],null]);
+        });
     }
 
     public addDevice(device : Device) : Promise<void> {

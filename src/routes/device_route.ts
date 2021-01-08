@@ -24,19 +24,17 @@ router.post('/borrow/:id_user', (req, res) => {
 
     try {
         const userId = req.params.id_user;
-        const devices = req.body.devices;
-        const loanDays = req.body.loanDays;
+        const commands = req.body.commands;
 
-        var devicesRef : string[] = [];
-        devices.forEach((device: string) => {
-            devicesRef.push(devices.ref);
+        var devices = commands.map((device: any) => {
+            return new Array(device.reference, device.loanDays[0], device.loanDays[1]);
         });
-
-        if(!devices){
+        
+        if(!commands){
             throw new Error("No devices given");
         }
-        
-        if (!loanDays) {
+
+        /*if (!loanDays) {
             throw new Error("No loanDays given");
         }
 
@@ -46,14 +44,9 @@ router.post('/borrow/:id_user', (req, res) => {
 
         if(loanDays.length != 2) {
             throw new Error("Invalid loanDays count");
-        }
+        }*/
 
-        const startDate = loanDays[0];
-        const endDate = loanDays[1];
-
-        devicesRef.forEach((refDevice : string) => {
-            controller.borrowDevice(req, res, refDevice, userId, startDate, endDate);
-        });
+        controller.borrowDevice(req, res, devices, userId);
         
     } catch (err) {
         controller.giveError(err, res);
