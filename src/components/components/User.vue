@@ -8,9 +8,8 @@
         <div class="user__info">{{ email }}</div>
       </div>
 
-
       <div class="user__info">
-        <span @click="remUser" class="icon is-small is-pointer fail">
+        <span v-if="user.id !== identifier" @click="remUser" class="icon is-small is-pointer fail">
           <font-awesome-icon :icon="['fas', 'trash-alt']" />
         </span>
         <span v-show="loading" class="icon is-small is-pointer success">
@@ -23,13 +22,24 @@
         Une erreur interne est survenue lors de la suppression de l'utilisateur, veuillez réessayer dans quelques instants
       </div>
     </article>
-    <Modal :id="identifier" ref="userAddModal">
+    <Modal :id="identifier" ref="userInfoModal">
       <template v-slot:header>
         <p class="modal-card-title">Historique</p>
       </template>
 
       <template v-slot:body>
-        temp
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Référence de l'appareil</th>
+              <th>Dates d'emprunts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <HistoryItem v-for="reservation in reservations" :key="reservation.id" :reservation-id="reservation.ID" :id-device="reservation.refDevice" :loan-dates="[reservation.startDate, reservation.endDate, reservation.returnDate]" />
+          </tbody>
+        </table>
       </template>
     </Modal>
   </div>
@@ -39,12 +49,13 @@
 import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import Modal from "@/components/components/Modal.vue";
 import authHeader from "@/services/auth-header";
+import HistoryItem from "@/components/components/HistoryItem.vue";
 
 @Component({
-  components: {Modal}
+  components: {HistoryItem, Modal}
 })
 export default class User extends Vue {
-  @Ref() readonly userAddModal!: Modal
+  @Ref() readonly userInfoModal!: Modal
 
   @Prop() private identifier!: string
   @Prop() private firstName!: string
@@ -58,12 +69,23 @@ export default class User extends Vue {
 
   backError = false
 
+  reservations = []
+
   popModal() {
-    this.userAddModal.popModal()
+
+    this.$api.get("/users/" + this.identifier + "/history", { headers: authHeader(this.user.token) }).then((res) => {
+      this.reservations = res.data
+
+    }).catch((error) => {
+      this.loading = false
+      this.backError = true
+    })
+
+    this.userInfoModal.popModal()
   }
 
   remUser() {
-    this.$api.delete("/users/delete/" + this.identifier,{}, { headers: authHeader(this.user.token) }).then((res) => {
+    this.$api.delete("/users/delete/" + this.identifier, { headers: authHeader(this.user.token) }).then((res) => {
       this.loading = true
 
       setTimeout(() => {

@@ -11,7 +11,7 @@
     <div class="users__userslist">
       <div class="users__userslist--options">
         <button @click="popUserModal" class="button  is-size-7 is-primary is-inverted">
-          Ajouter un administrateur
+          Ajouter un utilisateur
           <span class="icon is-small">
             <font-awesome-icon :icon="['fas', 'user-plus']" />
           </span>
@@ -135,7 +135,6 @@ export default class UsersLayout extends Vue {
       this.users = res.data
     }).catch((error) => {
       this.backError = true
-      console.log(error)
     })
   }
 
