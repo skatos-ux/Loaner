@@ -3,7 +3,7 @@
 // TODO : vérifier si des objets sont manquant quand envoie d'un requete avec un corps
 
 import * as jwt from 'jsonwebtoken';
-import * as config from '../../config.json';
+import * as config from '../../src/config.json';
 import request from 'supertest';
 
 // Tokens

@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from "cors";
 
-import * as config from '../config.json';
+import * as config from './config.json';
 
 import router from './routes/router';
 

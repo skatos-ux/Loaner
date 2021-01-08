@@ -1,5 +1,5 @@
 import { verbose } from 'sqlite3';
-import * as config from '../../config.json';
+import * as config from '../config.json';
 
 const sqlite = verbose();
 const db = new sqlite.Database(config.dbFile);

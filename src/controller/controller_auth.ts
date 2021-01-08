@@ -1,7 +1,7 @@
 import Controller from './controller';
 import DAOUser from '../dao/dao_user';
 
-import * as config from '../../config.json';
+import * as config from '../config.json';
 
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';

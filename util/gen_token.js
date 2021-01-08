@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 const readline = require('readline');
 
-const config = require('../config.json');
+const config = require('../src/config.json');
 
 const rl = readline.createInterface({
     input: process.stdin,

@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { app } from '../../src/index';
+import { app } from '../../src/server';
 import * as helper from './routing_tests_helper';
 import { expect } from 'chai';
 

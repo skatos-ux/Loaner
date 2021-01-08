@@ -1,9 +1,9 @@
 import request from 'supertest';
 import * as jwt from 'jsonwebtoken';
 
-import { app } from '../../src/index';
+import { app } from '../../src/server';
 import * as helper from './routing_tests_helper';
-import * as config from '../../config.json';
+import * as config from '../../src/config.json';
 
 import createDatabase from '../../util/create_db';
 

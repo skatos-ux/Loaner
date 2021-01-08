@@ -1,6 +1,6 @@
 import DAO from './dao';
 import User from '../model/user';
-import * as config from '../../config.json';
+import * as config from '../config.json';
 
 import * as bcrypt from 'bcryptjs';
 

@@ -2,7 +2,7 @@
 
 import { readFileSync } from 'fs';
 import { verbose } from 'sqlite3';
-import * as config from '../config.json';
+import * as config from '../src/config.json';
 
 const sqlite = verbose();
 
