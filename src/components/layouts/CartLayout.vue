@@ -23,7 +23,7 @@
         <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference" :loanStart="item.loanStart" :loanEnd="item.loanEnd">
           <div class="cart__modal--item">
             {{ item.name }}
-            <input v-model="item.lockDays" :id="'datepicker' + index" class="input" type="text" required placeholder="date de réservation">
+            <input :id="'datepicker' + index" class="input" type="text" required placeholder="date de réservation">
           </div>
         </CartItem>
         <article v-show="backError" class="message is-danger">
@@ -31,7 +31,7 @@
             Une erreur interne est survenue, veuillez réessayer dans quelques instants
           </div>
         </article>
-        <article v-show="backSuccess" class="message is-info">
+        <article v-show="backSuccess" class="message is-success">
           <div class="message-body is-size-7">
             Votre commande à bien été effectuée vous allez être redirigé vers la page d'acceuil
           </div>
@@ -88,6 +88,7 @@ export default class CartLayout extends Vue {
         lang: "fr-FR",
         numberOfMonths: 2,
         numberOfColumns: 2,
+        minDate: new Date(),
         singleMode: false,
         lockDays: item.lockDays,
         disallowLockDaysInRange: true,
@@ -123,7 +124,7 @@ export default class CartLayout extends Vue {
   }
 
   command() {
-    this.$api.post("/devices/borrow/" + this.user.id, this.cart, { headers: authHeader(this.user.token) }).then((res) => {
+    this.$api.post("/devices/borrow/" + this.user.id, { commands: this.cart }, { headers: authHeader(this.user.token) }).then((res) => {
       this.backSuccess = true
       setTimeout(() => {
         window.location.reload()
