@@ -22,22 +22,17 @@ export default class CartItem extends Vue {
   @Prop() private name!: string;
   @Prop() private version!: string;
   @Prop() private reference!: string;
-  @Prop() private loanStart: number | undefined;
-  @Prop() private loanEnd: number | undefined;
 
   item = {
     identifier: this.identifier,
     name: this.name,
     version: this.version,
-    reference: this.reference,
-    loanStart: this.loanStart,
-    loanEnd: this.loanEnd
+    reference: this.reference
   }
 
   remFromCart() {
     this.$store.dispatch('remFromCart', this.item)
   }
-
 
 }
 </script>

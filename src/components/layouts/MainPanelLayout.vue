@@ -102,7 +102,9 @@
 
       </div>
       <DeviceCategoryLayout v-for="category in searchedCategories" :key="category.name" :title="category.name" :categoryid="category.ID">
-        <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :phone="device.phone" :lockDays="device.lockDays" :photo="device.photo"></Device>
+        <div v-if="fixSearchCategories >= 3">
+          <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :phone="device.phone" :lockDays="device.lockDays" :photo="device.photo"></Device>
+        </div>
       </DeviceCategoryLayout>
     </div>
   </section>
@@ -159,6 +161,8 @@ export default class MainPanelLayout extends Vue {
   filters = this.$store.state.web.filters
   categories = this.$store.state.devices.categories
   user = this.$store.state.auth.user
+
+  fixSearchCategories = 1
 
   backError = false
   backCategoryUpdate = false
@@ -253,6 +257,8 @@ export default class MainPanelLayout extends Vue {
   get searchedCategories() {
     let search = this.formSearch.search
     let categories = this.categories
+
+    this.fixSearchCategories++
 
     if(!search) {
       return categories

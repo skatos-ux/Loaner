@@ -20,23 +20,28 @@
       </template>
 
       <template v-slot:body>
-        <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference" :loanStart="item.loanStart" :loanEnd="item.loanEnd">
+        <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference">
           <div class="cart__modal--item">
             {{ item.name }}
             <input :id="'datepicker' + index" class="input" type="text" required placeholder="date de réservation">
           </div>
         </CartItem>
-        <article v-show="backError" class="message is-danger">
-          <div class="message-body is-size-7">
-            Une erreur interne est survenue, veuillez réessayer dans quelques instants
-          </div>
-        </article>
         <article v-show="backSuccess" class="message is-success">
           <div class="message-body is-size-7">
             Votre commande à bien été effectuée vous allez être redirigé vers la page d'acceuil
           </div>
         </article>
-        <input @click="command" class="button is-success is-fullwidth is-size-6" type="button" value="Commander">
+        <article v-show="fixValidation < litepickers.length" class="message is-danger">
+          <div class="message-body is-size-7">
+            Des champs requis sont manquants, veuillez les completer
+          </div>
+        </article>
+        <article v-show="backError" class="message is-danger">
+          <div class="message-body is-size-7">
+            Une erreur interne est survenue, veuillez réessayer dans quelques instants
+          </div>
+        </article>
+        <input :disabled="fixValidation < litepickers.length" @click="command" class="button is-success is-fullwidth is-size-6" type="button" value="Commander">
       </template>
     </Modal>
   </section>
@@ -47,26 +52,39 @@ import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import CartItem from "@/components/components/CartItem.vue";
 import Modal from "@/components/components/Modal.vue";
 import Litepicker from 'litepicker';
+
+
 import authHeader from "@/services/auth-header";
+import { required } from "vuelidate/lib/validators";
+
 @Component({
-  components: {CartItem, Modal}
+  components: {CartItem, Modal},
+  validations: {
+    cart: {
+      required,
+      $each: {
+        loanDays: {
+          required,
+        }
+      }
+    }
+  }
 })
 export default class CartLayout extends Vue {
   @Ref() readonly commandModal!: Modal
 
   cart = this.$store.state.cart.items
   user = this.$store.state.auth.user
+
   litepickers: Array<Litepicker> = []
+
+  fixValidation = 0
 
   backError = false
   backSuccess = false
 
-
   get checkEmpty () {
-    if(this.cart.length){
-      return false
-    }
-    return true
+    return !this.cart.length;
   }
 
   popModal() {
@@ -79,9 +97,10 @@ export default class CartLayout extends Vue {
       litepicker.destroy()
     })
 
-    this.litepickers = []
+    this.litepickers.length = 0
 
     this.cart.forEach((item: any, index: number) => {
+      item.loanDays = []
       this.litepickers.push(new Litepicker({
         element: document.getElementById("datepicker" + index),
         format: "D MMMM YYYY",
@@ -94,6 +113,7 @@ export default class CartLayout extends Vue {
         disallowLockDaysInRange: true,
         onSelect: (startDate: Date, endDate: Date) => {
           item.loanDays = this.datesToString(startDate, endDate)
+          this.fixValidation++
         }
       }));
     });
