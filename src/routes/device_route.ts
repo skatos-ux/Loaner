@@ -20,13 +20,22 @@ router.get('/:device_ref', (req, res) => {
     controller.getInfoDevice(req, res, refDevice);
 });
 
-router.post('/:device_ref/borrow/:id_user', (req, res) => {
+router.post('/borrow/:id_user', (req, res) => {
 
     try {
         const userId = req.params.id_user;
-        const refDevice = req.params.device_ref;
+        const devices = req.body.devices;
         const loanDays = req.body.loanDays;
 
+        var devicesRef : string[] = [];
+        devices.forEach((device: string) => {
+            devicesRef.push(devices.ref);
+        });
+
+        if(!devices){
+            throw new Error("No devices given");
+        }
+        
         if (!loanDays) {
             throw new Error("No loanDays given");
         }
@@ -42,8 +51,10 @@ router.post('/:device_ref/borrow/:id_user', (req, res) => {
         const startDate = loanDays[0];
         const endDate = loanDays[1];
 
-        controller.borrowDevice(req, res, refDevice, userId, startDate, endDate);
-
+        devicesRef.forEach((refDevice : string) => {
+            controller.borrowDevice(req, res, refDevice, userId, startDate, endDate);
+        });
+        
     } catch (err) {
         controller.giveError(err, res);
     }
