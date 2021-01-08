@@ -6,7 +6,7 @@ export default class Reservation {
     private endDate!: string;
     private returnDate!: string;
 
-    constructor(ID: number, refDevice: string, idUser: string, startDate: string, endDate: string, returnDate: string) {
+    constructor(ID: number, refDevice: string, idUser: string, startDate: string, endDate: string, returnDate: string = "") {
 
         if (!ID || ID < 0) {
             throw new Error("Invalid ID");
@@ -20,15 +20,15 @@ export default class Reservation {
             throw new Error("Invalid user id");
         }
 
-        if (!startDate || startDate.length != 10) {
+        if (!startDate || startDate.length != 10 || !this.checkDate(startDate)) {
             throw new Error("Invalid start date");
         }
 
-        if (!endDate || endDate.length != 10) {
+        if (!endDate || endDate.length != 10|| !this.checkDate(endDate)) {
             throw new Error("Invalid end date");
         }
 
-        if (endDate && endDate.length != 10) {
+        if (returnDate && ((returnDate.length != 0 && returnDate.length != 10) || !this.checkDate(returnDate))) {
             throw new Error("Invalid return date");
         }
 
@@ -38,6 +38,10 @@ export default class Reservation {
         this.startDate = startDate;
         this.endDate = endDate;
         this.returnDate = returnDate;
+    }
+
+    private checkDate(dateString : string) : boolean {
+        return !isNaN(Date.parse(dateString));
     }
 
     public getID(): number {
@@ -61,16 +65,29 @@ export default class Reservation {
     }
 
     public hasReturnDate(): boolean {
-        return !this.returnDate;
+        return !!this.returnDate && this.returnDate.length != 0;
     }
 
     public getReturnDate(): Date {
 
-        if (!this.returnDate) {
+        if (!this.hasReturnDate()) {
             throw new Error("Return date is undefined");
         }
 
         return new Date(this.returnDate);
+    }
+
+    public getLockDays(): string[] {
+        const startDate = this.getStartDate();
+        let endDate: Date;
+
+        if (this.hasReturnDate()) {
+            endDate = this.getReturnDate();
+        } else {
+            endDate = this.getEndDate();
+        }
+
+        return [startDate, endDate].map(Reservation.convertDate);
     }
 
     public static convertDate(date: Date): string {
@@ -84,18 +101,5 @@ export default class Reservation {
             day = "0" + day;
 
         return [year, month, day].join('-');
-    }
-
-    public getLockDays(): string[] {
-        const startDate = this.getStartDate();
-        let endDate: Date;
-
-        if (this.hasReturnDate()) {
-            endDate = this.getEndDate();
-        } else {
-            endDate = this.getReturnDate();
-        }
-
-        return [startDate, endDate].map(Reservation.convertDate);
     }
 }
