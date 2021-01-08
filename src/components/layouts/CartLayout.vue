@@ -26,9 +26,17 @@
             <input v-model="item.lockDays" :id="'datepicker' + index" class="input" type="text" required placeholder="date de réservation">
           </div>
         </CartItem>
-        <div class="cart__modal--footer">
-          <input @click="command" class="button is-success is-fullwidth is-size-6" type="button" value="Commander">
-        </div>
+        <article v-show="backError" class="message is-danger">
+          <div class="message-body is-size-7">
+            Une erreur interne est survenue, veuillez réessayer dans quelques instants
+          </div>
+        </article>
+        <article v-show="backSuccess" class="message is-info">
+          <div class="message-body is-size-7">
+            Votre commande à bien été effectuée vous allez être redirigé vers la page d'acceuil
+          </div>
+        </article>
+        <input @click="command" class="button is-success is-fullwidth is-size-6" type="button" value="Commander">
       </template>
     </Modal>
   </section>
@@ -39,6 +47,7 @@ import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import CartItem from "@/components/components/CartItem.vue";
 import Modal from "@/components/components/Modal.vue";
 import Litepicker from 'litepicker';
+import authHeader from "@/services/auth-header";
 @Component({
   components: {CartItem, Modal}
 })
@@ -46,7 +55,12 @@ export default class CartLayout extends Vue {
   @Ref() readonly commandModal!: Modal
 
   cart = this.$store.state.cart.items
+  user = this.$store.state.auth.user
   litepickers: Array<Litepicker> = []
+
+  backError = false
+  backSuccess = false
+
 
   get checkEmpty () {
     if(this.cart.length){
@@ -58,8 +72,11 @@ export default class CartLayout extends Vue {
   popModal() {
     this.commandModal.popModal();
 
-    document.querySelectorAll('.litepicker').forEach((litepicker) => {
-      litepicker.remove()
+    this.backSuccess = false
+    this.backError = false
+
+    this.litepickers.map((litepicker: Litepicker) => {
+      litepicker.destroy()
     })
 
     this.litepickers = []
@@ -73,26 +90,52 @@ export default class CartLayout extends Vue {
         numberOfColumns: 2,
         singleMode: false,
         lockDays: item.lockDays,
-        disallowLockDaysInRange: true
+        disallowLockDaysInRange: true,
+        onSelect: (startDate: Date, endDate: Date) => {
+          item.loanDays = this.datesToString(startDate, endDate)
+        }
       }));
     });
   }
 
-  command() {
-    this.litepickers.forEach((litepicker) => {
-      console.log(litepicker.getStartDate())
-      console.log(litepicker.getEndDate())
-    })
-    this.commandModal.depopModal()
+  datesToString(startDate: Date, endDate: Date) {
 
-    /*
-    this.$api.post("/login", this.form).then((res) => {
-      console.log(res.data)
+    const startDateYear = startDate.getFullYear()
+    const startDateMonths = startDate.getMonth() + 1
+    const startDateDay = startDate.getDate()
+
+    const startDateString = [startDateYear,
+      (startDateMonths>9 ? '' : '0') + startDateMonths,
+      (startDateDay>9 ? '' : '0') + startDateDay
+    ].join('-');
+
+    const endDateYear = endDate.getFullYear()
+    const endDateMonths = endDate.getMonth() + 1
+    const endDateDay = endDate.getDate()
+
+    const endDateString = [endDateYear,
+      (endDateMonths>9 ? '' : '0') + endDateMonths,
+      (endDateDay>9 ? '' : '0') + endDateDay
+    ].join('-');
+
+    return [startDateString, endDateString]
+
+  }
+
+  command() {
+    this.$api.post("/devices/borrow/" + this.user.id, this.cart, { headers: authHeader(this.user.token) }).then((res) => {
+      this.backSuccess = true
+      setTimeout(() => {
+        window.location.reload()
+      }, 5000)
     }).catch((error) => {
-      console.log(error)
-      element.preventDefault()
+      this.backError = true
     })
-    */
+
+    setTimeout(() => {
+      this.$store.dispatch('clearCart')
+      window.location.reload()
+    }, 4500)
   }
 }
 </script>
