@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "strict": true,
+      "esModuleInterop": true,
+      "outDir": "dist",
+      "resolveJsonModule": true,
+      "forceConsistentCasingInFileNames": true
+    },
+    "include": ["util/**/*.ts"],
+    "exclude": [
+      "./tests/",
+      "./node_modules/",
+      "./dist/"
+    ],
+    "files": [
+        "src/config.json"
+    ]
+  }
+  

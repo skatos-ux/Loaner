@@ -14,7 +14,7 @@
     "create-db": "ts-node ./util/create_db.ts --exec --log-queries",
     "build:dev": "tsc",
     "build:prod": "tsc -p tsconfig.production.json",
-    "build-util": "tsc util/create_db.ts --include src/config.json --outDir dist_util"
+    "build-util": "tsc -p tsconfig.util.json"
   },
   "repository": {
     "type": "git",
