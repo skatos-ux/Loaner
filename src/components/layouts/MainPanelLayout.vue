@@ -182,6 +182,8 @@ export default class MainPanelLayout extends Vue {
     phone: ""
   }
 
+
+
   isInputInvalid(validator: boolean) {
     if(validator) {
       return " is-danger"
@@ -191,7 +193,7 @@ export default class MainPanelLayout extends Vue {
   }
 
   mounted() {
-    this.$api.get('/devices/all').then((res) => {
+    this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
       this.$store.dispatch('initDevices', res.data)
     }).catch((error) => {
       console.log(error)
@@ -208,8 +210,7 @@ export default class MainPanelLayout extends Vue {
   addCategory() {
     if(!this.$v.formAddCategory.name?.$invalid) {
       this.$api.put('/category/add/' + this.formAddCategory.name, {} ,{ headers: authHeader(this.user.token) }).then((res) => {
-
-        this.$api.get('/devices/all').then((res) => {
+        this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
           this.$store.dispatch('initDevices', res.data)
         }).catch((error) => {
           this.backError = true
@@ -230,7 +231,7 @@ export default class MainPanelLayout extends Vue {
 
       this.$api.put("/devices/add", this.formAddDevice, {headers: authHeader(this.user.token)}).then((res) => {
         this.backDeviceUpdate = true
-        this.$api.get('/devices/all').then((res) => {
+        this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
           this.$store.dispatch('initDevices', res.data)
         }).catch((error) => {
           this.backError = true

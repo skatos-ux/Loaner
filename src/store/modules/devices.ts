@@ -4,7 +4,12 @@ export const devices = {
     },
     mutations: {
         initDevices(state: any, categories: any) {
-            state.categories = categories
+
+            state.categories.length = 0
+
+            categories.map((category: any) => {
+                state.categories.push(category)
+            })
         },
     },
     actions: {

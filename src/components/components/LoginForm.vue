@@ -34,7 +34,7 @@
       </div>
     </article>
     <div class="login__form--footer">
-      <input id="login" class="button is-success is-fullwidth is-size-6" type="submit" value="Se connecter">
+      <button id="login" class="button is-success is-fullwidth is-size-6" type="submit">Se connecter</button>
     </div>
   </form>
 </template>
@@ -61,6 +61,10 @@ export default class LoginForm extends Vue {
 
   failLogin = false
   backError = false
+
+  mounted() {
+    window.localStorage.clear()
+  }
 
   loginForm(event: Event){
     const input = document.getElementById("login")
