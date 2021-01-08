@@ -40,9 +40,8 @@ describe("Tests on authenticate",function(){
         cy.visit('localhost:8080');
         cy.get('.input[type="email"]').type("@@@@@").should('have.value','@@@@@');
         cy.get('.input[type="password"]').type("arobase").should('have.value','arobase');
-        cy.contains('Se connecter').click().then(x => {
-            done(new Error('Expected button NOT to be clickable, but click() succeeded'));
-        }); 
-        
+        cy.contains('Se connecter').click();
+        //The click is expected to not work so the URL will stay the same 
+        cy.url().should('eq', 'http://localhost:8080/');
     })
 });
