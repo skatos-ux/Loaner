@@ -102,7 +102,9 @@
 
       </div>
       <DeviceCategoryLayout v-for="category in searchedCategories" :key="category.name" :title="category.name" :categoryid="category.ID">
-        <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :phone="device.phone" :lockDays="device.lockDays" :photo="device.photo"></Device>
+        <div v-if="fixSearchCategories >= 3">
+          <Device v-for="device in category.devices" :key="device.name" :name="device.name" :category="category.name" :reference="device.ref" :version="device.version" :phone="device.phone" :lockDays="device.lockDays" :photo="device.photo"></Device>
+        </div>
       </DeviceCategoryLayout>
     </div>
   </section>
@@ -160,6 +162,8 @@ export default class MainPanelLayout extends Vue {
   categories = this.$store.state.devices.categories
   user = this.$store.state.auth.user
 
+  fixSearchCategories = 1
+
   backError = false
   backCategoryUpdate = false
   backDeviceUpdate = false
@@ -182,6 +186,8 @@ export default class MainPanelLayout extends Vue {
     phone: ""
   }
 
+
+
   isInputInvalid(validator: boolean) {
     if(validator) {
       return " is-danger"
@@ -191,7 +197,7 @@ export default class MainPanelLayout extends Vue {
   }
 
   mounted() {
-    this.$api.get('/devices/all').then((res) => {
+    this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
       this.$store.dispatch('initDevices', res.data)
     }).catch((error) => {
       console.log(error)
@@ -208,8 +214,7 @@ export default class MainPanelLayout extends Vue {
   addCategory() {
     if(!this.$v.formAddCategory.name?.$invalid) {
       this.$api.put('/category/add/' + this.formAddCategory.name, {} ,{ headers: authHeader(this.user.token) }).then((res) => {
-
-        this.$api.get('/devices/all').then((res) => {
+        this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
           this.$store.dispatch('initDevices', res.data)
         }).catch((error) => {
           this.backError = true
@@ -230,7 +235,7 @@ export default class MainPanelLayout extends Vue {
 
       this.$api.put("/devices/add", this.formAddDevice, {headers: authHeader(this.user.token)}).then((res) => {
         this.backDeviceUpdate = true
-        this.$api.get('/devices/all').then((res) => {
+        this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
           this.$store.dispatch('initDevices', res.data)
         }).catch((error) => {
           this.backError = true
@@ -252,6 +257,8 @@ export default class MainPanelLayout extends Vue {
   get searchedCategories() {
     let search = this.formSearch.search
     let categories = this.categories
+
+    this.fixSearchCategories++
 
     if(!search) {
       return categories

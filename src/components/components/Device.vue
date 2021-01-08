@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="device__info">
-        <button @click="addToCart" class="button is-primary is-inverted">
+        <button @click="addToCart" :disabled="isInCart" class="button is-primary is-inverted">
           Ajouter au panier
           <span class="icon is-small">
             <font-awesome-icon :icon="['fas', 'plus']" />
@@ -82,6 +82,7 @@ export default class Device extends Vue {
   @Ref() readonly deviceInfoModal!: Modal
 
   user = this.$store.state.auth.user
+  cart = this.$store.state.cart.items
 
   item = {
     identifier: null,
@@ -93,6 +94,17 @@ export default class Device extends Vue {
   }
 
   backUpdate = false
+
+
+
+  get isInCart() {
+    for(const item of this.cart) {
+      if(item.reference === this.reference) {
+        return true
+      }
+    }
+    return false
+  }
 
   deleteDevice() {
 
@@ -111,11 +123,11 @@ export default class Device extends Vue {
     }).catch((error) => {
       console.log(error)
     })
-
-
   }
   addToCart(){
-    this.$store.dispatch('addToCart', this.item)
+    if(!this.isInCart){
+      this.$store.dispatch('addToCart', this.item)
+    }
   }
   popModal() {
     this.deviceInfoModal.popModal()

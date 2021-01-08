@@ -9,6 +9,9 @@ export const cart = {
         },
         remItem(state: any, item: any) {
             state.items.splice(item.identifier, 1)
+        },
+        clearItems(state: any) {
+            state.items.length = 0
         }
     },
     actions: {
@@ -17,6 +20,9 @@ export const cart = {
         },
         remFromCart(context: any, item: any) {
             context.commit('remItem', item)
+        },
+        clearCart(context: any) {
+            context.commit('clearItems')
         }
     }
 }

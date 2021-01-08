@@ -7,11 +7,6 @@ import { devices} from "@/store/modules/devices";
 import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 
-localStorage.removeItem("web")
-localStorage.removeItem("db")
-localStorage.removeItem("user")
-localStorage.removeItem("items")
-
 export default new Vuex.Store({
   state: {
     web: {
