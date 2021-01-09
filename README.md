@@ -38,9 +38,8 @@ Cette commmande va lire le contenu du fichier *init_db.sql* et va créer une fic
 
 Si vous souhaitez créer la base de données à partir de votre propre fichier SQL, exécutez la commande suivante :
 ```
-TODO
+node dist/util/create_db.js <fichier SQL> --exec [--log-queries]
 ```
-...
 
 ## Configuration
 Dans le dossier *dist/* ce trouve le fichier de configuration du serveur *config.json* se présentant sous la forme suivante :
@@ -59,9 +58,9 @@ Voici une description pour chacun des paramètres du fichier :
 | ------- | --------------- | --------- |
 |serverPort|3000|Port sur lequel écoute le serveur (attention à ne pas mettre un numéro de port nécessitant les privilèges administrateurs)|
 |dbFile|database.db|Fichier contenant la base de données|
-|useStatic|true|Permet de savoir si le serveur fonctionne en mode "back-end uniquement" ou non (à laisser à true)|
-|jwtSecret|*Phrase culte...*|Phrase secrete pour la génération du token JWT|
-|hashSaltRounds|10|Nombre de tours effectué par l'algorithme de hachage lors de la génération du "sel" des mots de passes|
+|useStatic|true|Permet de savoir si le serveur fonctionne en mode normal ou en mode "back-end uniquement" (à laisser à tel quel)|
+|jwtSecret|*Phrase secrète*|Phrase secrete pour la génération du token JWT|
+|hashSaltRounds|10|Nombre de tours effectué par l'algorithme de hachage BCrypt lors de la génération du "sel" des mots de passes|
 
 ## Lancement
 Vous pouvez lancer le serveur en appelant NodeJS et en lui précisant le fichier d'entrée de l'application avec la commande :
@@ -75,12 +74,12 @@ npm start
 ```
 
 Une fois cela fait, il ne vous reste plus qu'à attendre que le message suivant s'affiche, vous confirmant que l'application est bien lancée :
-> Server is listening on port <numéro de port du serveur>
+> Server is listening on port **numéro de port du serveur**
 
 ## Utilisation
 Une fois votre serveur lancé, il ne vous reste plus qu'à vous rendre à l'adresse suivante :
 ```
-http://localhost:<port du serveur>
+http://<adresse du serveur>:<port du serveur>
 ```
 
 Pour vous connecter, il existe 2 utilisateurs créés par défaut :
@@ -100,4 +99,3 @@ Il existe aussi un lot de 3 catégories contenant au total 3 matériels différe
 **Tablettes** :
 *Catégorie vide*
 
-...

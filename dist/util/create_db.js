@@ -33,15 +33,20 @@ const fs_1 = require("fs");
 const sqlite3_1 = require("sqlite3");
 const config = __importStar(require("../src/config.json"));
 const sqlite = sqlite3_1.verbose();
-const sqlContent = fs_1.readFileSync('init_db.sql').toString();
+const logQueries = process.argv.includes("--log-queries");
+const execute = process.argv.includes("--exec");
+let sqlFile = 'init_db.sql';
+console.log(process.argv);
+if (process.argv.length > 2 && fs_1.existsSync(process.argv[2])) {
+    sqlFile = process.argv[2];
+}
+const sqlContent = fs_1.readFileSync(sqlFile).toString();
 const db = new sqlite.Database(config.dbFile, (err) => {
     if (err) {
         handleError(err);
     }
 });
 const lines = sqlContent.toString().split(';');
-const logQueries = process.argv.includes("--log-queries");
-const execute = process.argv.includes("--exec");
 if (execute) {
     console.log("Création de la base de données...");
     createDatabase().then(closeDatabase);
