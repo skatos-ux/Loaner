@@ -24,7 +24,7 @@ Voici une liste des documents importants pour la compréhension du projet :
 - *Cahier de test.docx* : Cahier de recettes crée avec Squash-TM compilant tous les tests du backend
 - *backend_test_reports/mochawesome.html* : Rapport d’exécution des TU du backends généré avec l'outil mocha-awesome
 - *Rapport.pdf* : Rapport sur les points qui ont été importants sur le projet
-- 
+- *README.pdf* : Ce fichier au format PDF
 
 ## Structuration du dépôt
 Le dépôt est composé de 3 branches :
