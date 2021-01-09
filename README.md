@@ -9,19 +9,27 @@ L'application utilise les technologies et frameworks suivantes :
 - SQLite
 - VueJS
 
-Le dépôt Git est accessible [ici](https://github.com/skatos-ux/Loaner)
+Pour les tests et la vérification de la qualité du code, les technologies suivantes sont utilisées :
+- **Mocha / Chai** : Pour les tests unitaires sur le backend
+- **Cypress** : Pour les tests de bout en bout
+- **Supertest** : Pour les tests sur les routes et les contrôleurs dans le backend
+- **ESLint** : Pour la vérification de la qualité de la syntaxe
+- **NYC** : Pour vérifier le taux de couverture des tests unitaires
+
+Le dépôt Git est accessible [ici](https://github.com/skatos-ux/Loaner).
 
 ## Documents importants
 Voici une liste des documents importants pour la compréhension du projet :
 - *Cahier de Specifications_V1.pdf* : Cahier de spécifications du projet fourni au client
 - *Cahier de test.docx* : Cahier de recettes crée avec Squash-TM compilant tous les tests du backend
 - *backend_test_reports/mochawesome.html* : Rapport d’exécution des TU du backends généré avec l'outil mocha-awesome
-- TODO : Rapport
+- *Rapport.pdf* : Rapport sur les points qui ont été importants sur le projet
+- 
 
 ## Structuration du dépôt
 Le dépôt est composé de 3 branches :
 - **Branche main** : Branche sur laquelle se trouve tout les documents utiles et la version production du logiciel
-- **Branche frontend** : Contient la partie web du projet ainsi que des tests unitaires avec Jest et des tests de bout en bout avec Cypress
+- **Branche frontend** : Contient la partie web du projet ainsi que des tests de bout en bout avec Cypress
 - **Branche backend** : Contient la partie serveur du projet faisait fonctionner l'API REST avec un base de données; Contient des tests effectuées avec Mocha/Chai et Supertest
 
 ## Arborecence du projet
