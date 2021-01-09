@@ -1,4 +1,3 @@
-import { faDiceOne } from "@fortawesome/free-solid-svg-icons";
 
 describe("Tests on authenticate",function(){
 
