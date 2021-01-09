@@ -1,6 +1,6 @@
 <template>
   <div class="mainpage">
-    <div class="mainpage__header">
+    <div v-if="!user.temporaryPassword" class="mainpage__header">
       <NavBar/>
     </div>
     <div class="mainpage__body">

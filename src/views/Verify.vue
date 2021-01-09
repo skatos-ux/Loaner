@@ -1,13 +1,15 @@
 <template>
   <div class="verify">
-
+    <PassChangeForm />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-
-@Component
+import PassChangeForm from "@/components/components/PassChangeForm.vue";
+@Component({
+  components: {PassChangeForm}
+})
 export default class Verify extends Vue {
 }
 </script>

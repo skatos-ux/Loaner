@@ -79,7 +79,12 @@ export default class LoginForm extends Vue {
       this.user.temporaryPassword = res.data.user.temporaryPassword
       if(res.data.auth) {
         this.$store.dispatch('login', this.user)
-        this.$router.push("/mainpage/dashboard")
+
+        if(this.user.temporaryPassword) {
+          this.$router.push("/mainpage/verify")
+        } else {
+          this.$router.push("/mainpage/dashboard")
+        }
       } else {
         this.failLogin = true
         input!.classList.remove("control", "is-loading")

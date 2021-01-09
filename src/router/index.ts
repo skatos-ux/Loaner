@@ -4,6 +4,7 @@ import Login from "@/views/Login.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import MainPage from "@/views/MainPage.vue";
 import Users from "@/views/Users.vue";
+import Verify from "@/views/Verify.vue";
 
 Vue.use(VueRouter)
 
@@ -25,7 +26,12 @@ const routes: Array<RouteConfig> = [
     {
       path: 'users',
       component: Users
-    }]
+    },
+    {
+      path: 'verify',
+      component: Verify
+    }
+    ]
   },
   {
     path: '/about',
