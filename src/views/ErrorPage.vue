@@ -21,6 +21,7 @@
         <span class="n"></span>
         <span class="d"></span>
       </figcaption>
+      <button @click="goHome" class="button is-rounded is-info error__home">Retourner à la page d'acceuil</button>
     </figure>
   </div>
 </template>
@@ -30,6 +31,9 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class ErrorPage extends Vue {
+  goHome() {
+    this.$router.push('/')
+  }
 }
 </script>
 
@@ -41,9 +45,12 @@ export default class ErrorPage extends Vue {
   padding: 0;
 }
 .error {
-  background: black;
+  background: #48c774;
   width: 100vw;
   height: 100vh;
+}
+.error__home {
+  margin-top: 30px;
 }
 /* I. Containers */
 figure {
