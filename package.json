@@ -1,0 +1,30 @@
+{
+  "name": "loaner",
+  "version": "1.0.0",
+  "description": "Loaner allows you to track who borrowed your devices",
+  "main": "dist/server.js",
+  "private": true,
+  "scripts": {
+    "start": "node dist/server.js",
+    "create-db": "node dist/util/create_db.js --exec --log-queries"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skatos-ux/Loaner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skatos-ux/Loaner/issues"
+  },
+  "homepage": "https://github.com/skatos-ux/Loaner#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "generate-password": "^1.5.1",
+    "jsonwebtoken": "^8.5.1",
+    "sqlite3": "^5.0.0"
+  }
+}
