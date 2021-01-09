@@ -95,16 +95,18 @@ export default class LoginForm extends Vue {
           input.classList.remove("control", "is-loading")
         }
       }).catch((error) => {
-        if(error.response.status === 400) {
-          this.failLogin = true
+        if(error.response) {
+          if(error.response.status === 400) {
+            this.failLogin = true
+          } else {
+            this.backError = true
+          }
         } else {
           this.backError = true
         }
         input.classList.remove("control", "is-loading")
       })
     }
-
-
   }
 
   isMobile() {
