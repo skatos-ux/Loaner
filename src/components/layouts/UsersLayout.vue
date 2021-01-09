@@ -26,17 +26,17 @@
 
           <template v-slot:body>
             <div class="modal__body--wrapper">
-              <label>
-                <input v-model="$v.formAddUser.id.$model" type="text" :class="'input left' + isInputInvalid($v.formAddUser.id.$invalid)" placeholder="Matricule">
+              <label class="left">
+                <input v-model="$v.formAddUser.id.$model" type="text" :class="'input ' + isInputInvalid($v.formAddUser.id.$invalid)" placeholder="Matricule">
               </label>
-              <label>
-                <input v-model="$v.formAddUser.firstName.$model" type="text" :class="'input middle' + isInputInvalid($v.formAddUser.firstName.$invalid)" placeholder="Prénom">
+              <label class="middle">
+                <input v-model="$v.formAddUser.firstName.$model" type="text" :class="'input ' + isInputInvalid($v.formAddUser.firstName.$invalid)" placeholder="Prénom">
               </label>
-              <label>
-                <input v-model="$v.formAddUser.lastName.$model" type="text" :class="'input middle' + isInputInvalid($v.formAddUser.lastName.$invalid)" placeholder="Nom">
+              <label class="middle">
+                <input v-model="$v.formAddUser.lastName.$model" type="text" :class="'input ' + isInputInvalid($v.formAddUser.lastName.$invalid)" placeholder="Nom">
               </label>
-              <label>
-                <input v-model="$v.formAddUser.email.$model" type="email" :class="'input middle' + isInputInvalid($v.formAddUser.email.$invalid)" placeholder="Email">
+              <label class="middle">
+                <input v-model="$v.formAddUser.email.$model" type="email" :class="'input ' + isInputInvalid($v.formAddUser.email.$invalid)" placeholder="Email">
               </label>
               <input v-model="$v.formAddUser.admin.$model" id="switchExample" type="checkbox" class="switch right">
               <label for="switchExample" class="middle">Administrateur</label>

@@ -36,7 +36,7 @@
         </span>
       </div>
     </div>
-    <article v-show="backSuccess" class="message is-danger">
+    <article v-show="backSuccess" class="message is-success">
       <div class="message-body is-size-7">
         Changement de mot de passe effectué, vous allez être redirigé vers la page d'authentification
       </div>
@@ -122,6 +122,9 @@ export default class PassChangeForm extends Vue {
 
       this.$api.post('/auth/password/change', this.formChPass, { headers: authHeader(this.user.token) }).then(() => {
         this.backSuccess = true
+
+        this.backError = false
+        this.wrongPasswordError = false
 
         setTimeout(() => {
           this.$router.push("/")

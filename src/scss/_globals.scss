@@ -18,6 +18,10 @@ section {
   }
 }
 
+label {
+  width: 100% !important;
+}
+
 .is-target {
   pointer-events: auto;
 }

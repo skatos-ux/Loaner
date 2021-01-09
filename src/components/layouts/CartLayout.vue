@@ -184,7 +184,7 @@ export default class CartLayout extends Vue {
         justify-content: space-between;
         align-items: center;
         margin-bottom: 10px;
-        input {
+        label {
           max-width: 305px;
           flex-grow: 2;
         }

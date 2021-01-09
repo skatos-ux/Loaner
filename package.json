@@ -25,6 +25,7 @@
     "js-cookie": "^2.2.1",
     "litepicker": "^1.5.7",
     "moment": "^2.29.1",
+    "split-text-js": "^1.0.3",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.5.1",

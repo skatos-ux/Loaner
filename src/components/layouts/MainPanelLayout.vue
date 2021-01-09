@@ -99,7 +99,7 @@
                 <input v-model="$v.formAddDevice.photo.$model" :class="'input left' + isInputInvalid($v.formAddDevice.photo.$invalid)" type="url" required placeholder="URL de l'image (optionnel)">
               </label>
               <label>
-                <input v-model="$v.formAddDevice.phone.$model" :class="'input right' + isInputInvalid($v.formAddDevice.phone.$invalid)" type="tel" required placeholder="Numéro de téléphone">
+                <input v-model="$v.formAddDevice.phone.$model" :class="'input right' + isInputInvalid($v.formAddDevice.phone.$invalid)" type="tel" required placeholder="Numéro de téléphone (optionnel)">
               </label>
             </div>
             <article v-show="backDeviceUpdate" class="message is-info">
@@ -163,7 +163,6 @@ import {required, minLength, url, numeric, maxLength} from 'vuelidate/lib/valida
         url,
       },
       phone: {
-        required,
         numeric,
         maxLength: maxLength(7)
       }
