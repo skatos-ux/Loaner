@@ -1,4 +1,4 @@
-# Loaner - Guide de déploiement
+# Loaner - Logiciel de gestion des emprunts de matériel
 ## Présentation
 Loaner est une application web permettant de gérer l'emprunt de matériel informatique dans le temps.
 
@@ -8,6 +8,21 @@ L'application utilise les technologies et frameworks suivantes :
 - Express
 - SQLite
 - VueJS
+
+Le dépôt Git est accessible [ici](https://github.com/skatos-ux/Loaner)
+
+## Documents importants
+Voici une liste des documents importants pour la compréhension du projet :
+- *Cahier de Specifications_V1.pdf* : Cahier de spécifications du projet fourni au client
+- *Cahier de test.docx* : Cahier de recettes crée avec Squash-TM compilant tous les tests du backend
+- *backend_test_reports/mochawesome.html* : Rapport d’exécution des TU du backends généré avec l'outil mocha-awesome
+- TODO : Rapport
+
+## Structuration du dépôt
+Le dépôt est composé de 3 branches :
+- **Branche main** : Branche sur laquelle se trouve tout les documents utiles et la version production du logiciel
+- **Branche frontend** : Contient la partie web du projet ainsi que des tests unitaires avec Jest et des tests de bout en bout avec Cypress
+- **Branche backend** : Contient la partie serveur du projet faisait fonctionner l'API REST avec un base de données; Contient des tests effectuées avec Mocha/Chai et Supertest
 
 ## Arborecence du projet
 Voici la liste des fichiers indispensable au bon fonctionnement du projet ainsi que leur utilité :
