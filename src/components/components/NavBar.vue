@@ -1,8 +1,8 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io">
-        <img alt="logo" src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+      <a class="navbar-item" href="https://github.com/skatos-ux/Loaner">
+        <img alt="logo" src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Logo_Reseau_Polytech.svg" width="50" height="56">
       </a>
     </div>
     <div id="navbarBasicExample" class="navbar-menu">
