@@ -41,7 +41,7 @@ export default class DeviceCategoryLayout extends Vue {
   remCategory() {
     this.loading = true
 
-    this.$api.delete('/category/delete/' + this.categoryid,{ headers: authHeader(this.user.token) }).then((res) => {
+    this.$api.delete('/category/delete/' + this.categoryid,{ headers: authHeader(this.user.token) }).then(() => {
 
       this.$api.get('/devices/all').then((res) => {
         this.$store.dispatch('initDevices', res.data)
@@ -53,7 +53,7 @@ export default class DeviceCategoryLayout extends Vue {
         this.loading = false
         window.location.reload()
       }, 1000)
-    }).catch((error) => {
+    }).catch(() => {
       this.backError = true
     })
   }

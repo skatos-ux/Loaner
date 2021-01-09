@@ -5,7 +5,7 @@
         Panier
       </p>
       <ul class="menu-list">
-        <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference" :loanStart="item.loanStart" :loanEnd="item.loanEnd"></CartItem>
+        <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference"></CartItem>
       </ul>
     </aside>
     <div class="cart__command control field has-icons-right ">
@@ -23,7 +23,9 @@
         <CartItem v-for="(item, index) in cart" :key="item.ref" :identifier="index" :name="item.name" :version="item.version" :reference="item.reference">
           <div class="cart__modal--item">
             {{ item.name }}
-            <input :id="'datepicker' + index" class="input" type="text" required placeholder="date de réservation">
+            <label>
+              <input :id="'datepicker' + index" class="input" type="text" required placeholder="date de réservation">
+            </label>
           </div>
         </CartItem>
         <article v-show="backSuccess" class="message is-success">
@@ -48,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Ref, Vue} from 'vue-property-decorator';
+import {Component, Ref, Vue} from 'vue-property-decorator';
 import CartItem from "@/components/components/CartItem.vue";
 import Modal from "@/components/components/Modal.vue";
 import Litepicker from 'litepicker';
@@ -101,6 +103,7 @@ export default class CartLayout extends Vue {
 
     this.cart.forEach((item: any, index: number) => {
       item.loanDays = []
+      // noinspection JSUnusedGlobalSymbols
       this.litepickers.push(new Litepicker({
         element: document.getElementById("datepicker" + index),
         format: "D MMMM YYYY",
@@ -144,12 +147,12 @@ export default class CartLayout extends Vue {
   }
 
   command() {
-    this.$api.post("/devices/borrow/" + this.user.id, { commands: this.cart }, { headers: authHeader(this.user.token) }).then((res) => {
+    this.$api.post("/devices/borrow/" + this.user.id, { commands: this.cart }, { headers: authHeader(this.user.token) }).then(() => {
       this.backSuccess = true
       setTimeout(() => {
         window.location.reload()
       }, 5000)
-    }).catch((error) => {
+    }).catch(() => {
       this.backError = true
     })
 

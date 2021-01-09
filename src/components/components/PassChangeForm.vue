@@ -6,7 +6,9 @@
     <div class="field">
       <label class="label is-size-7 has-text-left	">Ancien mot de passe</label>
       <div class="control has-icons-left">
-        <input id="oldpassword" v-model="$v.formChPass.oldPassword.$model" class="input" type="password" required>
+        <label>
+          <input id="oldpassword" v-model="$v.formChPass.oldPassword.$model" class="input" type="password" required>
+        </label>
         <span class="icon is-small is-left">
           <font-awesome-icon :icon="['fas', 'key']" />
         </span>
@@ -15,7 +17,9 @@
     <div class="field">
       <label class="label is-size-7 has-text-left	">Nouveau mot de passe</label>
       <div class="control has-icons-left">
-        <input id="password" v-model="$v.formChPass.newPassword.$model" class="input" type="password" required>
+        <label>
+          <input id="password" v-model="$v.formChPass.newPassword.$model" class="input" type="password" required>
+        </label>
         <span class="icon is-small is-left">
           <font-awesome-icon :icon="['fas', 'key']" />
         </span>
@@ -24,7 +28,9 @@
     <div class="field">
       <label class="label is-size-7 has-text-left	">Confirmer le mot de passe</label>
       <div class="control has-icons-left">
-        <input id="confpassword" v-model="$v.formChPass.confPassword.$model" class="input" type="password" required>
+        <label>
+          <input id="confpassword" v-model="$v.formChPass.confPassword.$model" class="input" type="password" required>
+        </label>
         <span class="icon is-small is-left">
           <font-awesome-icon :icon="['fas', 'key']" />
         </span>
@@ -95,8 +101,10 @@ export default class PassChangeForm extends Vue {
   }
   
   mounted() {
-    const confPasswordInput = document.getElementById('confpassword')!;
-    confPasswordInput.onpaste = e => e.preventDefault();
+    const confPasswordInput = document.getElementById('confpassword');
+    if(confPasswordInput) {
+      confPasswordInput.onpaste = e => e.preventDefault();
+    }
 
     if(this.user.temporaryPassword === false) {
       this.$router.push("/")
@@ -112,7 +120,7 @@ export default class PassChangeForm extends Vue {
     if(!this.backSuccess) {
       event.preventDefault()
 
-      this.$api.post('/auth/password/change', this.formChPass, { headers: authHeader(this.user.token) }).then((res) => {
+      this.$api.post('/auth/password/change', this.formChPass, { headers: authHeader(this.user.token) }).then(() => {
         this.backSuccess = true
 
         setTimeout(() => {

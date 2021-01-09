@@ -22,12 +22,18 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class Modal extends Vue {
   @Prop() private id!: string
 
-  popModal(): any {
-    document.getElementById(this.id)!.className += " is-active"
+  popModal() {
+    const inputId = document.getElementById(this.id)
+    if(inputId) {
+      inputId.className += " is-active"
+    }
   }
 
-  depopModal(): any {
-    document.getElementById(this.id)!.classList.remove("is-active")
+  depopModal() {
+    const inputId = document.getElementById(this.id)
+    if(inputId) {
+      inputId.classList.remove("is-active")
+    }
   }
 }
 </script>
@@ -92,7 +98,7 @@ export default class Modal extends Vue {
     }
 
     label {
-      margin-bottom: 0px;
+      margin-bottom: 0;
       margin-right: 3px;
       line-height: 24px;
     }

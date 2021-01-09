@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Component, Vue} from 'vue-property-decorator';
 import CartComponent from "@/components/layouts/CartLayout.vue";
 import MainPanelLayout from "@/components/layouts/MainPanelLayout.vue";
 import DashboardLayout from "@/components/layouts/DashboardLayout.vue";

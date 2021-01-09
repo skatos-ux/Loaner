@@ -64,7 +64,6 @@
 <script lang="ts">
 import { Component, Prop, Ref, Vue} from 'vue-property-decorator';
 import Modal from "@/components/components/Modal.vue";
-import Litepicker from "litepicker";
 import authHeader from "@/services/auth-header";
 
 @Component({
@@ -108,7 +107,7 @@ export default class Device extends Vue {
 
   deleteDevice() {
 
-    this.$api.post("/devices/delete/" + this.item.reference, {}, { headers: authHeader(this.user.token) }).then((res) => {
+    this.$api.post("/devices/delete/" + this.item.reference, {}, { headers: authHeader(this.user.token) }).then(() => {
       this.$api.get('/devices/all').then((res) => {
         this.$store.dispatch('initDevices', res.data)
       }).catch((error) => {

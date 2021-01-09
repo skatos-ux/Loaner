@@ -3,7 +3,9 @@
     <div class="field">
       <label class="label is-size-7 has-text-left">Email</label>
       <div class="control has-icons-left">
-        <input v-model="form.email" class="input" type="email" required>
+        <label>
+          <input v-model="form.email" class="input" type="email" required>
+        </label>
         <span class="icon is-small is-left">
           <font-awesome-icon :icon="['fas', 'user']" />
         </span>
@@ -12,7 +14,9 @@
     <div class="field">
       <label class="label is-size-7 has-text-left	">Mot de passe</label>
       <div class="control has-icons-left">
-        <input v-model="form.password" class="input" type="password" required>
+        <label>
+          <input v-model="form.password" class="input" type="password" required>
+        </label>
         <span class="icon is-small is-left">
           <font-awesome-icon :icon="['fas', 'key']" />
         </span>
@@ -68,35 +72,38 @@ export default class LoginForm extends Vue {
 
   loginForm(event: Event){
     const input = document.getElementById("login")
-    input!.className +=  " control is-loading"
-    event.preventDefault()
+    if(input) {
+      input.className +=  " control is-loading"
+      event.preventDefault()
 
-    this.$api.post("/auth/login", this.form).then((res) => {
-      this.user.id = res.data.user.id
-      this.user.email= res.data.user.email
-      this.user.token = res.data.token
-      this.user.admin = res.data.user.admin
-      this.user.temporaryPassword = res.data.user.temporaryPassword
-      if(res.data.auth) {
-        this.$store.dispatch('login', this.user)
+      this.$api.post("/auth/login", this.form).then((res) => {
+        this.user.id = res.data.user.id
+        this.user.email= res.data.user.email
+        this.user.token = res.data.token
+        this.user.admin = res.data.user.admin
+        this.user.temporaryPassword = res.data.user.temporaryPassword
+        if(res.data.auth) {
+          this.$store.dispatch('login', this.user)
 
-        if(this.user.temporaryPassword) {
-          this.$router.push("/mainpage/verify")
+          if(this.user.temporaryPassword) {
+            this.$router.push("/mainpage/verify")
+          } else {
+            this.$router.push("/mainpage/dashboard")
+          }
         } else {
-          this.$router.push("/mainpage/dashboard")
+          this.failLogin = true
+          input.classList.remove("control", "is-loading")
         }
-      } else {
-        this.failLogin = true
-        input!.classList.remove("control", "is-loading")
-      }
-    }).catch((error) => {
-      if(error.response.status === 400) {
-        this.failLogin = true
-      } else {
-        this.backError = true
-      }
-      input!.classList.remove("control", "is-loading")
-    })
+      }).catch((error) => {
+        if(error.response.status === 400) {
+          this.failLogin = true
+        } else {
+          this.backError = true
+        }
+        input.classList.remove("control", "is-loading")
+      })
+    }
+
 
   }
 

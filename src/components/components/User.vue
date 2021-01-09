@@ -76,7 +76,7 @@ export default class User extends Vue {
     this.$api.get("/users/" + this.identifier + "/history", { headers: authHeader(this.user.token) }).then((res) => {
       this.reservations = res.data
 
-    }).catch((error) => {
+    }).catch(() => {
       this.loading = false
       this.backError = true
     })
@@ -85,7 +85,7 @@ export default class User extends Vue {
   }
 
   remUser() {
-    this.$api.delete("/users/delete/" + this.identifier, { headers: authHeader(this.user.token) }).then((res) => {
+    this.$api.delete("/users/delete/" + this.identifier, { headers: authHeader(this.user.token) }).then(() => {
       this.loading = true
 
       setTimeout(() => {
@@ -93,7 +93,7 @@ export default class User extends Vue {
         window.location.reload()
       }, 1000)
 
-    }).catch((error) => {
+    }).catch(() => {
       this.loading = false
       this.backError = true
     })

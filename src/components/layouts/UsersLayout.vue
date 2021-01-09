@@ -1,7 +1,9 @@
 <template>
   <section class="users section--1">
     <div class="users__searchbar section--1 box">
-      <input class="input is-rounded" v-model="search" type="text" placeholder="Rechercher un nom de famille">
+      <label>
+        <input class="input is-rounded" v-model="search" type="text" placeholder="Rechercher un nom de famille">
+      </label>
     </div>
     <article v-show="backError" class="message is-danger">
       <div class="message-body is-size-7">
@@ -24,10 +26,18 @@
 
           <template v-slot:body>
             <div class="modal__body--wrapper">
-              <input v-model="$v.formAddUser.id.$model" type="text" :class="'input left' + isInputInvalid($v.formAddUser.id.$invalid)" placeholder="Matricule">
-              <input v-model="$v.formAddUser.firstName.$model" type="text" :class="'input middle' + isInputInvalid($v.formAddUser.firstName.$invalid)" placeholder="Prénom">
-              <input v-model="$v.formAddUser.lastName.$model" type="text" :class="'input middle' + isInputInvalid($v.formAddUser.lastName.$invalid)" placeholder="Nom">
-              <input v-model="$v.formAddUser.email.$model" type="email" :class="'input middle' + isInputInvalid($v.formAddUser.email.$invalid)" placeholder="Email">
+              <label>
+                <input v-model="$v.formAddUser.id.$model" type="text" :class="'input left' + isInputInvalid($v.formAddUser.id.$invalid)" placeholder="Matricule">
+              </label>
+              <label>
+                <input v-model="$v.formAddUser.firstName.$model" type="text" :class="'input middle' + isInputInvalid($v.formAddUser.firstName.$invalid)" placeholder="Prénom">
+              </label>
+              <label>
+                <input v-model="$v.formAddUser.lastName.$model" type="text" :class="'input middle' + isInputInvalid($v.formAddUser.lastName.$invalid)" placeholder="Nom">
+              </label>
+              <label>
+                <input v-model="$v.formAddUser.email.$model" type="email" :class="'input middle' + isInputInvalid($v.formAddUser.email.$invalid)" placeholder="Email">
+              </label>
               <input v-model="$v.formAddUser.admin.$model" id="switchExample" type="checkbox" class="switch right">
               <label for="switchExample" class="middle">Administrateur</label>
             </div>
@@ -133,7 +143,7 @@ export default class UsersLayout extends Vue {
   mounted() {
     this.$api.get('/users/all', { headers: authHeader(this.user.token) }).then((res) => {
       this.users = res.data
-    }).catch((error) => {
+    }).catch(() => {
       this.backError = true
     })
   }
@@ -152,7 +162,7 @@ export default class UsersLayout extends Vue {
       this.$api.put('/users/add', this.formAddUser, { headers: authHeader(this.user.token) }).then((res) => {
         this.$api.get('/users/all', { headers: authHeader(this.user.token) }).then((res) => {
           this.users = res.data
-        }).catch((error) => {
+        }).catch(() => {
           this.backError = true
         })
 
