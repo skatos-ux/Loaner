@@ -26,6 +26,7 @@ exports.app = void 0;
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
+const path_1 = require("path");
 const config = __importStar(require("./config.json"));
 const router_1 = __importDefault(require("./routes/router"));
 const app = express_1.default();
@@ -35,13 +36,11 @@ app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use('/api', router_1.default);
 if (config.useStatic) {
-    app.use('/', express_1.default.static('static'));
+    app.use('/css', express_1.default.static(path_1.resolve(__dirname, '../static/css')));
+    app.use('/js', express_1.default.static(path_1.resolve(__dirname, '../static/js')));
+    app.get(/.*/, (_, res) => res.sendFile(path_1.resolve(__dirname, '../static/index.html')));
 }
 else {
-    app.get('/', (req, res) => {
-        res.send('Version back-end uniquement');
-    });
+    app.get('/', (_, res) => res.send('Version back-end uniquement'));
 }
-app.listen(config.serverPort, () => {
-    console.log('Server is listening on port ' + config.serverPort);
-});
+app.listen(config.serverPort, () => console.log('Server is listening on port ' + config.serverPort));

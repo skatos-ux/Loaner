@@ -41,6 +41,18 @@ Si vous souhaitez créer la base de données à partir de votre propre fichier S
 node dist/util/create_db.js <fichier SQL> --exec [--log-queries]
 ```
 
+Il existe un fichier *empty_db.sql* permettant de créer une base de données vide avec un seul utilisateur administrateur à l'intérieur.
+
+Il est aussi possible de générer un mot de passe afin de l'insérer dans la base de données avec la commande :
+```
+node dist/util/hash_password.js
+```
+
+De la même façon, il possible de générer un token de connexion JWT avec la commande :
+```
+node dist/util/gen_token.js
+```
+
 ## Configuration
 Dans le dossier *dist/* ce trouve le fichier de configuration du serveur *config.json* se présentant sous la forme suivante :
 ```json

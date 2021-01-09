@@ -76,10 +76,10 @@ class DeviceController extends controller_1.default {
                 if (this.auth.checkToken(req, res, false, userId)) {
                     let lastId = (yield this.daoReservation.getLastId()) + 1;
                     const reservations = yield Promise.all(commands.map((device) => __awaiter(this, void 0, void 0, function* () {
-                        if (!device.ref) {
+                        if (!device.reference) {
                             throw new Error("No reference given");
                         }
-                        const ref = device.ref;
+                        const ref = device.reference;
                         if (!device.loanDays) {
                             throw new Error("No loanDays given");
                         }

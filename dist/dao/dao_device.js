@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dao_1 = __importDefault(require("./dao"));
 const device_1 = __importDefault(require("../model/device"));
 const dao_reservation_1 = __importDefault(require("./dao_reservation"));
+const reservation_1 = __importDefault(require("../model/reservation"));
 class DAODevice extends dao_1.default {
     constructor() {
         super(...arguments);
@@ -49,14 +50,15 @@ class DAODevice extends dao_1.default {
     borrowDevice(reservations) {
         return __awaiter(this, void 0, void 0, function* () {
             const promises = reservations.map(reservation => {
-                return this.runQuery('insert into reservation values(?,?,?,?,?,?)', [reservation.getID(), reservation.getDevice(), reservation.getUserID(),
-                    reservation.getStartDate(), reservation.getEndDate(), (reservation.hasReturnDate()) ? reservation.getReturnDate() : null]);
+                return this.runQuery('INSERT INTO reservation VALUES(?,?,?,?,?,?)', [reservation.getID(), reservation.getDevice(), reservation.getUserID(),
+                    reservation_1.default.convertDate(reservation.getStartDate()), reservation_1.default.convertDate(reservation.getEndDate()),
+                    (reservation.hasReturnDate()) ? reservation_1.default.convertDate(reservation.getReturnDate()) : null]);
             });
             return Promise.all(promises);
         });
     }
     addDevice(device) {
-        return this.runQuery('insert into device values(?,?,?,?,?,?)', [device.getRef(), device.getCategoryID(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone()]);
+        return this.runQuery('INSERT INTO device VALUES(?,?,?,?,?,?)', [device.getRef(), device.getCategoryID(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone()]);
     }
     deleteDevice(refDevice) {
         return this.runQuery('DELETE FROM device WHERE ref = ?', [refDevice]);
