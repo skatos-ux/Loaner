@@ -76,7 +76,8 @@ export default class User extends Vue {
     this.$api.get("/users/" + this.identifier + "/history", { headers: authHeader(this.user.token) }).then((res) => {
       this.reservations = res.data
 
-    }).catch(() => {
+    }).catch((error) => {
+      console.log(error.response.data)
       this.loading = false
       this.backError = true
     })

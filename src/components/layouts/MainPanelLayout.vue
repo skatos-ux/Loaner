@@ -55,6 +55,11 @@
                 Le nom de la catégorie est obligatoire
               </div>
             </article>
+            <article v-show="backCategoryError" class="message is-danger">
+              <div class="message-body is-size-7">
+                {{ backCategoryErrorMsg }}
+              </div>
+            </article>
             <input @click="addCategory" :disabled="$v.formAddCategory.name.$invalid" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
           </template>
         </Modal>
@@ -110,6 +115,11 @@
             <article v-show="$v.formAddDevice.$invalid" class="message is-danger">
               <div class="message-body is-size-7">
                 Les champs saisis sont incorrects
+              </div>
+            </article>
+            <article v-show="backDeviceError" class="message is-danger">
+              <div class="message-body is-size-7">
+                {{ backDeviceErrorMsg }}
               </div>
             </article>
             <input @click="addDevice" :disabled="$v.formAddDevice.$invalid" class="button is-success is-fullwidth is-size-6" type="button" value="Enregistrer">
@@ -182,6 +192,11 @@ export default class MainPanelLayout extends Vue {
   backError = false
   backCategoryUpdate = false
   backDeviceUpdate = false
+  backDeviceError = false
+  backCategoryError = false
+
+  backDeviceErrorMsg = ""
+  backCategoryErrorMsg = ""
 
   formSearch = {
     search: "",
@@ -215,7 +230,8 @@ export default class MainPanelLayout extends Vue {
     this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
       this.$store.dispatch('initDevices', res.data)
     }).catch((error) => {
-      console.log(error)
+      console.log(error.response.data)
+      this.backError = true
     })
   }
 
@@ -229,18 +245,23 @@ export default class MainPanelLayout extends Vue {
   addCategory() {
     if(!this.$v.formAddCategory.name?.$invalid) {
       this.$api.put('/category/add/' + this.formAddCategory.name, {} ,{ headers: authHeader(this.user.token) }).then(() => {
-        this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
-          this.$store.dispatch('initDevices', res.data)
-        }).catch(() => {
-          this.backError = true
-        })
+        this.backCategoryError = false
         this.backCategoryUpdate = true
         setTimeout(() => {
           this.backCategoryUpdate = false
           window.location.reload()
         }, 1000)
-      }).catch(() => {
-        this.backError = true
+      }).catch((error) => {
+        if(error.response) {
+          if(error.response.data.message === 'Category name already exists') {
+            this.backCategoryError = true
+            this.backCategoryErrorMsg = 'Cette catégorie existe déjà, veuillez en choisir une autre'
+          } else {
+            this.backError = true
+          }
+        } else {
+          this.backError = true
+        }
       })
     }
   }
@@ -249,18 +270,23 @@ export default class MainPanelLayout extends Vue {
     if(!this.$v.formAddDevice.$invalid) {
 
       this.$api.put("/devices/add", this.formAddDevice, {headers: authHeader(this.user.token)}).then(() => {
+        this.backDeviceError = false
         this.backDeviceUpdate = true
-        this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
-          this.$store.dispatch('initDevices', res.data)
-        }).catch(() => {
-          this.backError = true
-        })
         setTimeout(() => {
           this.backDeviceUpdate = false
           window.location.reload()
         }, 1000)
-      }).catch(() => {
-        this.backError = true
+      }).catch((error) => {
+        if(error.response) {
+          if(error.response.data.message === 'Device reference is already used') {
+            this.backDeviceError = true
+            this.backDeviceErrorMsg = 'Cette référence existe déjà, veuillez en choisir une autre'
+          } else {
+            this.backError = true
+          }
+        } else {
+          this.backError = true
+        }
       })
     }
   }

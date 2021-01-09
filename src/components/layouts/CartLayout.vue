@@ -150,16 +150,17 @@ export default class CartLayout extends Vue {
     this.$api.post("/devices/borrow/" + this.user.id, { commands: this.cart }, { headers: authHeader(this.user.token) }).then(() => {
       this.backSuccess = true
       setTimeout(() => {
+        this.$store.dispatch('clearCart')
+        window.location.reload()
+      }, 4500)
+      setTimeout(() => {
         window.location.reload()
       }, 5000)
-    }).catch(() => {
+    }).catch((error) => {
+      console.log(this.cart)
+      console.log(error.response.data)
       this.backError = true
     })
-
-    setTimeout(() => {
-      this.$store.dispatch('clearCart')
-      window.location.reload()
-    }, 4500)
   }
 }
 </script>

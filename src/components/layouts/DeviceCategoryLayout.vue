@@ -43,10 +43,10 @@ export default class DeviceCategoryLayout extends Vue {
 
     this.$api.delete('/category/delete/' + this.categoryid,{ headers: authHeader(this.user.token) }).then(() => {
 
-      this.$api.get('/devices/all').then((res) => {
+      this.$api.get('/devices/all', { headers: authHeader(this.user.token) }).then((res) => {
         this.$store.dispatch('initDevices', res.data)
-      }).catch((error) => {
-        console.log(error)
+      }).catch(() => {
+        this.backError = true
       })
       this.loading = true
       setTimeout(() => {

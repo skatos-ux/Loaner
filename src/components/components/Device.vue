@@ -51,6 +51,11 @@
             Mise à jour...
           </div>
         </article>
+        <article v-show="backError" class="message is-danger has-text-centered">
+          <div class="message-body is-size-7">
+            Une erreur interne est survenue, veuillez réessayer dans quelques instants
+          </div>
+        </article>
         <div v-if="user.admin" class="modal__body--footer">
           <div class="modal__body--info">
             <input @click="deleteDevice" class="button is-danger" type="button" value="Supprimer">
@@ -92,6 +97,7 @@ export default class Device extends Vue {
     phone: this.phone,
   }
 
+  backError = false
   backUpdate = false
 
 
@@ -106,21 +112,14 @@ export default class Device extends Vue {
   }
 
   deleteDevice() {
-
-    this.$api.post("/devices/delete/" + this.item.reference, {}, { headers: authHeader(this.user.token) }).then(() => {
-      this.$api.get('/devices/all').then((res) => {
-        this.$store.dispatch('initDevices', res.data)
-      }).catch((error) => {
-        console.log(error)
-      })
+    this.$api.delete("/devices/delete/" + this.item.reference,{ headers: authHeader(this.user.token) }).then(() => {
       this.backUpdate = true
       setTimeout(() => {
         this.backUpdate = false
         window.location.reload()
       }, 1000)
-
-    }).catch((error) => {
-      console.log(error)
+    }).catch(() => {
+      this.backError = true
     })
   }
   addToCart(){
@@ -129,6 +128,8 @@ export default class Device extends Vue {
     }
   }
   popModal() {
+    this.backError = false
+    this.backUpdate = false
     this.deviceInfoModal.popModal()
   }
 
