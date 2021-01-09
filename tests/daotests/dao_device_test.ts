@@ -8,6 +8,7 @@ import chaiAsPromised from 'chai-as-promised';
 import Reservation from '../../src/model/reservation';
 
 import createDatabase from '../../util/create_db';
+import Category from '../../src/model/category';
 
 const assert = chai.assert;
 const expect = chai.expect;
@@ -107,13 +108,16 @@ const DAOcat = new DAOCategory();
         })
     });
 
-    describe("Tests on get() method",async function() {
+    describe("Tests on get() method", function() {
         //The reference used in the test is a mock created at the start of init_db.sql
-        const device =  await DAOTested.get("AN001");
+        let device: Device, existingCategories : Category[];
 
-        it("The device must match an existing category", async function(){
-            const existingCategories = await DAOcat.getAll();
+        this.beforeEach(async () => {
+            device = await DAOTested.get("AN001");
+            existingCategories = await DAOcat.getAll();
+        });
 
+        it("The device must match an existing category", function(){
             let check = false;
 
             //Testing that its category is member of the categories of the database
@@ -124,31 +128,31 @@ const DAOcat = new DAOCategory();
             assert.isTrue(check);
         });
 
-        it("The device must have a five character reference", async function() {
+        it("The device must have a five character reference", function() {
             assert.equal(device.getRef().length,5);
         });
 
-        it("The device must not have an empty name or a null name", async function() {
+        it("The device must not have an empty name or a null name", function() {
             assert.isNotNull(device.getName());
             assert.isAbove(device.getName().length,0);
         });
 
-        it("The device must have a version number between 3 and 15 characters", async function() {
+        it("The device must have a version number between 3 and 15 characters", function() {
             assert.isAbove(device.getVersion().length,2);
             assert.isBelow(device.getVersion().length,16);
         });
 
-        it("The device must have a correct version number", async function(){
+        it("The device must have a correct version number", function(){
             expect(device.getVersion()).to.match(/^[0-9]*\.[0-9]*$/);
         });
 
-        it("The device must have a grater version than 0.0", async function(){
+        it("The device must have a grater version than 0.0", function(){
             const numbers = device.getVersion().split('.');
             assert.isAbove(parseInt(numbers[0]),0);
             assert.isAbove(parseInt(numbers[1]),-1);
         })
 
-        it("The device with a phone number must have a correct phone number", async function(){
+        it("The device with a phone number must have a correct phone number", function(){
             if(device.getPhone()){
                 expect(device.getPhone()).to.match(/^\+?[0-9]{0,15}$/);
             }
