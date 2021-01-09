@@ -362,7 +362,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 commands: [{
-                    ref: "AN001",
+                    reference: "AN001",
                     loanDays: ["2021-02-30", "2021-02-15"]
                 }]
             })
@@ -411,7 +411,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 commands: [{
-                    ref: "AN001"
+                    reference: "AN001"
                 }]
             })
             .expect('Content-Type', /json/)
@@ -429,7 +429,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 commands: [{
-                    ref: "AN001",
+                    reference: "AN001",
                     loanDays: 67
                 }]
             })
@@ -448,7 +448,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 commands: [{
-                    ref: "AN001",
+                    reference: "AN001",
                     loanDays: ["2020-04-12"]
                 }]
             })
@@ -467,7 +467,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 commands: [{
-                    ref: "AN001",
+                    reference: "AN001",
                     loanDays: ["2020-04-12", "2020-04-14", "2020-04-16"]
                 }]
             })
@@ -486,7 +486,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 commands: [{
-                    ref: "AN001",
+                    reference: "AN001",
                     loanDays: ["2021-01-02", "2021-01-15"]
                 }]
             })
@@ -505,7 +505,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 commands: [{
-                    ref: "AN001",
+                    reference: "AN001",
                     loanDays: ["01-s", "2021-01-15"]
                 }]
             })
@@ -524,7 +524,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 commands: [{
-                    ref: "AN001",
+                    reference: "AN001",
                     loanDays: ["2021-01-20", "20-s"]
                 }]
             })
@@ -540,7 +540,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
         .set('Content-Type', 'application/json')
         .send({
             commands: [{
-                ref: "AN001",
+                reference: "AN001",
                 loanDays: ["2021-02-05", "2021-02-15"]
             }]
         });
@@ -556,7 +556,7 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .set("x-access-token", helper.getToken())
             .send({
                 commands: [{
-                    ref: "AN001",
+                    reference: "AN001",
                     loanDays: ["2021-05-05", "2021-05-15"]
                 }]
             })
@@ -573,11 +573,11 @@ describe('POST /devices/borrow/:id_utilisateur', function() {
             .send({
                 commands: [
                     {
-                        ref: "AN001",
+                        reference: "AN001",
                         loanDays: ["2021-05-05", "2021-05-15"]
                     },
                     {
-                        ref: "AN002",
+                        reference: "AN002",
                         loanDays: ["2021-05-05", "2021-05-15"]
                     }
                 ]

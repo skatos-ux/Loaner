@@ -2,7 +2,6 @@
 
 import { readFileSync, existsSync } from 'fs';
 import { verbose } from 'sqlite3';
-import * as config from '../src/config.json';
 
 const sqlite = verbose();
 
@@ -16,7 +15,7 @@ if(process.argv.length > 2 && existsSync(process.argv[2])) {
 }
 
 const sqlContent = readFileSync(sqlFile).toString();
-const db = new sqlite.Database(config.dbFile, (err) => {
+const db = new sqlite.Database('database.db', (err) => {
     if(err) {
         handleError(err);
     }
