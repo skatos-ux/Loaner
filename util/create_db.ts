@@ -1,12 +1,21 @@
 // Utilitaire permettant de créer à base de données à partir du contenu du fichier "init_db.sql"
 
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { verbose } from 'sqlite3';
 import * as config from '../src/config.json';
 
 const sqlite = verbose();
 
-const sqlContent = readFileSync('init_db.sql').toString();
+const logQueries = process.argv.includes("--log-queries");
+const execute = process.argv.includes("--exec");
+
+let sqlFile = 'init_db.sql';
+
+if(process.argv.length > 2 && existsSync(process.argv[2])) {
+    sqlFile = process.argv[2];
+}
+
+const sqlContent = readFileSync(sqlFile).toString();
 const db = new sqlite.Database(config.dbFile, (err) => {
     if(err) {
         handleError(err);
@@ -14,8 +23,6 @@ const db = new sqlite.Database(config.dbFile, (err) => {
 });
 
 const lines = sqlContent.toString().split(';');
-const logQueries = process.argv.includes("--log-queries");
-const execute = process.argv.includes("--exec");
 
 if(execute) {
     console.log("Création de la base de données...");

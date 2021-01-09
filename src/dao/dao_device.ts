@@ -36,22 +36,18 @@ export default class DAODevice extends DAO<Device> {
             "WHERE d.idCategory = c.id AND d.ref=?", refDevice).then(row => { return this.rowToModelAsync.bind(this)(row); });
     }
 
-    //public async borrowDevice(devices : string[], idUser : string) : Promise<void> {
-        public async borrowDevice(reservations : Reservation[]) : Promise<void[]> {
-        /*devices.forEach((device : any) => {
-            return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[device[3],device[0],idUser,device[1],device[2],null]);
-        });*/
-
+    public async borrowDevice(reservations : Reservation[]) : Promise<void[]> {
         const promises = reservations.map(reservation => {
-            return this.runQuery('insert into reservation values(?,?,?,?,?,?)',[reservation.getID(), reservation.getDevice(), reservation.getUserID(),
-                reservation.getStartDate(), reservation.getEndDate(), (reservation.hasReturnDate()) ? reservation.getReturnDate() : null]);
+            return this.runQuery('INSERT INTO reservation VALUES(?,?,?,?,?,?)',[reservation.getID(), reservation.getDevice(), reservation.getUserID(),
+                Reservation.convertDate(reservation.getStartDate()), Reservation.convertDate(reservation.getEndDate()),
+                (reservation.hasReturnDate()) ? Reservation.convertDate(reservation.getReturnDate()) : null]);
         });
 
         return Promise.all(promises);
     }
 
     public addDevice(device : Device) : Promise<void> {
-        return this.runQuery('insert into device values(?,?,?,?,?,?)',[device.getRef(), device.getCategoryID(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone()]);
+        return this.runQuery('INSERT INTO device VALUES(?,?,?,?,?,?)',[device.getRef(), device.getCategoryID(), device.getName(), device.getVersion(), device.getPhoto(), device.getPhone()]);
     }
 
     public deleteDevice(refDevice : string) : Promise<void> {

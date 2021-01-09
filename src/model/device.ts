@@ -81,13 +81,8 @@ export default class Device {
         this.version = version;
     }
 
+    // Peux mener à une faille XSS
     public setPhoto(photo : string) : void {
-        
-        // Peux mener à une faille XSS
-        /*if(photo.length == 0) {
-            throw new Error("Invalid photo");
-        }*/
-
         this.photo = photo;
     }
 

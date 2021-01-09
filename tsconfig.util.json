@@ -9,7 +9,10 @@
       "resolveJsonModule": true,
       "forceConsistentCasingInFileNames": true
     },
-    "include": ["util/**/*.ts"],
+    "include": [
+      "util/**/*.ts",
+      "util/**/*.js"
+    ],
     "exclude": [
       "./tests/",
       "./node_modules/",
