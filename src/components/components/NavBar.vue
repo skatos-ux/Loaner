@@ -16,9 +16,7 @@
       </div>
       <div class="navbar-end">
         <div class="navbar-item">
-          <a @click="logout" class="button is-link navbar-logout">
-            <strong>Se déconnecter</strong>
-          </a>
+          <button @click="logout" class="button is-link navbar-logout">Se déconnecter</button>
         </div>
       </div>
     </div>
@@ -41,6 +39,7 @@ export default class NavBar extends Vue {
 
 <style scoped lang="scss">
 .navbar-logout {
-  max-width: 150px;
+  min-width: 180px;
+  margin-right: 10px;
 }
 </style>

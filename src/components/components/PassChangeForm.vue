@@ -97,6 +97,11 @@ export default class PassChangeForm extends Vue {
   mounted() {
     const confPasswordInput = document.getElementById('confpassword')!;
     confPasswordInput.onpaste = e => e.preventDefault();
+
+    if(this.user.temporaryPassword === false) {
+      this.$router.push("/")
+    }
+
   }
 
   get failVerify() {
