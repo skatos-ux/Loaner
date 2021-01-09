@@ -67,11 +67,11 @@ export default class DeviceController extends Controller {
 
                 const reservations = await Promise.all(commands.map(async (device : any) => {
 
-                    if (!device.ref) {
+                    if (!device.reference) {
                         throw new Error("No reference given");
                     }
 
-                    const ref = device.ref;
+                    const ref = device.reference;
 
                     if (!device.loanDays) {
                         throw new Error("No loanDays given");
