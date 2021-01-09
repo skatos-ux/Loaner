@@ -2,7 +2,7 @@
 ## Présentation
 Loaner est une application web permettant de gérer l'emprunt de matériel informatique dans le temps.
 
-L'application utilise les technologies / frameworks suivantes :
+L'application utilise les technologies et frameworks suivantes :
 - NodeJS
 - NPM (Node Package Manager)
 - Express
@@ -23,63 +23,81 @@ Voici la liste des fichiers indispensable au bon fonctionnement du projet ainsi 
 ## Mise en place du logiciel
 ### Installation des dépendances
 Une fois les fichiers de ce dépôt récupéré, il est nécessaire de faire télécharger les dépendances du projet par NPM en exécutant la commande suivante :
-`npm install`
+```
+npm install
+```
 
 ### Création de la base de données
 Une fois cela fait, il vous sera ensuite possible de créer une base de données initiale pour le projet.
 La méthode la plus simple consiste à exécuter cette commande :
-`npm run create-db`
+```
+npm run create-db
+```
+
 Cette commmande va lire le contenu du fichier *init_db.sql* et va créer une fichier de base de données *database.db* à partir de celui-ci.
 
 Si vous souhaitez créer la base de données à partir de votre propre fichier SQL, exécutez la commande suivante :
-`TODO`
+```
+TODO
+```
 ...
 
 ## Configuration
 Dans le dossier *dist/* ce trouve le fichier de configuration du serveur *config.json* se présentant sous la forme suivante :
 ```json
 {
-    "serverPort": 3000, // Port sur lequel écoute le serveur (attention à ne pas mettre un numéro de port nécessitant les privilèges administrateurs)
-    "dbFile": "database.db", // Fichier contenant la base de données
-    "useStatic": true, // Permet de savoir si le serveur fonctionne en mode "back-end uniquement" ou non (à laisser à true)
+    "serverPort": 3000,
+    "dbFile": "database.db",
+    "useStatic": true,
     "jwtSecret": "*Phrase secrete pour la génération du token JWT*",
-    "hashSaltRounds": 10 // Nombre de tours effectué par l'algorithme de hachage lors de la génération du "sel" des mots de passes
+    "hashSaltRounds": 10
 }
 ```
 
+Voici une description pour chacun des paramètres du fichier :
+|Paramètre|Valeur par défaut|Description|
+| ------- | --------------- | --------- |
+|serverPort|3000|Port sur lequel écoute le serveur (attention à ne pas mettre un numéro de port nécessitant les privilèges administrateurs)|
+|dbFile|database.db|Fichier contenant la base de données|
+|useStatic|true|Permet de savoir si le serveur fonctionne en mode "back-end uniquement" ou non (à laisser à true)|
+|jwtSecret|*Phrase culte...*|Phrase secrete pour la génération du token JWT|
+|hashSaltRounds|10|Nombre de tours effectué par l'algorithme de hachage lors de la génération du "sel" des mots de passes|
+
 ## Lancement
 Vous pouvez lancer le serveur en appelant NodeJS et en lui précisant le fichier d'entrée de l'application avec la commande :
-`node dist/server.js`
+```
+node dist/server.js
+```
+
 Il existe aussi un raccourci avec la commande :
-`npm start`
+```
+npm start
+```
 
 Une fois cela fait, il ne vous reste plus qu'à attendre que le message suivant s'affiche, vous confirmant que l'application est bien lancée :
-> Server is listening on port *numéro de port du serveur*
+> Server is listening on port <numéro de port du serveur>
 
 ## Utilisation
 Une fois votre serveur lancé, il ne vous reste plus qu'à vous rendre à l'adresse suivante :
-`http://localhost:<port du serveur>`
+```
+http://localhost:<port du serveur>
+```
 
 Pour vous connecter, il existe 2 utilisateurs créés par défaut :
-Lilian Bethus
-: Email : lilianb@mail.fr
-: Mot de passe : fromage
-: Administrateur : Oui
-
-Milan Pasquereau
-: Email : mpsqr@mail.fr
-: Mot de passe : bourbe
-: Administrateur : Non
+|Prénom Nom|Email|Mot de passe|Adminstrateur ?|
+| -------- | --- | ---------- | ------------- |
+|Lilian Bethus|lilianb@mail.fr|fromage|Oui|
+|Milan Pasquereau|mpsqr@mail.fr|bourbe|Non|
 
 Il existe aussi un lot de 3 catégories contenant au total 3 matériels différents :
-Téléphones
-: - Samsung Galaxy S1000
-: - Huawei P80
+**Téléphones** :
+ - Samsung Galaxy S1000
+ - Huawei P80
 
-Ordinateurs
-: - Acer Pro Max
+**Ordinateurs** :
+ - Acer Pro Max
 
-Tablettes
-: *Catégorie vide*
+**Tablettes** :
+*Catégorie vide*
 
 ...
